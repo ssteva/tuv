@@ -1,0 +1,35 @@
+﻿<template>
+    <a class="md-btn md-btn-primary md-btn-icon-mini md-btn-wave-light" click.delegate="noviKorisnik()">
+        <i class="uk-icon-user "></i>
+        Novi korisnik
+    </a>
+    <br />
+    <br />
+    <ak-grid k-widget.bind="grid"
+             k-data-source.bind="datasource"
+             k-pageable.bind="pageable"
+             k-filterable.bind="filterobj"
+             k-sortable.bind="true">
+        <!-- Column definitions in HTML -->
+        <ak-col k-title="Ime" k-field="ime"></ak-col>
+        <ak-col k-title="Prezime" k-field="prezime"></ak-col>
+        <ak-col k-title="Korisničko ime" k-field="korisnickoIme"></ak-col>
+        <ak-col k-title="Mesto" k-field="servis" k-sortable.bind="false">
+            <ak-template>
+                <span if.bind="servis && servis.mesto">${servis.mesto.naziv}</span>
+            </ak-template>
+        </ak-col>
+        <ak-col k-title="Email" k-field="email"></ak-col>
+        <ak-col k-title="Uloga" k-field="uloga"></ak-col>
+        <ak-col k-title="Opcije">
+            <ak-template>
+                <!--<button class="uk-button-mini uk-button-primary uk-icon-edit" click.delegate="edit($this)">Izmena</button>-->
+                <!--<a href="javascript:void()"  click.delegate="izmena($this)" class="uk-icon-justify uk-icon-edit"></a>-->
+                <a href="javascript:void()" click.delegate="izmena($this)">
+                    <i class="md-icon material-icons">mode_edit</i>
+                </a>
+            </ak-template>
+        </ak-col>
+        <!--<ak-col k-command.bind="['edit', 'destroy']" k-title="&nbsp;" k-width.bind="200"></ak-col>-->
+    </ak-grid>
+</template>

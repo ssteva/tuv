@@ -1,0 +1,30 @@
+<template>
+  <require from="./editkontakt.css"></require>
+  <require from="resources/elements/closebutton.html"></require>
+  <require from="aurelia-kendoui-bridge/dropdownlist/dropdownlist"></require>
+  <require from="aurelia-kendoui-bridge/common/template"></require>
+  <ux-dialog>
+    <ux-dialog-header>
+      <closebutton naslov="${naslov}" click.trigger="cancel()"></closebutton>
+    </ux-dialog-header>
+    <ux-dialog-body>
+
+      <label>Ime i prezime</label>
+      <input type="text" class="md-input" value.bind="kontakt.ime" />
+      <label>Oblast</label>
+      <input type="text" class="md-input" value.bind="kontakt.oblast" />
+      <label>Email</label>
+      <input type="text" class="md-input" value.bind="kontakt.email" />
+      <label>Telefon</label>
+      <input type="text" class="md-input" value.bind="kontakt.telefon" />
+
+    </ux-dialog-body>
+    <ux-dialog-footer>
+      
+      <button class="md-btn  md-btn-primary md-btn-icon-mini"  click.delegate="potvrdi()">
+        <i class="material-icons">check</i>
+        Potvrda
+      </button>
+    </ux-dialog-footer>
+  </ux-dialog>
+</template>

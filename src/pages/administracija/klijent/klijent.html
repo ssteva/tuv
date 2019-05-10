@@ -1,0 +1,105 @@
+﻿<template>
+  <require from="./klijent.css"></require>
+
+  <a href="javascript:void()" click.delegate="router.navigateBack()">
+    <i class="material-icons md-36">arrow_back</i>
+  </a>
+  <br />
+  <br />
+
+  <div class="md-card">
+    <div class="md-card-content">
+      <h3 class="heading_a">${klijent.id === 0 ? 'Novi klijent' : klijent.naziv}</h3>
+      <div class="uk-grid uk-grid-divider" data-uk-grid-margin>
+        <div class="uk-width-large-4-10 uk-width-medium-4-10 uk-width-small-1">
+
+          <div if.bind="klijent.id !== 0" class="uk-input-group">
+            <label class="uk-text-small">Broj</label>
+            <input type="text" value.bind="klijent.rbr" disabled.bind="klijent.id !== 0" />
+          </div>
+          <div class="uk-input-group">
+            <label class="uk-text-small">Naziv</label>
+            <input type="text" value.bind="klijent.naziv" />
+          </div>
+          <div class="uk-input-group">
+            <label class="uk-text-small">PIB</label>
+            <input type="text" value.bind="klijent.pib" />
+          </div>
+          <div class="uk-input-group">
+            <label class="uk-text-small">Adresa</label>
+            <input type="text" value.bind="klijent.adresa" />
+          </div>
+          <div class="uk-input-group">
+            <label class="uk-text-small">Mesto</label>
+            <input type="text" value.bind="klijent.mesto" />
+          </div>
+          <div class="uk-input-group">
+            <label class="uk-text-small">Država</label>
+            <input type="text" value.bind="klijent.drzava" />
+          </div>
+          <h5>Kontakti</h5>
+          <!--<ul class="uk-list">
+
+            <li repeat.for="kontakt of klijent.kontakti">
+              <div class="md-list-content">
+                <span class="md-list-heading">${kontakt.ime}</span>
+                <span class="uk-margin-right">
+                  <span style="margin-left: 15px;" class="uk-badge">${kontakt.oblast}</span>
+                </span>
+                <span class="uk-margin-right">
+                  <i class="material-icons">email</i> <a href="mailto:${kontakt.email}">${kontakt.email}</a>
+                </span>
+              </div>
+              <br />
+            </li>
+          </ul>-->
+          <table class="uk-table uk-text-small uk-table-condensed">
+            <thead>
+              <tr>
+                <th>Ime</th>
+                <th>Oblast</th>
+                <th>Email</th>
+                <th>Telefon</th>
+                <th>Opcije</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr repeat.for="kontakt of klijent.kontakti">
+                <td if.bind="!kontakt.obrisan">
+                  <a click.delegate="edit(kontakt, $index)">${kontakt.ime}</a>
+                </td>
+                <td if.bind="!kontakt.obrisan">
+                  <span if.bind="kontakt.oblast" class="uk-badge">${kontakt.oblast}</span>
+                </td>
+                <td if.bind="!kontakt.obrisan">
+                  <i if.bind="kontakt.email" class="material-icons">email</i>
+                  <a href="mailto:${kontakt.email}">${kontakt.email}</a>
+                </td>
+                <td if.bind="!kontakt.obrisan">
+                  <i if.bind="kontakt.telefon" class="material-icons">phone</i>
+                  ${kontakt.telefon}
+                </td>
+                <td if.bind="!kontakt.obrisan">
+                  <a click.delegate="edit(kontakt, $index)"><i class="material-icons">edit</i></a>
+                  <a click.delegate="delete(kontakt, $index)"><i class="material-icons">delete</i></a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <a click.delegate="novi(kontakt, $index)"><i class="material-icons">create</i> Novi kontakt</a>
+        </div>
+
+
+      </div>
+      <br />
+      <br />
+      <button class="md-btn md-btn-primary md-btn-icon" href="javascript:void(0)" click.delegate="snimi()">
+        <i class="uk-icon-save"></i>
+        Snimi
+      </button>
+
+    </div>
+  </div>
+
+
+</template>

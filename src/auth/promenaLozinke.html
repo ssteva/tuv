@@ -1,0 +1,35 @@
+<template>
+    <!--<require from="/lib/bootstrap/dist/css/bootstrap.css"></require>-->
+    <ai-dialog>
+        <ai-dialog-header>
+            <h2>${message}</h2>
+        </ai-dialog-header>
+        <ai-dialog-body>
+            <div class="md-card">
+                <div class="md-card-content">
+                    <div class="uk-grid" data-uk-grid-margin>
+                        <div class="uk-width-1-1">
+                            <label>Nova lozinka</label>
+                            <input type="password" class="md-input" value.bind="password  & validate" change.delegate="confirmPassword = ''" />
+                            <label>Nova lozinka - potvrda</label>
+                            <input type="password" class="md-input" value.bind="confirmPassword & validate" />
+                        </div>
+                        <div class="uk-width-small-2-4">
+                            <ul if.bind="validcontroller.errors">
+                                <li repeat.for="error of validcontroller.errors">
+                                    ${error.message}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </ai-dialog-body>
+        <ai-dialog-footer>
+            <button class="md-btn md-btn-warning" click.trigger="controller.cancel()">Odustani</button>
+            <button class="md-btn md-btn-danger" click.trigger="promena()">Promeni</button>
+        </ai-dialog-footer>
+    </ai-dialog>
+</template> 
+

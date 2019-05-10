@@ -1,0 +1,86 @@
+﻿<template>
+  <require from="./obim.css"></require>
+  <require from="aurelia-kendoui-bridge/dropdownlist/dropdownlist"></require>
+
+  <div class="md-card">
+    <div class="md-card-content">
+      <div class="uk-grid uk-grid-divider" data-uk-grid-margin>
+        <div class="uk-width-large-1-4 uk-width-medium-1-2 uk-width-small-1-1">
+          <h3 class="uk-margin-bottom">Primarna grupa</h3>
+          <select size="20" value.bind="primarna" change.delegate="chgPrimarna(primarna)">
+            <option repeat.for="p of primarne"
+                    model.bind="p.id">
+              ${p.sifra} - ${p.naziv}
+            </option>
+          </select>
+          <br />
+          <a class="md-btn md-btn-primary md-btn-mini md-btn-icon" href="javascript:void(0)" click.delegate="novaPrimarna()">
+            <i class="uk-icon-plus"></i>
+          </a>
+          <a class="md-btn md-btn-danger md-btn-mini md-btn-icon ${primarna ? '' : 'disabled'}" href="javascript:void(0)" click.delegate="delPrimarna()">
+            <i class="uk-icon-trash"></i>
+          </a>
+        </div>
+        <div class="uk-width-large-1-4 uk-width-medium-1-2 uk-width-small-1-1">
+          <h3 class="uk-margin-bottom">Sekundarna grupa</h3>
+          <select size="20" value.bind="sekundarna" change.delegate="chgSekundarna(sekundarna)">
+            <option model.bind="null">Nema</option>
+            <option repeat.for="p of odabranesekundarne"
+                    model.bind="p.id">
+              ${p.sifra} - ${p.naziv}
+            </option>
+          </select>
+          <br />
+          <a class="md-btn md-btn-primary md-btn-mini md-btn-icon" href="javascript:void(0)" click.delegate="novaSekundarna()">
+            <i class="uk-icon-plus"></i>
+          </a>
+          <a class="md-btn md-btn-danger md-btn-mini md-btn-icon ${sekundarna ? '' : 'disabled'}" href="javascript:void(0)" click.delegate="delSekundarna()">
+            <i class="uk-icon-trash"></i>
+          </a>
+        </div>
+        <div class="uk-width-large-1-4 uk-width-medium-1-2 uk-width-small-1-1">
+          <h3 class="uk-margin-bottom">Tercijarna grupa</h3>
+          <select size="20" value.bind="tercijarna" change.delegate="chgTercijarna(tercijarna)">
+            <option model.bind="null">Nema</option>
+            <option repeat.for="p of odabranetercijarne"
+                    model.bind="p.id">
+              ${p.sifra} - ${p.naziv}
+            </option>
+          </select>
+          <br />
+          <a class="md-btn md-btn-primary md-btn-mini md-btn-icon" href="javascript:void(0)" click.delegate="novaTercijarna()">
+            <i class="uk-icon-plus"></i>
+          </a>
+          <a class="md-btn md-btn-danger md-btn-mini md-btn-icon ${tercijarna ? '' : 'disabled'}" href="javascript:void(0)" click.delegate="delTercijarna()">
+            <i class="uk-icon-trash"></i>
+          </a>
+        </div>
+
+        <div class="uk-width-large-1-4 uk-width-medium-1-2 uk-width-small-1-1">
+          <h3 class="uk-margin-bottom">Oblast poslovanja</h3>
+          <select style="font-size 8px;" size="20" value.bind="obim" change.delegate="chgObim(obim)">
+            <option repeat.for="p of odabraniobimi"
+                    model.bind="p.id">
+              ${p.sifra} - ${p.naziv}
+            </option>
+          </select>
+          <br />
+          <a class="md-btn md-btn-primary md-btn-mini md-btn-icon" href="javascript:void(0)" click.delegate="noviObim()">
+            <i class="uk-icon-plus"></i>
+          </a>
+          <a class="md-btn md-btn-danger md-btn-mini md-btn-icon ${obim ? '' : 'disabled'}" href="javascript:void(0)" click.delegate="delObim()">
+            <i class="uk-icon-trash"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <br />
+  <br />
+  <button class="md-btn md-btn-primary md-btn-icon" href="javascript:void(0)" click.delegate="snimi()">
+    <i class="uk-icon-save"></i>
+    Test
+  </button>
+</template>

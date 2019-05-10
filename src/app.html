@@ -1,0 +1,298 @@
+<template>
+
+  <require from="kendo/css/web/kendo.common.min.css"></require>
+  <require from="kendo/css/web/kendo.default.min.css"></require>
+  <require from="kendo/css/web/kendo.default-v2.min.css"></require>
+  <require from="toastr/build/toastr.min.css"></require>
+  
+  <!-- main header -->
+  <header if.bind="authenticated" id="header_main">
+    <div class="header_main_content">
+
+      <nav class="uk-navbar">
+
+
+
+        <!-- secondary sidebar switch -->
+        <a href="javascript:void()" id="sidebar_secondary_toggle" class="sSwitch sSwitch_right sidebar_secondary_check">
+          <span class="sSwitchIcon"></span>
+        </a>
+
+        <img style="margin-top: -12px; width: 140px; height:70px;" src="assets/img/login_logo.jpg" />
+
+        <!--<div style="width:140px;height:50px;overflow:hidden;">
+
+        </div>-->
+
+        <span style="color: white; font-size: 12px; vertical-align: middle; margin-left: 15px; margin-top: -20px">
+          ${korisnik} - ${role}
+        </span>
+
+        <!--<div id="menu_top_dropdown" class="uk-float-left uk-hidden-small">
+      <div class="uk-button-dropdown" data-uk-dropdown="{mode:'click'}">
+          <a href="#" class="top_menu_toggle"><i class="material-icons md-24">&#xE8F0;</i></a>
+          <div class="uk-dropdown uk-dropdown-width-3">
+              <div class="uk-grid uk-dropdown-grid">
+                  <div class="uk-width-2-3">
+                      <div class="uk-grid uk-grid-width-medium-1-3 uk-margin-bottom uk-text-center uk-dropdown-close">
+                          <a href="#nalog/0" click.bind="noviNalog" class="uk-margin-top">
+                              <i class="material-icons md-36 md-color-light-green-600">build</i>
+                              <span class="uk-text-muted uk-display-block">Novi radni nalog</span>
+                          </a>
+                      </div>
+                  </div>
+                  <div class="uk-width-1-3">
+                      <ul class="uk-nav uk-nav-dropdown uk-panel uk-dropdown-close">
+                          <li class="uk-nav-header">Administracija</li>
+                          <li><a class="md-btn-icon" href="#/korisnik"><i class="uk-icon-user"></i> Korisnici</a></li>
+                          <li><a class="md-btn-icon" href="#/servis"><i class="uk-icon-users"></i> Servisi</a></li>
+                          <li><a class="md-btn-icon" href="#/grad"><i class="material-icons">place</i> Gradovi</a></li>
+                          <li><a class="md-btn-icon" href="#/rezervnideo"><i class="material-icons">extension</i> Rezervni delovi</a></li>
+                      </ul>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>-->
+
+
+
+        <div class="uk-navbar-flip">
+          <ul class="uk-navbar-nav user_actions">
+            <li><a href="#" id="full_screen_toggle" class="user_action_icon uk-visible-large"><i class="material-icons md-24 md-light">&#xE5D0;</i></a></li>
+            <li><a href="#" id="main_search_btn" class="user_action_icon"><i class="material-icons md-24 md-light">&#xE8B6;</i></a></li>
+            <li data-uk-dropdown="{mode:'click',pos:'bottom-right'}">
+              <!--<a href="#" class="user_action_image"><img class="md-user-image" src="assets/img/avatars/user.png" alt=""/></a>-->
+              <a href="#" class="user_action_image">
+                <i class="material-icons md-36 md-color-white">person</i>
+              </a>
+              <div class="uk-dropdown uk-dropdown-small">
+                <ul class="uk-nav js-uk-prevent">
+                  <li if.bind="role=='Administrator'"><!--<a href="javascript:void()" click.delegate="noviKorisnik()">Novi korisnik</a>--></li>
+                  <!--<li><a href="javascript:void()" click.delegate="resetLozinke()">Reset lozinke</a></li>-->
+                  <li>
+                    <i class="uk-icon-world"></i>
+                    <ak-drop-down-list class="uk-text-small"
+                                       k-auto-bind.bind="true"
+                                       k-data-source.bind="jezici"
+                                       k-data-text-field="naziv"
+                                       k-data-value-field="id"
+                                       k-widget.bind="cboJezik"
+                                       k-value.two-way="odabranijezik"
+                                       k-on-select.delegate="onSelectJezik($event.detail)"
+                                       style="width: 100%">
+                    </ak-drop-down-list>
+                  </li>
+                  <li><a class="md-btn-icon" href="javascript:void()" click.delegate="promenaLozinke()"><i class="uk-icon-refresh"></i>${'Promena lozinke' & t} </a></li>
+
+                  <!--<li><a href="javascript:void()" click.delegate="profil()">Profil</a></li>-->
+                  <li><a class="md-btn-icon" href="javascript:void()" click.delegate="logout()"><i class="uk-icon-sign-out"></i>${'Odjava' & t}</a></li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+    <div class="header_main_search_form">
+      <i class="md-icon header_main_search_close material-icons">&#xE5CD;</i>
+      <form role="form" submit.delegate="pretraga()">
+        <input type="text" class="header_main_search_input" value.bind="search" />
+        <button click.delegate="pretraga()" class="header_main_search_btn uk-button-link"><i class="md-icon material-icons">&#xE8B6;</i></button>
+      </form>
+    </div>
+  </header><!-- main header end -->
+  <!-- secondary sidebar -->
+  <!-- secondary sidebar end -->
+  <div if.bind="authenticated" id="top_bar">
+    <div class="md-top-bar">
+      <ul id="menu_top" class="uk-clearfix">
+        <li class="uk-hidden-small"><a href="#home"><i class="material-icons">&#xE88A;</i></a></li>
+        <li repeat.for="route of router.navigation" data-uk-dropdown class="uk-hidden-small">
+          <!--Ako nema submeni-->
+          <a show.bind="vidljiv(route)" if.bind="!route.setting.subMenu" href.bind="route.href" class="uk-dropdown-close">
+            <span class="menu_icon">
+              <i class="material-icons">${route.settings.ikona ? route.settings.ikona : dashboard}</i>
+            </span>
+            <span class="menu_title">${route.title & t}</span>
+          </a>
+          <!--Ako ima submeni-->
+          <div if.bind="route.settings.subMenu" class="uk-dropdown">
+            <ul class="uk-nav uk-nav-dropdown">
+              <li repeat.for="menu of route.settings.subMenu" class="${menu.title==='separator' ? 'uk-nav-divider' : ''}">
+                <a show.bind="vidljiv(menu)" if.bind="menu.title !=='separator'" href.bind="menu.href" class="uk-dropdown-close">
+                  <span class="menu_icon">
+                    <i class="material-icons">${menu.settings.ikona}</i>
+                  </span>
+                  <span class="menu_title">${menu.title & t}</span>
+                </a>
+
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li data-uk-dropdown="boundary:'#top_bar'" class="uk-visible-small">
+          <a href="javascript:void()"><i class="material-icons">&#xE5D2;</i><span>Mobile</span></a>
+          <div class="uk-dropdown uk-dropdown-scrollable uk-dropdown-small">
+            <!--<div class="uk-grid uk-dropdown-grid" data-uk-grid-margin>
+            <div class="uk-width-1-2">-->
+            <ul class="uk-nav uk-nav-dropdown js-uk-prevent">
+              <li repeat.for="route of router.navigation" class="${route.settings.subMenu ? 'uk-nav-header' : ''}">
+                ${route.title & t}
+                <ul>
+                  <li repeat.for="menu of route.settings.subMenu" class="${menu.title==='separator' ? 'uk-nav-divider' : ''}">
+                    <a show.bind="vidljiv(menu)" if.bind="menu.title !=='separator'" href.bind="menu.href" class="uk-dropdown-close">
+                      <span class="menu_icon">
+                        <i class="material-icons">${menu.settings.ikona}</i>
+                      </span>
+                      <span class="menu_title">${menu.title & t}</span>
+                    </a>
+
+                  </li>
+                </ul>
+                <!--<a if.bind="route.title !=='separator' && !route.settings.subMenu" href.bind="route.href" class="uk-dropdown-close">
+                    <span class="menu_icon">
+                        <i class="material-icons">${route.settings.ikona}</i>
+                    </span>
+                    <span class="menu_title">${route.title}</span>
+                </a>-->
+              </li>
+            </ul>
+            <!--</div>
+            </div>-->
+            <!--<div class="uk-width-1-2">
+                <ul class="uk-nav uk-nav-dropdown">
+                    <li class="uk-nav-header">Components</li>
+                    <li><a href="components_accordion.html">Accordions</a></li>
+                    <li><a href="components_buttons.html"> Buttons</a></li>
+                    <li><a href="components_cards.html">Cards</a></li>
+                    <li><a href="components_colors.html">Colors</a></li>
+                    <li><a href="components_common.html">Common</a></li>
+                    <li><a href="components_dropdowns.html">Dropdowns</a></li>
+                    <li><a href="components_dynamic_grid.html">Dynamic Grid</a></li>
+                    <li><a href="components_grid.html">Grid</a></li>
+                    <li><a href="components_icons.html">Icons</a></li>
+                    <li><a href="components_modal.html">Lightbox/Modal</a></li>
+                    <li><a href="components_lists.html">Lists</a></li>
+                    <li><a href="components_nestable.html">Nestable</a></li>
+                    <li><a href="components_notifications.html">Notifications</a></li>
+                    <li><a href="components_preloaders.html">Preloaders</a></li>
+                    <li><a href="components_sortable.html">Sortable</a></li>
+                    <li><a href="components_tables.html">Tables</a></li>
+                    <li><a href="components_tables_examples.html">Tables Examples</a></li>
+                    <li><a href="components_tabs.html">Tabs</a></li>
+                    <li><a href="components_tooltips.html">Tooltips</a></li>
+                    <li><a href="components_typography.html">Typography</a></li>
+                </ul>
+            </div>-->
+
+          </div>
+          <!--<div class="uk-dropdown uk-dropdown-width-2">
+              <div class="uk-grid uk-dropdown-grid" data-uk-grid-margin></div>
+              <ul class="uk-nav uk-nav-dropdown js-uk-prevent">
+                  <li show.bind="route.settings.subMenu" repeat.for="route of router.navigation" class="${route.settings.subMenu ? 'uk-nav-header' : ''}">
+                      ${route.title}
+                      <ul class="uk-nav uk-nav-dropdown">
+                          <li repeat.for="menu of route.settings.subMenu">
+                              <a if.bind="menu.title !=='separator'" href.bind="menu.href" class="js-uk-prevent">
+                                  <span class="menu_icon">
+                                      <i class="material-icons">${menu.settings.ikona}</i>
+                                  </span>
+                                  <span class="menu_title">${menu.title}</span>
+                              </a>
+                          </li>
+                      </ul>
+                  </li>
+              </ul>
+          </div>-->
+        </li>
+      </ul>
+
+
+    </div>
+  </div>
+
+  <div if.bind="authenticated" id="page_content">
+    <div id="page_content_inner">
+      <router-view></router-view>
+    </div>
+  </div>
+
+  <div if.bind="authenticated" id="style_switcher">
+    <div id="style_switcher_toggle"><i class="material-icons">&#xE8B8;</i></div>
+    <div class="uk-margin-medium-bottom">
+      <h4 class="heading_c uk-margin-bottom">Colors</h4>
+      <ul class="switcher_app_themes" id="theme_switcher">
+        <li class="app_style_default active_theme" data-app-theme="">
+          <span class="app_color_main"></span>
+          <span class="app_color_accent"></span>
+        </li>
+        <li class="switcher_theme_a" data-app-theme="app_theme_a">
+          <span class="app_color_main"></span>
+          <span class="app_color_accent"></span>
+        </li>
+        <li class="switcher_theme_b" data-app-theme="app_theme_b">
+          <span class="app_color_main"></span>
+          <span class="app_color_accent"></span>
+        </li>
+        <li class="switcher_theme_c" data-app-theme="app_theme_c">
+          <span class="app_color_main"></span>
+          <span class="app_color_accent"></span>
+        </li>
+        <li class="switcher_theme_d" data-app-theme="app_theme_d">
+          <span class="app_color_main"></span>
+          <span class="app_color_accent"></span>
+        </li>
+        <li class="switcher_theme_e" data-app-theme="app_theme_e">
+          <span class="app_color_main"></span>
+          <span class="app_color_accent"></span>
+        </li>
+        <li class="switcher_theme_f" data-app-theme="app_theme_f">
+          <span class="app_color_main"></span>
+          <span class="app_color_accent"></span>
+        </li>
+        <li class="switcher_theme_g" data-app-theme="app_theme_g">
+          <span class="app_color_main"></span>
+          <span class="app_color_accent"></span>
+        </li>
+        <li class="switcher_theme_h" data-app-theme="app_theme_h">
+          <span class="app_color_main"></span>
+          <span class="app_color_accent"></span>
+        </li>
+        <li class="switcher_theme_i" data-app-theme="app_theme_i">
+          <span class="app_color_main"></span>
+          <span class="app_color_accent"></span>
+        </li>
+        <li class="switcher_theme_dark" data-app-theme="app_theme_dark">
+          <span class="app_color_main"></span>
+          <span class="app_color_accent"></span>
+        </li>
+      </ul>
+    </div>
+    <!--<div class="uk-visible-large uk-margin-medium-bottom">
+        <h4 class="heading_c">Sidebar</h4>
+        <p>
+            <input type="checkbox" name="style_sidebar_mini" id="style_sidebar_mini" data-md-icheck />
+            <label for="style_sidebar_mini" class="inline-label">Mini Sidebar</label>
+        </p>
+        <p>
+            <input type="checkbox" name="style_sidebar_slim" id="style_sidebar_slim" data-md-icheck />
+            <label for="style_sidebar_slim" class="inline-label">Slim Sidebar</label>
+        </p>
+    </div>
+    <div class="uk-visible-large uk-margin-medium-bottom">
+        <h4 class="heading_c">Layout</h4>
+        <p>
+            <input type="checkbox" name="style_layout_boxed" id="style_layout_boxed" data-md-icheck />
+            <label for="style_layout_boxed" class="inline-label">Boxed layout</label>
+        </p>
+    </div>
+    <div class="uk-visible-large">
+        <h4 class="heading_c">Main menu accordion</h4>
+        <p>
+            <input type="checkbox" name="accordion_mode_main_menu" id="accordion_mode_main_menu" data-md-icheck />
+            <label for="accordion_mode_main_menu" class="inline-label">Accordion mode</label>
+        </p>
+    </div>-->
+  </div>
+</template>

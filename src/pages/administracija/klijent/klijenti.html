@@ -1,0 +1,30 @@
+﻿<template>
+  <a class="md-btn md-btn-primary md-btn-icon-mini md-btn-wave-light" click.delegate="novi()">
+    <i class="uk-icon-user "></i>
+    Novi klijent
+  </a>
+  <br />
+  <br />
+  <ak-grid k-widget.bind="grid"
+           k-data-source.bind="datasource"
+           k-pageable.bind="pageable"
+           k-filterable.bind="filterobj"
+           k-sortable.bind="true">
+    <!-- Column definitions in HTML -->
+    <ak-col k-title="Naziv" k-field="naziv"></ak-col>
+    <ak-col k-title="PIB" k-field="pib"></ak-col>
+    <ak-col k-title="Adresa" k-field="adresa"></ak-col>
+    <ak-col k-title="Mesto" k-field="mesto"></ak-col>
+    <ak-col k-title="Država" k-field="drzava"></ak-col>
+    <ak-col k-title="Opcije">
+      <ak-template>
+        <!--<button class="uk-button-mini uk-button-primary uk-icon-edit" click.delegate="edit($this)">Izmena</button>-->
+        <!--<a href="javascript:void()"  click.delegate="izmena($this)" class="uk-icon-justify uk-icon-edit"></a>-->
+        <a href="javascript:void()" click.delegate="izmena($this)">
+          <i class="md-icon material-icons">mode_edit</i>
+        </a>
+      </ak-template>
+    </ak-col>
+    <!--<ak-col k-command.bind="['edit', 'destroy']" k-title="&nbsp;" k-width.bind="200"></ak-col>-->
+  </ak-grid>
+</template>

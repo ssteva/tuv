@@ -1,0 +1,37 @@
+﻿<template>
+  <require from="./kurs.css"></require>
+  <require from="aurelia-kendoui-bridge/dropdownlist/dropdownlist"></require>
+  <require from="aurelia-kendoui-bridge/numerictextbox/numerictextbox"></require>
+  <div class="uk-input-group">
+    <label class="uk-text-small">Godina</label>
+    <ak-drop-down-list class="uk-text-small"
+                       k-data-source.bind="godine"
+                       style="width: 100%"
+                       k-widget.two-way="cboGodina"
+                       k-on-select.delegate="onSelectGodina($event.detail)"
+                       k-value.two-way="godina">
+
+    </ak-drop-down-list>
+    <label class="uk-text-small">Valuta</label>
+    <ak-drop-down-list class="uk-text-small"
+                       k-data-source.bind="common.valute"
+                       style="width: 100%"
+                       k-widget.two-way="cboValuta"
+                       k-value.two-way="valuta">
+
+    </ak-drop-down-list>
+  </div>
+  <br />
+  <div repeat.for="li of lista">
+    <div class="uk-input-group">
+      <label style="width: 20px;" class="uk-text-small">Kursna nedelja: ${li.nedelja}</label>
+      <input style="margin-left: 15px;" class="uk-text-small" type="number" ak-numerictextbox="k-widget.two-way: txtKurs;k-value.two-way: li.kurs;k-format.bind:'n2'; k-min.bind:1;k-max.bind:1000;k-step.bind:1" />
+    </div>
+  </div>
+  <br />
+  <br />
+  <button class="md-btn md-btn-primary md-btn-icon" href="javascript:void(0)" click.delegate="snimi()">
+    <i class="uk-icon-save"></i>
+    Snimi
+  </button>
+</template>

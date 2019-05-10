@@ -1,0 +1,44 @@
+﻿<template>
+    <ai-dialog>
+        <ai-dialog-header>
+            <h2>${naslov} </h2>
+        </ai-dialog-header>
+        <ai-dialog-body>
+            <div class="md-card">
+                <div class="md-card-content">
+                    <div class="uk-grid uk-grid-divider" data-uk-grid-margin>
+                        <div class="uk-width-small-1-1">
+                            <label>Ptt</label>
+                            <input type="text" class="md-input uk-text-small label-fixed" value.bind="grad.ptt" />
+                            <label>Mesto</label>
+                            <input type="text" class="md-input uk-text-small label-fixed" value.bind="grad.naziv" />
+                            <label>Država</label>
+                            <ak-combobox k-data-source.bind="drzave"
+                                         k-data-text-field="naziv"
+                                         k-data-value-field="id"
+                                         k-filter="contains"
+                                         k-min-length="3"
+                                         k-suggest="true"
+                                         k-value.two-way="grad.drzava.id"
+                                         style="width: 100%">
+                                <ak-template>
+                                    <span class="k-state-default">
+                                        ${naziv}
+                                    </span>
+                                </ak-template>
+                            </ak-combobox>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ai-dialog-body>
+        <ai-dialog-footer>
+            <ai-dialog-footer>
+                <a class="md-btn md-btn-primary md-btn-icon" click.trigger="save()">
+                    <i class="uk-icon-save"></i>
+                    Snimi
+                </a>
+            </ai-dialog-footer>
+        </ai-dialog-footer>
+    </ai-dialog>
+</template>
