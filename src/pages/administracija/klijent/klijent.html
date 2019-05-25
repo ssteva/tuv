@@ -1,5 +1,6 @@
 ﻿<template>
   <require from="./klijent.css"></require>
+  <require from="../../../helper/grid-i18n"></require>
 
   <a href="javascript:void()" click.delegate="router.navigateBack()">
     <i class="material-icons md-36">arrow_back</i>
@@ -9,97 +10,158 @@
 
   <div class="md-card">
     <div class="md-card-content">
-      <h3 class="heading_a">${klijent.id === 0 ? 'Novi klijent' : klijent.naziv}</h3>
-      <div class="uk-grid uk-grid-divider" data-uk-grid-margin>
-        <div class="uk-width-large-4-10 uk-width-medium-4-10 uk-width-small-1">
+      <ul if.bind="!printLabela" id="nalogtabs" class="uk-tab" data-uk-tab="{connect:'#tab1', animation:'scale'}">
 
-          <div if.bind="klijent.id !== 0" class="uk-input-group">
-            <label class="uk-text-small">Broj</label>
-            <input type="text" value.bind="klijent.rbr" disabled.bind="klijent.id !== 0" />
-          </div>
-          <div class="uk-input-group">
-            <label class="uk-text-small">Naziv</label>
-            <input type="text" value.bind="klijent.naziv" />
-          </div>
-          <div class="uk-input-group">
-            <label class="uk-text-small">PIB</label>
-            <input type="text" value.bind="klijent.pib" />
-          </div>
-          <div class="uk-input-group">
-            <label class="uk-text-small">Adresa</label>
-            <input type="text" value.bind="klijent.adresa" />
-          </div>
-          <div class="uk-input-group">
-            <label class="uk-text-small">Mesto</label>
-            <input type="text" value.bind="klijent.mesto" />
-          </div>
-          <div class="uk-input-group">
-            <label class="uk-text-small">Država</label>
-            <input type="text" value.bind="klijent.drzava" />
-          </div>
-          <h5>Kontakti</h5>
-          <!--<ul class="uk-list">
+        <li class="uk-active">
+          <a href="#">
+            <i class="material-icons md-24 md-color-light-green-600">business</i>
+            <h3 style="display: inline; margin-left: 5px">${'Podaci o klijentu' & t}</h3>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <i class="material-icons md-24 ${istorija.length===0 ? 'md-color-disabled' : 'md-color-light-green-600'}">assignment</i>
+            <h3 style="display: inline; margin-left: 5px">${'Ponude' & t}</h3>
+          </a>
+        </li>
+      </ul>
+      <ul id="tab1" class="uk-switcher uk-margin">
+        <li>
+          <div class="uk-grid uk-grid-divider" data-uk-grid-margin>
+            <div class="uk-width-large-3-10 uk-width-medium-3-10 uk-width-small-1-1">
 
-            <li repeat.for="kontakt of klijent.kontakti">
-              <div class="md-list-content">
-                <span class="md-list-heading">${kontakt.ime}</span>
-                <span class="uk-margin-right">
-                  <span style="margin-left: 15px;" class="uk-badge">${kontakt.oblast}</span>
-                </span>
-                <span class="uk-margin-right">
-                  <i class="material-icons">email</i> <a href="mailto:${kontakt.email}">${kontakt.email}</a>
-                </span>
-              </div>
+
+
+              <h3 class="heading_a">${klijent.id === 0 ? 'Novi klijent' : klijent.naziv & t}</h3>
               <br />
-            </li>
-          </ul>-->
-          <table class="uk-table uk-text-small uk-table-condensed">
-            <thead>
-              <tr>
-                <th>Ime</th>
-                <th>Oblast</th>
-                <th>Email</th>
-                <th>Telefon</th>
-                <th>Opcije</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr repeat.for="kontakt of klijent.kontakti">
-                <td if.bind="!kontakt.obrisan">
-                  <a click.delegate="edit(kontakt, $index)">${kontakt.ime}</a>
-                </td>
-                <td if.bind="!kontakt.obrisan">
-                  <span if.bind="kontakt.oblast" class="uk-badge">${kontakt.oblast}</span>
-                </td>
-                <td if.bind="!kontakt.obrisan">
-                  <i if.bind="kontakt.email" class="material-icons">email</i>
-                  <a href="mailto:${kontakt.email}">${kontakt.email}</a>
-                </td>
-                <td if.bind="!kontakt.obrisan">
-                  <i if.bind="kontakt.telefon" class="material-icons">phone</i>
-                  ${kontakt.telefon}
-                </td>
-                <td if.bind="!kontakt.obrisan">
-                  <a click.delegate="edit(kontakt, $index)"><i class="material-icons">edit</i></a>
-                  <a click.delegate="delete(kontakt, $index)"><i class="material-icons">delete</i></a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <a click.delegate="novi(kontakt, $index)"><i class="material-icons">create</i> Novi kontakt</a>
-        </div>
+              <form class="uk-form uk-form-horizontal">
 
 
-      </div>
-      <br />
-      <br />
-      <button class="md-btn md-btn-primary md-btn-icon" href="javascript:void(0)" click.delegate="snimi()">
-        <i class="uk-icon-save"></i>
-        Snimi
-      </button>
 
+                <div if.bind="klijent.id !== 0" class="uk-form-row">
+                  <label class="uk-form-label" t="Broj">Broj</label>
+                  <div class="uk-form-controls">
+                    <input type="text" value.bind="klijent.rbr" disabled.bind="klijent.id !== 0" style="width: 100%;" />
+                  </div>
+                </div>
+                <div class="uk-form-row">
+                  <label class="uk-form-label" t="Naziv">Naziv</label>
+                  <div class="uk-form-controls">
+                    <input type="text" value.bind="klijent.naziv" style="width: 100%;" />
+                  </div>
+                </div>
+                <div class="uk-form-row">
+                  <label class="uk-form-label" t="PIB">PIB</label>
+                  <div class="uk-form-controls">
+                    <input type="text" value.bind="klijent.pib" style="width: 100%;" />
+                  </div>
+                </div>
+                <div class="uk-form-row">
+                  <label class="uk-form-label" t="Adresa">Adresa</label>
+                  <div class="uk-form-controls">
+                    <input type="text" value.bind="klijent.adresa" style="width: 100%;" />
+                  </div>
+                </div>
+                <div class="uk-form-row">
+                  <label class="uk-form-label" t="Mesto">Mesto</label>
+                  <div class="uk-form-controls">
+                    <input type="text" value.bind="klijent.mesto" style="width: 100%;" />
+                  </div>
+                </div>
+                <div class="uk-form-row">
+                  <label class="uk-form-label" t="Država">Država</label>
+                  <div class="uk-form-controls">
+                    <input type="text" value.bind="klijent.drzava" style="width: 100%;" />
+                  </div>
+                </div>
+
+              </form>
+
+            </div>
+
+
+            <div class="uk-width-large-7-10 uk-width-medium-7-10 uk-width-small-1-1">
+              <br />
+              <h5 t="Kontakti">Kontakti</h5>
+              <table class="uk-table uk-text-small uk-table-condensed">
+                <thead>
+                  <tr>
+                    <th t="Ime i prezime">Ime</th>
+                    <th t="Oblast">Oblast</th>
+                    <th t="Email">Email</th>
+                    <th t="Telefon">Telefon</th>
+                    <th t="Opcije">Opcije</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr repeat.for="kontakt of klijent.kontakti">
+                    <td if.bind="!kontakt.obrisan">
+                      <a click.delegate="edit(kontakt, $index)">${kontakt.ime}</a>
+                    </td>
+                    <td if.bind="!kontakt.obrisan">
+                      <span if.bind="kontakt.oblast" class="uk-badge">${kontakt.oblast}</span>
+                    </td>
+                    <td if.bind="!kontakt.obrisan">
+                      <i if.bind="kontakt.email" class="material-icons">email</i>
+                      <a href="mailto:${kontakt.email}">${kontakt.email}</a>
+                    </td>
+                    <td if.bind="!kontakt.obrisan">
+                      <i if.bind="kontakt.telefon" class="material-icons">phone</i>
+                      ${kontakt.telefon}
+                    </td>
+                    <td if.bind="!kontakt.obrisan">
+                      <a click.delegate="edit(kontakt, $index)"><i class="material-icons">edit</i></a>
+                      <a click.delegate="delete(kontakt, $index)"><i class="material-icons">delete</i></a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <a click.delegate="novi(kontakt, $index)"><i class="material-icons">create</i> ${"Novi kontakt" & t}</a>
+
+
+            </div>
+
+
+          </div>
+          <br />
+          <br />
+          <button class="md-btn md-btn-primary md-btn-icon" href="javascript:void(0)" click.delegate="snimi()">
+            <i class="uk-icon-save"></i>
+            ${"Snimi" & t}
+          </button>
+        </li>
+        <li>
+
+          <a class="md-btn md-btn-primary md-btn-icon-mini md-btn-wave-light" href="javascript:void()" click.delegate="novi()">
+            <i class="material-icons md-24">add</i>
+            ${"Nova ponuda" & t}
+          </a>
+          <br />
+          <br />
+          <ak-grid grid-i18n k-widget.bind="grid"
+                   k-data-source.bind="dsPonude"
+                   k-pageable.bind="common.pageable"
+                   k-filterable.bind="common.filterobj"
+                   k-sortable.bind="true">
+            <!-- Column definitions in HTML -->
+            <ak-col k-title="${'Rbr' & t}" k-field="rbr"></ak-col>
+            <ak-col k-title="${'Klijent' & t}" k-field="klijent.naziv"></ak-col>
+            <ak-col k-title="${'Broj' & t}" k-field="broj"></ak-col>
+            <ak-col k-title="${'Datum ponude' & t}" k-field="datumPonude" k-format="{0:dd.MM.yyyy}" k-width="130px"></ak-col>
+            <ak-col k-title="${'Opcije' & t}">
+              <ak-template>
+                <!--<button class="uk-button-mini uk-button-primary uk-icon-edit" click.delegate="edit($this)">Izmena</button>-->
+                <!--<a href="javascript:void()"  click.delegate="izmena($this)" class="uk-icon-justify uk-icon-edit"></a>-->
+                <a href="javascript:void()" click.delegate="izmena($this)">
+                  <i class="md-icon material-icons">mode_edit</i>
+                </a>
+              </ak-template>
+            </ak-col>
+            <!--<ak-col k-command.bind="['edit', 'destroy']" k-title="&nbsp;" k-width.bind="200"></ak-col>-->
+          </ak-grid>
+        </li>
+      </ul>
     </div>
   </div>
-
 
 </template>

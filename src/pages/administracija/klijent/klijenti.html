@@ -1,22 +1,23 @@
 ﻿<template>
+  <require from="../../../helper/grid-i18n"></require>
   <a class="md-btn md-btn-primary md-btn-icon-mini md-btn-wave-light" click.delegate="novi()">
     <i class="uk-icon-user "></i>
-    Novi klijent
+    ${"Novi klijent" & t}
   </a>
   <br />
   <br />
-  <ak-grid k-widget.bind="grid"
+  <ak-grid grid-i18n k-widget.bind="grid"
            k-data-source.bind="datasource"
-           k-pageable.bind="pageable"
-           k-filterable.bind="filterobj"
+           k-pageable.bind="common.pageable"
+           k-filterable.bind="common.filterobj"
            k-sortable.bind="true">
     <!-- Column definitions in HTML -->
-    <ak-col k-title="Naziv" k-field="naziv"></ak-col>
-    <ak-col k-title="PIB" k-field="pib"></ak-col>
-    <ak-col k-title="Adresa" k-field="adresa"></ak-col>
-    <ak-col k-title="Mesto" k-field="mesto"></ak-col>
-    <ak-col k-title="Država" k-field="drzava"></ak-col>
-    <ak-col k-title="Opcije">
+    <ak-col k-title="${'Naziv' & t}"  k-field="naziv"></ak-col>
+    <ak-col k-title="${'PIB' & t}" k-field="pib"></ak-col>
+    <ak-col k-title="${'Adresa' & t}" k-field="adresa"></ak-col>
+    <ak-col k-title="${'Mesto' & t}" k-field="mesto"></ak-col>
+    <ak-col k-title="${'Država' & t}" k-field="drzava"></ak-col>
+    <ak-col k-title="${'Opcije' & t}">
       <ak-template>
         <!--<button class="uk-button-mini uk-button-primary uk-icon-edit" click.delegate="edit($this)">Izmena</button>-->
         <!--<a href="javascript:void()"  click.delegate="izmena($this)" class="uk-icon-justify uk-icon-edit"></a>-->

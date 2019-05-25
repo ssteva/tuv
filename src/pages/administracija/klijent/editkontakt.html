@@ -9,21 +9,21 @@
     </ux-dialog-header>
     <ux-dialog-body>
 
-      <label>Ime i prezime</label>
+      <label>${"Ime i prezime" & t}</label>
       <input type="text" class="md-input" value.bind="kontakt.ime" />
-      <label>Oblast</label>
+      <label>${"Oblast" & t}</label>
       <input type="text" class="md-input" value.bind="kontakt.oblast" />
-      <label>Email</label>
+      <label>${"Email" & t}</label>
       <input type="text" class="md-input" value.bind="kontakt.email" />
-      <label>Telefon</label>
+      <label>${"Telefon" & t}</label>
       <input type="text" class="md-input" value.bind="kontakt.telefon" />
 
     </ux-dialog-body>
     <ux-dialog-footer>
       
-      <button class="md-btn  md-btn-primary md-btn-icon-mini"  click.delegate="potvrdi()">
+      <button class="md-btn  md-btn-primary md-btn-icon-mini" click.delegate="potvrdi()">
         <i class="material-icons">check</i>
-        Potvrda
+        ${"Potvrda" & t}
       </button>
     </ux-dialog-footer>
   </ux-dialog>

@@ -7,19 +7,20 @@ import 'kendo/js/kendo.numerictextbox.js';
 import { Common } from 'helper/common';
 import { AltairCommon } from 'helper/altair_admin_common';
 import { Router } from 'aurelia-router';
+import { I18N } from 'aurelia-i18n';
 
-@inject(AuthService, EntityManager, AltairCommon,  Endpoint.of(), Common, Router)
+@inject(AuthService, EntityManager, AltairCommon,  Endpoint.of(), Common, Router, I18N)
 export class Kurs {
   
 
-  constructor(authService, em, ac,  repo, common, router) {
+  constructor(authService, em, ac,  repo, common, router, i18n) {
     this.authService = authService;
     this.repo = repo;
     //this.repoKorisnik = em.getRepository('korisnik');
     this.ac = ac;
     this.common = common;
     this.router = router;
-
+    this.i18n = i18n;
     let payload = this.authService.getTokenPayload();
     if (payload) {
       this.korisnik = payload.unique_name;
@@ -58,9 +59,9 @@ export class Kurs {
       this.repo.post('KursnaLista/', this.lista)
         .then(result => {
           if (result.success) {
-            toastr.success("Uspešno snimljeno");
+            toastr.success(this.i18n.tr("Uspešno snimljeno"));
           } else {
-            toastr.error("Greška prilikom upisa");
+            toastr.error(this.i18n.tr("Greška prilikom upisa"));
           }
         })
         .catch(err => {

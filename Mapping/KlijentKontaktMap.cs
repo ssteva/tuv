@@ -23,7 +23,7 @@ namespace Tuv.Mapping
       Map(x => x.Ime).CustomSqlType("nvarchar(50)");
       Map(x => x.Email).CustomSqlType("nvarchar(50)");
       Map(x => x.Telefon).CustomSqlType("nvarchar(50)");
-      References(x => x.Klijent).Cascade.None();
+      References(x => x.Klijent).Cascade.None().Not.Update();
     }
   }
 }

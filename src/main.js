@@ -49,12 +49,43 @@ export function configure(aurelia) {
 
                 }
               });
+          })
+          .registerEndpoint('fajl',
+            configure => {
+              configure.withBaseUrl('api/');
+              configure.withDefaults({
+                //credentials: 'same-origin',
+                headers: {
+                  'Accept': 'application/json',
+                  'X-Requested-With': 'Fetch'
+                }
+              })
+              configure.withInterceptor({
+                request(request) {
+                  let ac = aurelia.container.get(AltairCommon);
+                  //toastr.success(`Requesting ${request.method} ${request.url}`);
+                  ac.altair_helpers.content_preloader_show('md');
+                  return request;
+                  // you can return a modified Request, or you can short-circuit the request by returning a Response
+                },
+                response(response) {
+                  let ac = aurelia.container.get(AltairCommon);
+
+                  ac.altair_helpers.content_preloader_hide();
+                  //toastr.success(`Received ${response.status} ${response.url}`);
+                  return response; // you can return a modified Response
+                  //return response.json().then(Promise.reject.bind(Promise));
+
+                }
+              });
             })
           .setDefaultEndpoint('lokal')
       })
     .plugin('aurelia-orm',
       builder => {
-        builder.registerEntities(entiteti.KorisnikEntity, entiteti.KlijentEntity, entiteti.KontaktEntity);
+        builder.registerEntities(entiteti.KorisnikEntity, entiteti.KlijentEntity, entiteti.KontaktEntity,
+          entiteti.PrimarnaEntity, entiteti.SekundarnaEntity, entiteti.TercijarnaEntity, entiteti.ObimEntity
+          );
       })
     //.plugin('aurelia-mousetrap', config => {
     //  // Example keymap
@@ -107,7 +138,7 @@ export function configure(aurelia) {
         attributes: aliases,
         lng: 'sr',
         fallbackLng: 'en',
-        debug: false
+        debug: true
       });
   });
   //$(':input').keypress(function(e){

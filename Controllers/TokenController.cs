@@ -134,6 +134,7 @@ namespace Tuv.Controllers
       var username = principalOriginal.Claims.First(c => c.Type == ClaimTypes.Name);
       var email = principalOriginal.Claims.First(c => c.Type == ClaimTypes.Email);
       var userid = principalOriginal.Claims.First(c => c.Type == ClaimTypes.NameIdentifier);
+      
       var subj = new ClaimsIdentity();
 
       var user = _userManager.KorisnikPostoji(username.Value);
@@ -148,6 +149,7 @@ namespace Tuv.Controllers
       subj.AddClaim(new Claim(ClaimTypes.Name, username.Value));
       subj.AddClaim(new Claim(JwtRegisteredClaimNames.UniqueName, username.Value));
       subj.AddClaim(new Claim(ClaimTypes.NameIdentifier, userid.Value));
+      subj.AddClaim(new Claim("Jezik", user.Lang));
       subj.AddClaims(roles.Select(r => new Claim(ClaimTypes.Role, r)));
 
       //var expires = DateTime.UtcNow.AddHours(_satiT);
@@ -200,6 +202,7 @@ namespace Tuv.Controllers
                   new Claim(ClaimTypes.Email, user.Email),
                   new Claim(ClaimTypes.Name, user.KorisnickoIme),
                   new Claim(JwtRegisteredClaimNames.UniqueName, user.KorisnickoIme),
+                  new Claim("Jezik", user.Lang),
                   new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
         });
         subj.AddClaims(roles.Select(r => new Claim(ClaimTypes.Role, r)));

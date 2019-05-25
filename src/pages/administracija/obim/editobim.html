@@ -1,0 +1,24 @@
+﻿<template>
+  <require from="./editobim.css"></require>
+  <require from="resources/elements/closebutton.html"></require>
+  <require from="aurelia-kendoui-bridge/dropdownlist/dropdownlist"></require>
+  <require from="aurelia-kendoui-bridge/common/template"></require>
+  <ux-dialog>
+    <ux-dialog-header>
+      <closebutton naslov="${obj.naslov}" click.trigger="dialogController.cancel()"></closebutton>
+    </ux-dialog-header>
+    <ux-dialog-body>
+      <label> ${obj.edit ? "Šifra" : "Predlog šifre" & t}</label>
+      <input type="text" class="md-input" value.bind="obj.obj.sifra" />
+      <label t="Naziv">Naziv</label>
+      <input type="text" class="md-input" value.bind="obj.obj.naziv" />
+      
+    </ux-dialog-body>
+    <ux-dialog-footer>
+      <button class="md-btn md-btn-primary md-btn-icon" href="javascript:void(0)" click.delegate="potvrdi()">
+        <i class="uk-icon-save"></i>
+        ${"Snimi" & t}
+      </button>
+    </ux-dialog-footer>
+  </ux-dialog>
+</template>

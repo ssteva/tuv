@@ -1,0 +1,33 @@
+﻿<template>
+  <require from="./fajlovi.css"></require>
+  <h4>${naslov}</h4>
+  <input if.bind="fajlovi.length < maksimum" id="dodaj" type="file" change.delegate="fileSelected($event)">
+  <ul class="md-list">
+
+    <li repeat.for="fajl of fajlovi">
+      <div class="md-list-content">
+
+        <div show.bind="fajlovi.length>0">
+          <span class="md-list-heading"><a download href.bind="'api/Dokument/' + fajl.id">${fajl.fileName}</a></span>
+          <div class="uk-margin-small-top">
+            <span data-uk-tooltip title="${'Datum postavke fajla' & t}" class="uk-margin-right">
+              <i class="material-icons">&#xE192;</i> <span class="uk-text-muted uk-text-small">${fajl.dateUploaded | datumVremeFajl}</span>
+            </span>
+            <span data-uk-tooltip title="${'Datum fajla' & t}" class="uk-margin-right">
+              <i class="material-icons">&#xE192;</i> <span class="uk-text-muted uk-text-small">${fajl.dateLastModified | datumVremeFajl}</span>
+            </span>
+            <span data-uk-tooltip title="${'Veličina' & t}" class="uk-margin-right">
+              <i class="material-icons">photo_size_select_large</i> <span class="uk-text-muted uk-text-small">${fajl.size} bytes</span>
+            </span>
+            <!--<span data-uk-tooltip title="${'Obriši' & t}" class="uk-margin-right">
+              <a click.delegate="deletePonudaDokument(fajl.id)"><i class="material-icons">delete_forever</i></a>
+            </span>-->
+            <!--<a class="md-btn md-btn-primary md-btn-mini md-btn-wave-light" href="javascript:void(0)" click.delegate="deletePonudaDokument(fajl.id)">Mini</a>-->
+            <a class="uk-text-small" href="javascript:void(0)" click.delegate="deletePonudaDokument(fajl.id)">${'Obriši' & t}</a>
+
+          </div>
+        </div>
+      </div>
+    </li>
+  </ul>
+</template>

@@ -19,9 +19,19 @@ namespace Tuv.Mapping
     {
       Table("tPonuda");
       Id(x => x.Id).GeneratedBy.Identity();
-      Map(x => x.DatumPonude);
-      
+      Map(x => x.Rbr);
+      Map(x => x.Broj).CustomSqlType("nvarchar(50)");
+      Map(x => x.OpisPosla).CustomSqlType("nvarchar(1000)");
+      Map(x => x.DatumPonude).CustomSqlType("date");
+      Map(x => x.DatumPrihvatanja).CustomSqlType("date");
+      Map(x => x.Prihvacena);
+      Map(x => x.Valuta).CustomSqlType("nvarchar(3)");
+      Map(x => x.Vrednost);
+      Map(x => x.Komentar).CustomSqlType("nvarchar(1000)");
 
+      References(x => x.Klijent).Cascade.None();
+      References(x => x.ZaduzenZaPonudu).Column("ZaduzenZaPonuduId").Cascade.None();
+      References(x => x.ZaduzenZaProjekat).Column("ZaduzenZaProjekatId").Cascade.None();
     }
   }
 }

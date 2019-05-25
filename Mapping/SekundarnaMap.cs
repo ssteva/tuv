@@ -21,7 +21,7 @@ namespace Tuv.Mapping
       Id(x => x.Id).GeneratedBy.Identity();
       Map(x => x.Sifra);
       Map(x => x.Naziv);
-      References(x => x.Primarna).Cascade.All().Not.Update();
+      References(x => x.Primarna).Not.Update();
 
     }
   }

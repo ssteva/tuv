@@ -65,6 +65,26 @@ namespace Tuv.Controllers.api
       return lista;
     }
 
+    [HttpGet()]
+    [Route("[Action]")]
+    public IList<Korisnik> ListaIzvrsitelja()
+    {
+      var query = _session.QueryOver<Korisnik>()
+                  .Where(x => !x.Obrisan)
+                  .And(x => x.Uloga == "Rukovodilac");
+      var lista = query.List<Korisnik>();
+      return lista;
+    }
+    [HttpGet()]
+    [Route("[Action]")]
+    public IList<Korisnik> ListaRukovodioca()
+    {
+      var query = _session.QueryOver<Korisnik>()
+                  .Where(x => !x.Obrisan)
+                  .And(x => x.Uloga == "Izvršilac");
+      var lista = query.List<Korisnik>();
+      return lista;
+    }
     [HttpPost]
     public Korisnik Post([FromBody] Korisnik korisnik)
     {
@@ -114,6 +134,39 @@ namespace Tuv.Controllers.api
 
       return Ok("Uspešno promenjena lozinka");
 
+    }
+
+
+    [HttpPost]
+    [Route("[Action]")]
+    public ActionResult PromenaJezika([FromBody] JObject novaLozinka)
+    {
+      //var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+      //if (!User.IsInRole("Administrator"))
+      //    return Unauthorized();
+      //var user = _session.QueryOver<Korisnik>()
+      //    .Where(u => u.KorisnickoIme == User.Identity.Name || u.Email == User.Identity.Name)
+      //    .List<Korisnik>()
+      //    .FirstOrDefault();
+
+      //if (user == null)
+      //{
+      //    return BadRequest("Greška prilikom postavljanja lozinke!");
+      //}
+
+      if (string.IsNullOrEmpty(novaLozinka["jezik"].ToString()))
+      {
+        return BadRequest("An error has occured");
+      }
+
+      var res =  _userManager.KorisnikPromenaJezika(User.Identity.Name, novaLozinka["jezik"].ToString());
+
+
+      
+
+      
+
+      return Ok();
     }
   }
 }

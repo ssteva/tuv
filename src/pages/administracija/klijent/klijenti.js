@@ -2,8 +2,6 @@ import {Endpoint} from 'aurelia-api';
 import {inject} from 'aurelia-framework';
 import {AuthService} from 'aurelia-authentication';
 import {EntityManager} from 'aurelia-orm';
-
-import {EditKlijent} from './editklijent'
 import 'kendo/js/kendo.grid';
 import 'kendo/js/kendo.dropdownlist';
 import * as toastr from 'toastr';

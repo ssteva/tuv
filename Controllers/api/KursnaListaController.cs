@@ -35,7 +35,7 @@ namespace Tuv.Controllers.api
     private readonly Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor;
     public KursnaListaController(ISession session, ILoggerFactory loggerFactory, Microsoft.AspNetCore.Http.IHttpContextAccessor contextAccessor)
     {
-      _logger = loggerFactory.CreateLogger<KorisnikController>();
+      _logger = loggerFactory.CreateLogger<KursnaListaController>();
       _session = session;
       _httpContextAccessor = contextAccessor;
     }

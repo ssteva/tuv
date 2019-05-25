@@ -15,6 +15,7 @@ import { activationStrategy } from 'aurelia-router';
 import { I18N } from 'aurelia-i18n';
 import toastr from 'toastr';
 import 'kendo/js/kendo.dropdownlist';
+import moment from 'moment';
 
 @inject(AuthService)
 class AuthenticateStepRole {
@@ -74,7 +75,10 @@ export class App {
     });
     let payload = this.authService.getTokenPayload();
     if (payload) {
-      this.korisnik = payload.unique_name;
+      if (Array.isArray(payload.unique_name))
+        this.korisnik = payload.unique_name[0];
+      else
+        this.korisnik = payload.unique_name;
       this.role = payload.role;
       this.jezik = payload.Jezik;
       this.odabranijezik = this.jezik;
@@ -94,7 +98,10 @@ export class App {
   get ulogovan() {
     let payload = this.authService.getTokenPayload();
     if (payload) {
-      this.korisnik = payload.unique_name;
+      if (Array.isArray(payload.unique_name))
+        this.korisnik = payload.unique_name[0];
+      else
+        this.korisnik = payload.unique_name;
       this.role = payload.role;
       return `prijavljeni ste kao: ${payload.Ime} ${payload.Prezime} (${this.korisnik}), uloga: ${this.role}, email: ${payload.email}`;
     }
@@ -127,6 +134,8 @@ export class App {
       });
   }
   configureRouter(config, router) {
+    //config.options.pushState = true;
+    //config.options.root = '/';
     config.title = 'TUV';
     config.addPipelineStep('authorize', AuthenticateStep);
     config.addPipelineStep('authorize', AuthenticateStepRole);
@@ -277,7 +286,12 @@ export class App {
       FastClick.attach(document.body);
     }
     this.subscriber = this.ea.subscribe('router:navigation:processing', response => {
-      console.log('Router ');
+      //console.log('Router ');
+      //this.altairCommon.altair_helpers.content_preloader_show('md');
+    });
+    this.subscriber2 = this.ea.subscribe('router:navigation:complete', function (response) {
+      //console.log('Router ');
+      //this.altairCommon.altair_helpers.content_preloader_hide();
     });
   }
   detached() {

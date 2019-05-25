@@ -143,7 +143,9 @@
       "assets/img/gallery/*": "wwwroot/assets/img/gallery",
       "assets/img/ecommerce/*": "wwwroot/assets/img/ecommerce",
       "assets/img/avatars/*": "wwwroot/assets/img/avatars",
-      "assets/img/*": "wwwroot/assets/img"
+      "assets/img/*": "wwwroot/assets/img",
+      "assets/locales/en/*": "wwwroot/locales/en",
+      "assets/locales/sr/*": "wwwroot/locales/sr"
     },
     "loader": {
       "type": "require",

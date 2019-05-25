@@ -22,7 +22,6 @@ namespace Tuv.Mapping
       Map(x=>x.KorisnickoIme).Unique();
       Map(x=>x.Ime);
       Map(x=>x.Prezime);
-      Map(x=>x.Naziv);
       Map(x => x.Email);
       Map(x=>x.Lozinka).CustomSqlType("binary(64)");
       Map(x => x.So);

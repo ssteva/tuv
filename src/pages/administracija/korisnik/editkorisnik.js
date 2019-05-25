@@ -3,13 +3,15 @@ import { DialogController, DialogService } from 'aurelia-dialog';
 import { AuthService } from 'aurelia-authentication';
 import { AltairCommon } from 'helper/altair_admin_common';
 import 'kendo/js/kendo.dropdownlist';
+import { I18N } from 'aurelia-i18n';
 
-@inject(DialogController, DialogService, AuthService, AltairCommon)
+@inject(DialogController, DialogService, AuthService, AltairCommon, I18N)
 export class EditKorisnik {
-  constructor(dialogController, dialogService, authService, ac) {
+  constructor(dialogController, dialogService, authService, ac, i18n) {
     this.dialogController = dialogController;
     this.dialogService = dialogService;
     this.ac = ac;
+    this.i18n = i18n;
     // this.authService = authService;
     // let payload = this.authService.getTokenPayload();
     // this.korisnik = payload.unique_name;
@@ -39,22 +41,29 @@ export class EditKorisnik {
     this.dialogController.cancel();
   }
   resetLozinke() {
-    if (confirm('Da li želite da se resetujete loziku za korisnika ' + this.korisnik.email + '?')) {
-      this.repo.post('Korisnik/ResetLozinke', this.korisnik)
+    UIkit.modal.confirm(this.i18n.tr("Da li želite da se resetujete loziku za korisnika") + " " + this.korisnik.email + "?", () => {
+      this.repo.post("Korisnik/ResetLozinke", this.korisnik)
         .then(result => {
-          toastr.info('Nova lozinka je ' + this.korisnik.korisnickoIme);
+          toastr.info(this.i18n.tr("Nova lozinka je") + " " + this.korisnik.korisnickoIme);
         });
-    };
+    });
   }
   potvrdi() {
-    if (confirm("Da li želite da snimite izmene?")) {
+    if (!this.korisnik.email) {
+      toastr.error(this.i18n.tr("Email je obavezan unos"));
+      return;
+    }
+    UIkit.modal.confirm(this.i18n.tr("Da li želite da sačuvate izmene?"), () => {
       this.repo.post('Korisnik', this.korisnik)
         .then(res => {
-          toastr.success("Uspešno snimljeno");
+          toastr.success(this.i18n.tr("Uspešno snimljeno"));
           this.dialogController.ok();
         })
-        .error(err => toastr.error(err.statusText));
-    }
+        .catch(err => {
+          toastr.error(err);
+        });
+    });
   }
+
 
 }

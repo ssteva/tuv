@@ -51,7 +51,13 @@ namespace Tuv.Helper
       query.SetParameter("lozinka", lozinka, NHibernateUtil.String);
       return query.UniqueResult<bool>();
     }
-
+    public bool KorisnikPromenaJezika(string korisnickoIme, string jezik)
+    {
+      var query = _session.CreateSQLQuery("exec KorisnikPromenaJezika :korisnickoime, :jezik");
+      query.SetParameter("korisnickoime", korisnickoIme, NHibernateUtil.String);
+      query.SetParameter("jezik", jezik, NHibernateUtil.String);
+      return query.UniqueResult<bool>();
+    }
     public bool KorisnikPromenaLozinke(string korisnickoIme, string lozinka, string staralozinka)
     {
       var query = _session.CreateSQLQuery("exec KorisnikPromenaLozinke :korisnickoime, :staralozinka, :lozinka");

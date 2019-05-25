@@ -35,7 +35,7 @@ namespace Tuv.Controllers.api
     private readonly Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor;
     public KlijentController(ISession session, ILoggerFactory loggerFactory, Microsoft.AspNetCore.Http.IHttpContextAccessor contextAccessor)
     {
-      _logger = loggerFactory.CreateLogger<KorisnikController>();
+      _logger = loggerFactory.CreateLogger<KlijentController>();
       _session = session;
       _httpContextAccessor = contextAccessor;
     }
@@ -49,6 +49,14 @@ namespace Tuv.Controllers.api
       else
         klijent = _session.Get<Klijent>(id);
       return klijent;
+    }
+
+    [HttpGet]
+    [Route("[Action]")]
+    public ActionResult dajSveKlijente()
+    {
+      var upit = _session.QueryOver<Klijent>().Where(x => !x.Obrisan);
+      return Ok(upit.List<Klijent>());
     }
 
     [HttpGet]

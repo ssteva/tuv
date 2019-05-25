@@ -9,18 +9,20 @@ import 'kendo/js/kendo.dropdownlist';
 import * as toastr from 'toastr';
 import { Common } from 'helper/common';
 import { AltairCommon } from 'helper/altair_admin_common';
+import { I18N } from 'aurelia-i18n';
 
-@inject(AuthService, EntityManager, AltairCommon, DialogService, Endpoint.of(), Common)
+@inject(AuthService, EntityManager, AltairCommon, DialogService, Endpoint.of(), Common, I18N)
 export class Korisnici {
-  roles = ["Komercijalista", "Supervizor", "Administrator"];
+  
 
-  constructor(authService, em, ac, dialogService, repo, common) {
+  constructor(authService, em, ac, dialogService, repo, common, i18n) {
     this.authService = authService;
     this.repo = repo;
     //this.repoKorisnik = em.getRepository('korisnik');
     this.ac = ac;
     this.dialogService = dialogService;
     this.common = common;
+    this.i18n = i18n;
     this.repoKorisnik = em.getRepository('korisnik');
     let payload = this.authService.getTokenPayload();
     if (payload) {
@@ -51,19 +53,19 @@ export class Korisnici {
     // this.grid.refresh();
     let objm = {
       naslov: `${obj.ime} ${obj.prezime}`,
-      roles: this.roles,
+      roles: this.common.roles,
       korisnik: obj,
       repo: this.repo
     };
 
     this.dialogService.open({viewModel: EditKorisnik, model: objm})
       .whenClosed(response => {
-        console.log(response);
+        
         if (!response.wasCancelled) {
-          console.log('not cancelled');
+          
           this.datasource.read();
       } else {
-        console.log('cancelled');
+        
       }
     });
   }
@@ -72,7 +74,7 @@ export class Korisnici {
     this.grid.refresh();
   }
   potvrdi(obj, e) {
-    if (confirm("Da li želite da snimite izmene?")) {
+    if (confirm(this.i18n.tr("Da li želite da sačuvate izmene?"))) {
       this.repo.post('Korisnik', obj)
         .then(res => {
           toastr.success("Uspešno snimljeno");
@@ -87,22 +89,22 @@ export class Korisnici {
   noviKorisnik() {
     if (this.role !== 'Administrator') return;
     let obj = {
-      naslov: "Novi korisnik",
-      roles: this.roles,
+      naslov: this.i18n.tr("Novi korisnik"),
+      roles: this.common.roles,
       korisnik: this.repoKorisnik.getNewEntity(),
       repo: this.repo
     };
 
     this.dialogService.open({viewModel: EditKorisnik,model: obj})
       .then(response => {
-        console.log(response);
+        
         if (!response.wasCancelled) {
-          console.log('not cancelled');
+          
           this.datasource.read();
       } else {
-        console.log('cancelled');
+        
       }
-      console.log(response.output);
+      
     });
   }
 }

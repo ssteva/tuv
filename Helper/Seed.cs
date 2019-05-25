@@ -43,6 +43,7 @@ namespace Tuv.Helper
       SeedData("exec seed_sekundarna");
       SeedData("exec seed_tercijarna");
       SeedData("exec seed_ObimPoslovanja");
+      SeedData("exec seed_korisnici");
 
     }
 
@@ -114,47 +115,44 @@ namespace Tuv.Helper
       //   UserName = "dev"
       // };
       // SeedUser(dev, "ninja", "Administrator");
-      var dev = new Korisnik()
-      {
+      //var dev = new Korisnik()
+      //{
 
-        Aktivan = true,
-        Email = "stevo.sudjic@gmail.com",
-        Ime = "Dev",
-        Prezime = "",
-        Naziv = "dev",
-        Uloga = "Administrator",
-        KorisnickoIme = "dev",
-        Lozinka = "ninja"
-      };
-      SeedUserN(dev);
+      //  Aktivan = true,
+      //  Ime = "Testni",
+      //  Prezime = "Korisnik",
+      //  Uloga = "Administrator",
+      //  KorisnickoIme = "test",
+      //  Lozinka = "Test123"
+      //};
+      //SeedUserN(dev);
 
       var admin = new Korisnik()
       {
 
         Aktivan = true,
-        Email = "stevo.sudjic@gmail.com",
         Ime = "Administrator",
+        Email = "proba@test.com",
         Prezime = "",
-        Naziv = "Administrator",
         Uloga = "Administrator",
         KorisnickoIme = "admin",
-        Lozinka = "admin321"
+        Lozinka = "Admin321"
       };
       SeedUserN(admin);
 
-      var ssteva = new Korisnik()
-      {
+      //var ssteva = new Korisnik()
+      //{
 
-        Aktivan = true,
-        Email = "stevo.sudjic@gmail.com",
-        Ime = "Stevo",
-        Prezime = "Sudjic",
-        Naziv = "Administrator",
-        Uloga = "Administrator",
-        KorisnickoIme = "ssteva",
-        Lozinka = "Utorak3"
-      };
-      SeedUserN(ssteva);
+      //  Aktivan = true,
+      //  Email = "",
+      //  Ime = "Stevo",
+      //  Prezime = "Sudjic",
+      //  Uloga = "Administrator",
+      //  KorisnickoIme = "ssteva",
+      //  Lozinka = "Utorak3"
+      //};
+      //SeedUserN(ssteva);
+
     }
 
     // private void SeedUser(ApplicationUser user, string pass, string role)

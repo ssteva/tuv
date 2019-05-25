@@ -16,6 +16,7 @@
     "aurelia-authentication": "^3.8.2",
     "aurelia-bootstrapper": "^2.3.0",
     "aurelia-dialog": "^2.0.0-rc.5",
+    "aurelia-files": "^0.1.5",
     "aurelia-i18n": "^3.0.0-beta.7",
     "aurelia-kendoui-bridge": "^1.8.0",
     "aurelia-orm": "^7.0.1",

@@ -52,6 +52,66 @@ export class DataCache {
     });
     return promise;
   }
+  dajPonudeZaKlijenta(klijentid) {
+    var promise = new Promise((resolve, reject) => {
+
+      this.repo.find('Ponuda/PonudeZaKlijenta?id=' + klijentid)
+        .then(result => {
+          resolve(result);
+        })
+        .catch(err => reject(err));
+
+    });
+    return promise;
+  }
+  dajIzvrsioce() {
+    var promise = new Promise((resolve, reject) => {
+
+      this.repo.find('Korisnik/ListaIzvrsitelja')
+        .then(result => {
+          resolve(result);
+        })
+        .catch(err => reject(err));
+
+    });
+    return promise;
+  }
+  dajRukovodioce() {
+    var promise = new Promise((resolve, reject) => {
+
+      this.repo.find('Korisnik/ListaRukovodioca')
+        .then(result => {
+          resolve(result);
+        })
+        .catch(err => reject(err));
+
+    });
+    return promise;
+  }
+  dajSveKlijente(id) {
+    var promise = new Promise((resolve, reject) => {
+
+      this.repo.find('Klijent/dajSveKlijente')
+        .then(result => {
+          resolve(result);
+        })
+        .catch(err => reject(err));
+
+    });
+    return promise;
+  }
+  dajKlijenta(id) {
+    var promise = new Promise((resolve, reject) => {
+
+      this.repo.find('Klijent/' + id)
+        .then(result => {
+          resolve(result);
+        })
+        .catch(err => reject(err));
+
+    });
+    return promise;
+  }
   getPrimarna(force) {
     var promise = new Promise((resolve, reject) => {
       if (!this.primarna || force) {
@@ -112,8 +172,34 @@ export class DataCache {
     });
     return promise;
   }
-
-
+  dajDokumenta(entitet, entitetoipis, entitetid) {
+    var promise = new Promise((resolve, reject) => {
+      this.repo.find(`Dokument/Lista?entitet=${entitet}&entitetopis=${entitetoipis}&entitetid=${entitetid}`)
+          .then(result => {
+            if (result.success)
+              resolve(result.obj);
+            else {
+              reject("Greška prilikom dobijanja liste dokumenata");
+            }
+          })
+          .catch(err => reject(err));
+    });
+    return promise;
+  }
+  brisiDokument(id) {
+    var promise = new Promise((resolve, reject) => {
+      this.repo.find("Dokument/Brisi?id=" + id)
+        .then(result => {
+          if (result.success)
+            resolve(result.obj);
+          else {
+            reject("Error");
+          }
+        })
+        .catch(err => reject(err));
+    });
+    return promise;
+  }
 
   getStatusi(vrsta) {
     var promise = new Promise((resolve, reject) => {
