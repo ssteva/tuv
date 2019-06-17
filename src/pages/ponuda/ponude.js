@@ -1,7 +1,8 @@
 import {Endpoint} from 'aurelia-api';
 import {inject} from 'aurelia-framework';
 import {AuthService} from 'aurelia-authentication';
-import {EntityManager} from 'aurelia-orm';
+import { EntityManager } from 'aurelia-orm';
+import { DataCache } from 'helper/datacache';
 import 'kendo/js/kendo.grid';
 import 'kendo/js/kendo.dropdownlist';
 import * as toastr from 'toastr';
@@ -9,15 +10,16 @@ import { Common } from 'helper/common';
 import { AltairCommon } from 'helper/altair_admin_common';
 import { Router } from 'aurelia-router';
 
-@inject(AuthService, EntityManager, AltairCommon,  Endpoint.of(), Common, Router)
+@inject(AuthService, EntityManager, AltairCommon,  Endpoint.of(), Common, Router, DataCache)
 export class Ponude {
   
 
-  constructor(authService, em, ac,  repo, common, router) {
+  constructor(authService, em, ac,  repo, common, router, dc) {
     this.authService = authService;
     this.repo = repo;
     //this.repoKorisnik = em.getRepository('korisnik');
     this.ac = ac;
+    this.dc = dc;
     this.common = common;
     this.router = router;
     let payload = this.authService.getTokenPayload();
@@ -48,7 +50,9 @@ export class Ponude {
         model: {
           id: "id",
           fields: {
-            datumPonude: { type: 'date' }
+            datumPonude: { type: 'date' },
+            datumVazenja: { type: 'date' },
+            vrednost: { type: 'number' }
           //  ime: { type: 'string' },
           //  prezime: { type: 'string' },
           //  email: { type: 'string' },
@@ -58,8 +62,20 @@ export class Ponude {
       }
     });
   }
+  activate() {
+    var promises = [];
+    promises.push(this.dc.dajSveKlijente());
+    promises.push(this.dc.getObim());
+    return Promise.all(promises)
+      .then(res => {
+        this.klijenti = res[0];
+        this.obimi = res[1];
+      })
+      .catch(console.error);
+  }
+
   izmena(obj, e) {
-    if (this.role !== 'Administrator') return;
+    
     this.router.navigateToRoute("ponuda", { id: obj.id });
   }
 

@@ -108,6 +108,16 @@ export class DatumVremeFajlValueConverter {
     return moment(value).format('DD.MM.YYYY HH:mm:ss');
   }
 }
+export class SizeValueConverter {
+  toView(value) {
+    var bytes = value;
+    if (bytes < 1024) return bytes + " Bytes";
+    else if (bytes < 1048576) return (bytes / 1024).toFixed(0) + " KB";
+    else if (bytes < 1073741824) return (bytes / 1048576).toFixed(0) + " MB";
+    else return (bytes / 1073741824).toFixed(0) + " GB";
+   
+  }
+}
 //export class DinaraValueConverter {
 //  toView(value) {
 //    if (!value) return "";

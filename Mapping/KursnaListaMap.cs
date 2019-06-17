@@ -18,7 +18,7 @@ namespace Tuv.Mapping
     protected override void MapSubClass()
     {
       Table("tKurnsaLista");
-      Id(x => x.Id).GeneratedBy.Identity();
+      Id(x => x.Id).GeneratedBy.Identity().UnsavedValue(0);
       Map(x => x.Godina);
       Map(x => x.Nedelja);
       Map(x => x.Valuta).CustomSqlType("nvarchar(3)");

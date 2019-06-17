@@ -2,14 +2,20 @@
   <require from="./klijent.css"></require>
   <require from="../../../helper/grid-i18n"></require>
 
-  <a href="javascript:void()" click.delegate="router.navigateBack()">
+  <!--<a href="javascript:void()" click.delegate="router.navigateBack()">
     <i class="material-icons md-36">arrow_back</i>
   </a>
   <br />
-  <br />
+  <br />-->
 
   <div class="md-card">
     <div class="md-card-content">
+      <ul id="breadcrumbs">
+        <li><a href="/">Home</a></li>
+        <li><a href="/#/klijenti">${"Klijenti" & t}</a></li>
+        <li><span if.bind="klijent.id === 0" class="heading_a">${'Novi klijent' & t}</span></li>
+        <li><span if.bind="klijent.id !== 0" class="heading_a">${klijent.naziv}</span></li>
+      </ul>
       <ul if.bind="!printLabela" id="nalogtabs" class="uk-tab" data-uk-tab="{connect:'#tab1', animation:'scale'}">
 
         <li class="uk-active">
@@ -18,10 +24,10 @@
             <h3 style="display: inline; margin-left: 5px">${'Podaci o klijentu' & t}</h3>
           </a>
         </li>
-        <li>
+        <li class="${klijent.id === 0 || brojPonuda===0 ? 'uk-disabled' : ''}">
           <a href="#">
-            <i class="material-icons md-24 ${istorija.length===0 ? 'md-color-disabled' : 'md-color-light-green-600'}">assignment</i>
-            <h3 style="display: inline; margin-left: 5px">${'Ponude' & t}</h3>
+            <i class="material-icons md-24 ${klijent.id === 0 ? 'md-color-disabled' : 'md-color-light-green-600'}">assignment</i>
+            <h3 class="${klijent.id === 0 ? 'tekst-disabled' : ''}" style="display: inline; margin-left: 5px">${'Ponude' & t} (${brojPonuda})</h3>
           </a>
         </li>
       </ul>
@@ -74,7 +80,12 @@
                     <input type="text" value.bind="klijent.drzava" style="width: 100%;" />
                   </div>
                 </div>
-
+                <div class="uk-form-row">
+                  <label class="uk-form-label" t="Komentar">Komentar</label>
+                  <div class="uk-form-controls">
+                    <textarea rows="4" cols="50" class="uk-width-1-1" value.bind="klijent.komentar"></textarea>
+                  </div>
+                </div>
               </form>
 
             </div>
@@ -125,14 +136,14 @@
           </div>
           <br />
           <br />
-          <button class="md-btn md-btn-primary md-btn-icon" href="javascript:void(0)" click.delegate="snimi()">
+          <button class="md-btn md-btn-primary md-btn-icon ${klijent.naziv ? '' : 'disabled'}" href="javascript:void(0)" click.delegate="snimi()">
             <i class="uk-icon-save"></i>
             ${"Snimi" & t}
           </button>
         </li>
         <li>
 
-          <a class="md-btn md-btn-primary md-btn-icon-mini md-btn-wave-light" href="javascript:void()" click.delegate="novi()">
+          <a class="md-btn md-btn-primary md-btn-icon-mini md-btn-wave-light" href="javascript:void()" click.delegate="novaPonuda()">
             <i class="material-icons md-24">add</i>
             ${"Nova ponuda" & t}
           </a>
@@ -152,7 +163,7 @@
               <ak-template>
                 <!--<button class="uk-button-mini uk-button-primary uk-icon-edit" click.delegate="edit($this)">Izmena</button>-->
                 <!--<a href="javascript:void()"  click.delegate="izmena($this)" class="uk-icon-justify uk-icon-edit"></a>-->
-                <a href="javascript:void()" click.delegate="izmena($this)">
+                <a href="javascript:void()" click.delegate="izmenaPonude($this)">
                   <i class="md-icon material-icons">mode_edit</i>
                 </a>
               </ak-template>

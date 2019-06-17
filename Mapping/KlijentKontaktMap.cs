@@ -18,7 +18,7 @@ namespace Tuv.Mapping
     protected override void MapSubClass()
     {
       Table("tKlijentKontakt");
-      Id(x => x.Id).GeneratedBy.Identity();
+      Id(x => x.Id).GeneratedBy.Identity().UnsavedValue(0);
       Map(x => x.Oblast).CustomSqlType("nvarchar(50)");
       Map(x => x.Ime).CustomSqlType("nvarchar(50)");
       Map(x => x.Email).CustomSqlType("nvarchar(50)");

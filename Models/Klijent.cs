@@ -18,6 +18,9 @@ namespace Tuv.Models
     public virtual string Mesto { get; set; }
     public virtual string Adresa { get; set; }
     public virtual string Pib { get; set; }
+    public virtual string Komentar { get; set; }
+    public virtual decimal VrednostRsd { get; set; }
+    public virtual decimal VrednostEur { get; set; }
     public virtual ICollection<KlijentKontakt> Kontakti { get; set; }
   }
 }

@@ -137,7 +137,7 @@ namespace Tuv.Controllers.api
     }
 
     [HttpPost]
-    public ActionResult Post([System.Web.Http.FromUri] string tip, [FromBody] JObject objekat)
+    public ActionResult Post([FromQuery] string tip, [FromBody] JObject objekat)
     {
       object obj = null;
       try

@@ -6,19 +6,21 @@ import { EditKontakt } from './editkontakt'
 import 'kendo/js/kendo.grid';
 import 'kendo/js/kendo.dropdownlist';
 import { DialogService } from 'aurelia-dialog';
+import { DataCache } from 'helper/datacache';
 import { Common } from 'helper/common';
 import { AltairCommon } from 'helper/altair_admin_common';
 import { Router } from 'aurelia-router';
 import { I18N } from 'aurelia-i18n';
 
-@inject(AuthService, EntityManager, AltairCommon, Endpoint.of(), Common, DialogService, Router, I18N)
+@inject(AuthService, EntityManager, AltairCommon, Endpoint.of(), Common, DialogService, Router, I18N, DataCache)
 export class Klijenti {
 
 
-  constructor(authService, em, ac, repo, common, dialogService, router, i18n) {
+  constructor(authService, em, ac, repo, common, dialogService, router, i18n, dc) {
     this.authService = authService;
     this.repo = repo;
     this.ac = ac;
+    this.dc = dc;
     this.i18n = i18n;
     this.common = common;
     this.em = em;
@@ -46,8 +48,10 @@ export class Klijenti {
               o.data.filter.filters.push({ field: "klijent.id", operator: "equals", value: this.klijent.id });
             }
           } else {
-            o.data.filter = { logic: "and", filters: [] };
-            o.data.filter.filters.push({ field: "klijent.id", operator: "equals", value: this.klijent.id });
+            if (this.klijent) {
+              o.data.filter = { logic: "and", filters: [] };
+              o.data.filter.filters.push({ field: "klijent.id", operator: "equals", value: this.klijent.id });
+            }
           }
           this.repo.post('Ponuda/PregledGrid', o.data)
             .then(result => {
@@ -81,18 +85,27 @@ export class Klijenti {
 
     let promises = [];
 
-    var p = this.repo.find('Klijent', params.id);
-    promises.push(p);
+    promises.push(this.repo.find('Klijent', params.id), this.dc.brojDokumenata("ponuda", params.id));
     
     return Promise.all(promises)
       .then(res => {
-        if (params.id.toString() !== "0")
-          this.klijent = res[0];
+        //if (params.id.toString() !== "0")
+        this.klijent = res[0];
+        this.brojPonuda = res[1];
       })
-      .catch(err => {
-        toastr.error(err.statusText);
-      });
+      .catch(console.error);
 
+  }
+  reload() {
+    let promises = [];
+
+    promises.push(this.dc.brojDokumenata("ponuda", params.id));
+
+    Promise.all(promises)
+      .then(res => {
+        this.brojPonuda = res[0];
+      })
+      .catch(console.error);
   }
   edit(kontakt, indeks) {
     var objm = {};
@@ -133,6 +146,7 @@ export class Klijenti {
       });
   }
   snimi() {
+    if (this.role !== 'Administrator') return;
     var id = this.klijent.id;
     UIkit.modal.confirm(this.i18n.tr('Da li želite da sačuvate izmene?'), () => {
       this.repo.update('Klijent/' + this.klijent.id, "", this.klijent)
@@ -154,12 +168,11 @@ export class Klijenti {
 
 
 
-  izmena(obj, e) {
-    if (this.role !== 'Administrator') return;
+  izmenaPonude(obj, e) {
     this.router.navigateToRoute("ponuda", { id: obj.id, idk: this.klijent.id });
   }
 
-  novi() {
+  novaPonuda() {
     this.router.navigateToRoute("ponuda", { id: 0, idk: this.klijent.id });
   }
 

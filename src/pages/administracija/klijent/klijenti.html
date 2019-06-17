@@ -12,11 +12,14 @@
            k-filterable.bind="common.filterobj"
            k-sortable.bind="true">
     <!-- Column definitions in HTML -->
-    <ak-col k-title="${'Naziv' & t}"  k-field="naziv"></ak-col>
+    <ak-col k-title="${'Naziv' & t}" k-field="naziv"></ak-col>
     <ak-col k-title="${'PIB' & t}" k-field="pib"></ak-col>
     <ak-col k-title="${'Adresa' & t}" k-field="adresa"></ak-col>
     <ak-col k-title="${'Mesto' & t}" k-field="mesto"></ak-col>
     <ak-col k-title="${'Država' & t}" k-field="drzava"></ak-col>
+    <ak-col k-title="${'Komentar' & t}" k-field="komentar"></ak-col>
+    <ak-col k-title="${'Vrednost' & t} EUR" k-field="vrednostEur"></ak-col>
+    <ak-col k-title="${'Vrednost' & t} RSD" k-field="vrednostRsd"></ak-col>
     <ak-col k-title="${'Opcije' & t}">
       <ak-template>
         <!--<button class="uk-button-mini uk-button-primary uk-icon-edit" click.delegate="edit($this)">Izmena</button>-->

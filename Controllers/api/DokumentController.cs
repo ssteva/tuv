@@ -64,6 +64,8 @@ namespace Tuv.Controllers.api
         return Json(new { Success = false, Message = ex.Message });
       }
     }
+
+
     [HttpGet]
     [Route("[Action]")]
     public ActionResult Lista(string entitet, string entitetopis, int entitetid)
@@ -120,7 +122,7 @@ namespace Tuv.Controllers.api
     }
 
     [HttpPost]
-    public async Task<ActionResult> Post([System.Web.Http.FromUri] string entitet, int entitetid, string entitetopis, string filename, DateTime lastmodified, long size, [FromForm]  IFormFile file)
+    public async Task<ActionResult> Post([FromQuery] string entitet, int entitetid, string entitetopis, string filename, DateTime lastmodified, long size, [FromForm]  IFormFile file)
     {
       try
       {

@@ -8,9 +8,20 @@ using System.Security;
 
 namespace Tuv.Helper
 {
-
-    public static class HelperClasses
+  public static class StringExtensions
+  {
+    public static string FirstCharToUpper(this string input)
     {
+      switch (input)
+      {
+        case null: throw new ArgumentNullException(nameof(input));
+        case "": throw new ArgumentException($"{nameof(input)} cannot be empty", nameof(input));
+        default: return input.First().ToString().ToUpper() + input.Substring(1);
+      }
+    }
+  }
+  public static class HelperClasses
+  {
 
     public static SecureString ConvertToSecureString(string password)
     {
@@ -26,53 +37,55 @@ namespace Tuv.Helper
       return securePassword;
     }
 
+
+
     public static string BuildPropertyAccess<T>(Expression<Func<T>> alias, string propertyName)
-        {
-            string aliasName = ExpressionProcessor.FindMemberExpression(alias.Body);
+    {
+      string aliasName = ExpressionProcessor.FindMemberExpression(alias.Body);
 
-            return string.Format("{0}.{1}", aliasName, propertyName);
-        }
-
-
-        public static  bool IsValidEmail(string email)
-        {
-            try
-            {
-                var addr = new System.Net.Mail.MailAddress(email);
-                return addr.Address == email;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-        public static string UpperCaseFirst(this string s)
-        {
-            //if (string.IsNullOrEmpty(s))
-            //{
-            //    return string.Empty;
-            //}
-            //char[] a = s.ToCharArray();
-            //a[0] = char.ToUpper(a[0]);
-            //return new string(a);
-
-            if (string.IsNullOrEmpty(s))
-            {
-                return string.Empty;
-            }
-            var split = s.Split('.');
-            string izlaz = "";
-
-            foreach (string s1 in split)
-            {
-                char[] a = s1.ToCharArray();
-                a[0] = char.ToUpper(a[0]);
-                if (izlaz != "")
-                    izlaz = izlaz + ".";
-                izlaz = izlaz + new string(a);
-            }
-
-            return izlaz;
-        }
+      return string.Format("{0}.{1}", aliasName, propertyName);
     }
+
+
+    public static bool IsValidEmail(string email)
+    {
+      try
+      {
+        var addr = new System.Net.Mail.MailAddress(email);
+        return addr.Address == email;
+      }
+      catch
+      {
+        return false;
+      }
+    }
+    public static string UpperCaseFirst(this string s)
+    {
+      //if (string.IsNullOrEmpty(s))
+      //{
+      //    return string.Empty;
+      //}
+      //char[] a = s.ToCharArray();
+      //a[0] = char.ToUpper(a[0]);
+      //return new string(a);
+
+      if (string.IsNullOrEmpty(s))
+      {
+        return string.Empty;
+      }
+      var split = s.Split('.');
+      string izlaz = "";
+
+      foreach (string s1 in split)
+      {
+        char[] a = s1.ToCharArray();
+        a[0] = char.ToUpper(a[0]);
+        if (izlaz != "")
+          izlaz = izlaz + ".";
+        izlaz = izlaz + new string(a);
+      }
+
+      return izlaz;
+    }
+  }
 }

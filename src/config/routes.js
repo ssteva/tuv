@@ -1,35 +1,47 @@
 ﻿export default [
   //{ rbr: 2, route: 'test', name: 'test', moduleId: 'test', nav: false, title: 'Test', auth:true,settings: { roles: ['Administrator'] }},
 
-  { route: ['', 'home'], name: 'home', moduleId: 'pages/home/home', nav: false, title: 'Home', settings: { ikona: 'home', ino: true, roles: ['Administrator', 'Rukovodilac', 'Izvršilac'] } },
+  { route: ['', 'home'], name: 'home', moduleId: 'pages/home/home', nav: false, title: 'Home', settings: { ikona: 'home', ino: true, roles: ['Administrator', 'Direktor', 'Rukovodilac', 'Izvršilac'] } },
   { route: 'login', name: 'login', moduleId: 'login', nav: false, title: 'Login' },
-  { route: 'klijenti', name: 'klijenti', moduleId: 'pages/administracija/klijent/klijenti', href: "#klijenti", nav: false, auth: true, title: 'Klijenti', settings: { roles: ['Administrator', 'Rukovodilac', 'Izvršilac'] } },
-  { route: 'klijent/:id', name: 'klijent', moduleId: 'pages/administracija/klijent/klijent', href: "#klijent", nav: false, auth: true, title: 'Klijenti', settings: { roles: ['Administrator', 'Rukovodilac', 'Izvršilac'] } },
-  { route: 'ponuda/:id/:idk?', name: 'ponuda', moduleId: 'pages/ponuda/ponuda', href: "#ponuda/0", nav: false, title: 'Nova ponuda', auth: true, settings: { ikona: 'add', roles: ['Administrator', 'Rukovodilac', 'Izvršilac'] } },
-  { route: 'ponude', name: 'ponude', moduleId: 'pages/ponuda/ponude', href: "#ponude", nav: false, title: 'Pregled ponuda', auth: true, settings: { ikona: "list", roles: ['Administrator', 'Rukovodilac', 'Izvršilac'] } },
+  { route: 'klijenti', name: 'klijenti', moduleId: 'pages/administracija/klijent/klijenti', href: "#klijenti", nav: false, auth: true, title: 'Pregled klijenata', settings: { roles: ['Administrator', 'Direktor', 'Rukovodilac', 'Izvršilac'] } },
+  { route: 'klijent/:id', name: 'klijent', moduleId: 'pages/administracija/klijent/klijent', href: "#klijent", nav: false, auth: true, title: 'Novi klijent', settings: { roles: ['Administrator', 'Direktor','Rukovodilac', 'Izvršilac'] } },
+  { route: 'ponuda/:id/:idk?', name: 'ponuda', moduleId: 'pages/ponuda/ponuda', href: "#ponuda/0", nav: false, title: 'Nova ponuda', auth: true, settings: { ikona: 'add', roles: ['Administrator', 'Direktor','Rukovodilac', 'Izvršilac'] } },
+  { route: 'ponude', name: 'ponude', moduleId: 'pages/ponuda/ponude', href: "#ponude", nav: false, title: 'Pregled ponuda', auth: true, settings: { ikona: "list", roles: ['Administrator', 'Direktor', 'Rukovodilac', 'Izvršilac'] } },
   { route: 'korisnik', name: 'korisnik', moduleId: 'pages/administracija/korisnik/korisnik', href: "#korisnik", nav: false, title: 'Korisnici', auth: true, settings: { roles: ['Administrator'] } },
-  { route: 'obim', name: 'obim', moduleId: 'pages/administracija/obim/obim', href: "#obim", nav: false, title: 'Obim poslovanja', auth: true, settings: { roles: ['Administrator', 'Rukovodilac', 'Izvršilac'] } },
-  { route: 'kurs', name: 'kurs', moduleId: 'pages/administracija/kurs/kurs', href: "#kurs", nav: false, title: 'Kursna lista', auth: true, settings: { roles: ['Administrator', 'Rukovodilac', 'Izvršilac'] } },
+  { route: 'obim', name: 'obim', moduleId: 'pages/administracija/obim/obim', href: "#obim", nav: false, title: 'Obim poslovanja', auth: true, settings: { roles: ['Administrator', 'Direktor', 'Rukovodilac', 'Izvršilac'] } },
+  { route: 'kurs', name: 'kurs', moduleId: 'pages/administracija/kurs/kurs', href: "#kurs", nav: false, title: 'Kursna lista', auth: true, settings: { roles: ['Administrator', 'Direktor','Rukovodilac', 'Izvršilac'] } },
   {
-    route: 'meni', name: 'meni', moduleId: 'meni', nav: true, title: 'Ponude', settings: {
-      ikona: 'assignment', roles: ['Administrator', 'Rukovodilac', 'Izvršilac'],
+    route: 'meni', name: 'meni', moduleId: 'meni', nav: true, title: 'Klijenti', settings: {
+      ikona: 'business', roles: ['Administrator', 'Direktor', 'Rukovodilac', 'Izvršilac'],
       subMenu: [
         //{ route: 'grad', name: 'grad', moduleId: 'pages/administracija/grad', href: "#grad", title: 'Gradovi', settings: { ikona: 'location_city', roles: ['Administrator'] }},
-        { route: 'ponuda/:id', name: 'ponuda', moduleId: 'pages/ponuda/ponuda', href: "#ponuda/0", title: 'Nova ponuda', auth: true, settings: { ikona: 'add', roles: ['Administrator', 'Rukovodilac', 'Izvršilac'] } },
-        { route: 'ponude', name: 'ponude', moduleId: 'pages/ponuda/ponude', href: "#ponude", nav: false, title: 'Pregled ponuda', auth: true, settings: { ikona: "list", roles: ['Administrator', 'Rukovodilac', 'Izvršilac'] } }
+        { route: 'klijent/:id', name: 'klijent', moduleId: 'pages/administracija/klijent/klijent', href: "#klijent/0", nav: false, auth: true, title: 'Novi klijent', settings: { ikona: 'add', roles: ['Administrator'] } },
+        { route: 'klijenti', name: 'klijenti', moduleId: 'pages/administracija/klijent/klijenti', href: "#klijenti", nav: false, auth: true, title: 'Pregled klijenata', settings: { ikona: 'list', roles: ['Administrator', 'Direktor', 'Rukovodilac', 'Izvršilac'] } },
+        
+
+      ]
+    }
+  },
+  {
+    route: 'meni', name: 'meni', moduleId: 'meni', nav: true, title: 'Ponude', settings: {
+      ikona: 'assignment', roles: ['Administrator', 'Direktor', 'Rukovodilac', 'Izvršilac'],
+      subMenu: [
+        //{ route: 'grad', name: 'grad', moduleId: 'pages/administracija/grad', href: "#grad", title: 'Gradovi', settings: { ikona: 'location_city', roles: ['Administrator'] }},
+        { route: 'ponuda/:id', name: 'ponuda', moduleId: 'pages/ponuda/ponuda', href: "#ponuda/0", title: 'Nova ponuda', auth: true, settings: { ikona: 'add', roles: ['Administrator', 'Direktor', 'Rukovodilac', 'Izvršilac'] } },
+        { route: 'ponude', name: 'ponude', moduleId: 'pages/ponuda/ponude', href: "#ponude", nav: false, title: 'Pregled ponuda', auth: true, settings: { ikona: "list", roles: ['Administrator', 'Direktor', 'Rukovodilac', 'Izvršilac'] } }
 
       ]
     }
   },
   {
     route: 'meni', name: 'meni', moduleId: 'meni', nav: true, title: 'Administracija', settings: {
-      ikona: 'account_circle', roles: ['Administrator', 'Rukovodilac', 'Izvršilac'],
+      ikona: 'account_circle', roles: ['Administrator', 'Direktor', 'Rukovodilac', 'Izvršilac'],
       subMenu: [
         //{ route: 'grad', name: 'grad', moduleId: 'pages/administracija/grad', href: "#grad", title: 'Gradovi', settings: { ikona: 'location_city', roles: ['Administrator'] }},
-        { route: 'klijent', name: 'klijent', moduleId: 'pages/administracija/klijent/klijenti', href: "#klijenti", title: 'Klijenti', auth: true, settings: { ikona: 'business', roles: ['Administrator', 'Rukovodilac', 'Izvršilac'] } },
+        //{ route: 'klijent', name: 'klijent', moduleId: 'pages/administracija/klijent/klijenti', href: "#klijenti", title: 'Klijenti', auth: true, settings: { ikona: 'business', roles: ['Administrator', 'Rukovodilac', 'Izvršilac'] } },
         { route: 'korisnik', name: 'korisnik', moduleId: 'pages/administracija/korisnik/korisnik', href: "#korisnik", nav: false, title: 'Korisnici', auth: true, settings: { ikona: "group", roles: ['Administrator'] } },
-        { route: 'obim', name: 'obim', moduleId: 'pages/administracija/obim/obim', href: "#obim", nav: false, title: 'Obim poslovanja', auth: true, settings: { ikona: "layers", roles: ['Administrator', 'Rukovodilac', 'Izvršilac'] } },
-        { route: 'kurs', name: 'kurs', moduleId: 'pages/administracija/kurs/kurs', href: "#kurs", nav: false, title: 'Kursna lista', auth: true, settings: { ikona: "euro_symbol", roles: ['Administrator', 'Rukovodilac', 'Izvršilac'] } }
+        { route: 'obim', name: 'obim', moduleId: 'pages/administracija/obim/obim', href: "#obim", nav: false, title: 'Obim poslovanja', auth: true, settings: { ikona: "layers", roles: ['Administrator', 'Direktor', 'Rukovodilac', 'Izvršilac'] } },
+        { route: 'kurs', name: 'kurs', moduleId: 'pages/administracija/kurs/kurs', href: "#kurs", nav: false, title: 'Kursna lista', auth: true, settings: { ikona: "euro_symbol", roles: ['Administrator', 'Direktor', 'Rukovodilac', 'Izvršilac'] } }
         //{ route: 'autocomplete', name: 'autocomplete', moduleId: 'pages/autocomplete/autocomplete', title: 'Autocomplete', settings: { ikona: 'home', roles: ['Administrator', 'Supervizor', 'Komercijalista'] }}
       ]
     }

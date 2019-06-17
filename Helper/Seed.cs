@@ -44,6 +44,7 @@ namespace Tuv.Helper
       SeedData("exec seed_tercijarna");
       SeedData("exec seed_ObimPoslovanja");
       SeedData("exec seed_korisnici");
+      SeedData("exec seed_parametri");
 
     }
 

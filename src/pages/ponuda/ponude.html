@@ -11,12 +11,47 @@
            k-data-source.bind="datasource"
            k-pageable.bind="common.pageable"
            k-filterable.bind="common.filterobj"
+           k-on-filter-menu-init.delegate="common.filterMenu($event.detail)"
            k-sortable.bind="true">
     <!-- Column definitions in HTML -->
     <ak-col k-title="${'Rbr' & t}" k-field="rbr"></ak-col>
     <ak-col k-title="${'Klijent' & t}" k-field="klijent.naziv"></ak-col>
     <ak-col k-title="${'Broj' & t}" k-field="broj"></ak-col>
-    <ak-col k-title="${'Datum ponude' & t}" k-field="datumPonude" k-format="{0:dd.MM.yyyy}" k-width="130px"></ak-col>
+    <ak-col k-title="${'Datum ponude' & t}" k-field="datumPonude" k-format="{0:dd.MM.yyyy}" k-width="130px" k-filterable.bind="common.datumDokumentaFilter"></ak-col>
+    <ak-col k-title="${'Predmet' & t}" k-field="predmetPonude">
+      <ak-template>
+        <ul>
+          <li repeat.for="pp of predmetPonude">
+            ${pp.obimPoslovanja.sifra} ${pp.obimPoslovanja.naziv}
+          </li>
+        </ul>
+        <!--<table class="uk-table uk-text-small uk-table-condensed">
+          <colgroup>
+            <col span="1" style="width: 20%;">
+            <col span="1" style="width: 60%;">
+          </colgroup>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th t="Šifra">Šifra</th>
+              <th t="Naziv">Naziv</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr repeat.for="pp of predmetPonude">
+              <td>
+                ${pp.obimPoslovanja.sifra}
+              </td>
+              <td if.bind="!obim.obrisan">
+                ${pp.obimPoslovanja.naziv}
+              </td>
+            </tr>
+            </tbody>
+          </table>-->
+      </ak-template>
+    </ak-col>
+    <ak-col k-title="${'Valuta' & t}" k-field="valuta"></ak-col>
+    <ak-col k-title="${'Vrednost' & t}" k-field="vrednost"></ak-col>
     <ak-col k-title="${'Opcije' & t}">
       <ak-template>
         <!--<button class="uk-button-mini uk-button-primary uk-icon-edit" click.delegate="edit($this)">Izmena</button>-->

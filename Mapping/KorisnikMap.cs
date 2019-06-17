@@ -18,7 +18,7 @@ namespace Tuv.Mapping
     protected override void MapSubClass()
     {
       Table("tKorisnik");
-      Id(x => x.Id).UnsavedValue(0).GeneratedBy.Identity();
+      Id(x => x.Id).UnsavedValue(0).GeneratedBy.Identity().UnsavedValue(0);
       Map(x=>x.KorisnickoIme).Unique();
       Map(x=>x.Ime);
       Map(x=>x.Prezime);

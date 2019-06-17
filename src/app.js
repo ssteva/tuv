@@ -83,6 +83,7 @@ export class App {
       this.jezik = payload.Jezik;
       this.odabranijezik = this.jezik;
       this.ino = false;
+      moment.locale(this.jezik);
       //this.ulogovan = `prijavljeni ste kao: ${payload.Ime} ${payload.Prezime} (${this.korisnik}), uloga: ${this.role}, email: ${payload.email}`;
       //if (localStorage["putanja"])
       //    window.location.href = localStorage["putanja"];
@@ -125,6 +126,8 @@ export class App {
     var dataItem = this.cboJezik.dataItem(e.item.index());
 
     this.i18n.setLocale(dataItem.id);
+    moment.locale(dataItem.id);
+
     this.repo.post('Korisnik/PromenaJezika', { jezik: dataItem.id })
       .then(result => {
         //this.controller.ok();

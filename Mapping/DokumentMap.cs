@@ -18,7 +18,7 @@ namespace Tuv.Mapping
     protected override void MapSubClass()
     {
       Table("tDokument");
-      Id(x => x.Id).GeneratedBy.Identity();
+      Id(x => x.Id).GeneratedBy.Identity().UnsavedValue(0);
       Map(x => x.RowId).Not.Nullable().CustomSqlType("uniqueidentifier ROWGUIDCOL").Default("newid()");
       Map(x => x.Entitet).CustomSqlType("nvarchar(50)");
       Map(x => x.EntitetOpis).CustomSqlType("nvarchar(50)");

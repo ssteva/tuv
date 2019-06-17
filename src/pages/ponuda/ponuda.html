@@ -2,27 +2,40 @@
   <require from="./ponuda.css"></require>
   <require from="aurelia-kendoui-bridge/datepicker/datepicker"></require>
   <require from="aurelia-kendoui-bridge/dropdownlist/dropdownlist"></require>
+  <require from="aurelia-kendoui-bridge/multiselect/multiselect"></require>
   <require from="aurelia-kendoui-bridge/numerictextbox/numerictextbox"></require>
   <require from="resources/elements/fajlovi"></require>
-  <a href="javascript:void()" click.delegate="router.navigateBack()">
-    <i class="material-icons md-36">arrow_back</i>
-  </a>
 
-  <br />
-  <br />
 
   <div class="md-card">
     <div class="md-card-content">
-      <div class="uk-grid uk-grid-divider" data-uk-grid-margin>
-        <div class="uk-width-large-1-2 uk-width-medium-1-2 uk-width-small-1-1">
-          <h3 if.bind="ponuda.id === 0" class="heading_a">${'Nova ponuda' & t}</h3>
-          <h3 if.bind="ponuda.id !== 0" class="heading_a">${'Ponuda broj'& t} &nbsp;${ponuda.rbr} </h3>
-          <br />
-          <form  class="uk-form uk-form-horizontal">
+      <ul id="breadcrumbs">
+        <li><a href="/">Home</a></li>
+        <li><a href="/#/ponude">Ponude</a></li>
+        <li><span if.bind="ponuda.id === 0" class="heading_a">${'Nova ponuda' & t}</span></li>
+        <li><span if.bind="ponuda.id !== 0" class="heading_a">${'Ponuda broj'& t} &nbsp;${ponuda.rbr}</span></li>
+      </ul>
+      <!--<a href="javascript:void()" click.delegate="router.navigateBack()">
+        <i class="material-icons md-36">arrow_back</i>
+      </a>-->
+      <!--<div if.bind="ponuda.status === 1" class="uk-alert uk-alert-warning" data-uk-alert>
+        <a href="javascript:void(0)" class="uk-alert-close">
+        </a>
+        ${'Čeka se odobrenje' & t}
+      </div>
+      <div if.bind="ponuda.status === 2" class="uk-alert uk-alert-warning" data-uk-alert>
+        <a href="javascript:void(0)" class="uk-alert-close">
+        </a>
+        ${'Čeka se prihvatanje' & t}
+      </div>-->
+
+
+      <div class="uk-grid uk-grid-divider uk-margin-top" data-uk-grid-margin>
+        <div class="uk-width-large-4-6 uk-width-medium-1-2 uk-width-small-1-1">
+          <form class="uk-form-horizontal">
 
             <div class="uk-form-row">
               <label class="uk-form-label" t="Klijent">Klijent</label>
-
               <div class="uk-form-controls">
                 <ak-drop-down-list k-widget.two-way="cboKlijent"
                                    k-data-source.bind="klijenti"
@@ -38,26 +51,36 @@
 
                 </ak-drop-down-list>
               </div>
-
             </div>
 
 
-            <div class="uk-form-row">
-              <label class="uk-form-label" t="Opis posla">Opis posla</label>
-              <div class="uk-form-controls">
-                <textarea rows="4" cols="50" class="uk-width-1-1" value.bind="ponuda.opisPosla"></textarea>
+            <!--<div class="uk-form-row">
+              <label class="uk-form-label" t="Obim poslovanja">Obim poslovanja</label>
+              <div if.bind="!role.includes('Izvršilac')" class="uk-form-controls">
+                <ak-drop-down-list k-option-label="Odabrati..."
+                                   k-widget.two-way="cboObim"
+                                   k-data-source.bind="obimi"
+                                   k-data-text-field="naziv"
+                                   k-on-select.delegate="onSelectObim($event.detail)"
+                                   k-data-value-field="id"
+                                   style="width: 100%"
+                                   k-value.two-way="ponuda.obimPoslovanja.id">
+                  <ak-template>
+                    ${sifra} - ${naziv}
+                  </ak-template>
+                </ak-drop-down-list>
               </div>
-            </div>
-            <div class="uk-form-row" if.bind="ponuda.id !== 0">
+            </div>-->
+            <!--<div class="uk-form-row" if.bind="ponuda.id !== 0">
               <label class="uk-form-label" t="Redni broj">Redni broj</label>
               <div class="uk-form-controls">
                 <input type="text" class="k-textbox" value.bind="ponuda.rbr" disabled.bind="ponuda.id !== 0" />
               </div>
-            </div>
+            </div>-->
             <div class="uk-form-row" if.bind="klijent.id !== 0">
               <label class="uk-form-label" t="Broj">Broj</label>
               <div class="uk-form-controls">
-                <input type="text" class="k-textbox" value.bind="ponuda.broj" disabled.bind="ponuda.id !== 0" style="width: 100%;" />
+                <input type="text" class="k-textbox" value.bind="ponuda.broj" style="width: 100%;" disabled.bind="ponuda.status>=2" />
               </div>
             </div>
 
@@ -67,6 +90,156 @@
                 <input ak-datepicker="k-widget.two-way: cboDatumPonude; k-value.two-way: ponuda.datumPonude; k-format.bind:'dd.MM.yyyy'" />
               </div>
             </div>
+            <div class="uk-form-row">
+              <label class="uk-form-label" t="Predmet ponude">Predmet ponude</label>
+              <div class="uk-form-controls">
+                <ak-multiselect k-placeholder="Odabrati..."
+                                k-widget.two-way="cboObim"
+                                k-data-text-field="naziv"
+                                k-data-value-field="id"
+                                k-auto-bind.bind="false"
+                                k-data-source.bind="dataSource"
+                                k-on-change.delegate="onChangeObim($event.detail)"
+                                k-value.two-way="obimOdabir">
+                  <ak-template>
+                    ${sifra}  ${naziv}
+                  </ak-template>
+                  <ak-template for="headerTemplate">
+                    <span class="ts-align-left">${grupa}</span>
+                  </ak-template>
+                  <ak-template for="groupTemplate">
+                    ${grupa}
+                  </ak-template>
+                </ak-multiselect>
+              </div>
+            </div>
+            <div class="uk-form-row">
+              <label class="uk-form-label" t="Primenjivi zahtevi">Primenjivi zahtevi</label>
+              <div class="uk-form-controls">
+                <textarea rows="4" class="uk-text-small uk-width-1-1" value.bind="stavka.primenjiviZahtevi"  disabled.bind="ponuda.status>=2"></textarea>
+              </div>
+            </div>
+
+            <div class="uk-form-row">
+              <label class="uk-form-label" t="Valuta">Valuta</label>
+              <div class="uk-form-controls">
+                <div class="dynamic_radio uk-margin-small-top">
+                  <span class="icheck-inline">
+                    <input type="radio" name="optValuta" id="RSD" value.bind="'RSD'" checked.bind="ponuda.valuta" data-md-icheck required disabled.bind="ponuda.status>=2" />
+                    <label class="uk-text-small inline-label" for="RSD">RSD</label>
+                  </span>
+                  <span class="icheck-inline">
+                    <input type="radio" name="optValuta" id="EUR" model.bind="'EUR'" checked.bind="ponuda.valuta" data-md-icheck required disabled.bind="ponuda.status>=2" />
+                    <label class="uk-text-small inline-label" for="EUR">EUR</label>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <a if.bind="ponuda.status < 2" click.delegate="novaStavka()"><i class="material-icons">add</i> ${"Nova stavka ponude" & t}</a>
+            <table class="uk-table uk-text-small uk-table-condensed">
+              <colgroup>
+                <col span="1" style="width: 55%;">
+                <col span="1" style="width: 10%;">
+                <col span="1" style="width: 10%;">
+                <col span="1" style="width: 10%;">
+                <col span="1" style="width: 10%;">
+                <col span="1" style="width: 5%;">
+              </colgroup>
+              <thead>
+                <tr>
+                  <!--<th>#</th>-->
+                  <th t="Opis posla">Opis posla</th>
+                  <th t="JM">JM</th>
+                  <th>${ponuda.valuta}/${"JM" & t}</th>
+                  <th t="Količina">Količina</th>
+                  <th>${ponuda.valuta} ${"bez poreza" & t}</th>
+                  <th if.bind="ponuda.status < 2" t="Opcije">Opcije</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr repeat.for="stavka of ponuda.stavke">
+                  <!--<td if.bind="!stavka.obrisan">${$index + 1}</td>-->
+                  <td if.bind="!stavka.obrisan">
+                    <textarea rows="4" class="uk-text-small uk-width-1-1" value.bind="stavka.opisPosla"></textarea>
+                  </td>
+                  <td if.bind="!stavka.obrisan">
+                    <input type="text" class="k-textbox" value.bind="stavka.jm" style="width: 100%;" />
+                  </td>
+                  <td if.bind="!stavka.obrisan">
+                    <input type="number" ak-numerictextbox="k-widget.two-way: txtCena; k-value.two-way: stavka.cena;k-format.bind:'n2'; k-min.bind:1;k-max.bind:99999999;k-step.bind: 1"
+                           k-on-change.delegate="onCenaChange(stavka, $event.detail)" k-on-spin.delegate="onCenaChange($this, $event.detail)" />
+                  </td>
+                  <td if.bind="!stavka.obrisan">
+                    <input type="number" ak-numerictextbox="k-widget.two-way: txtKolicina; k-value.two-way: stavka.kolicina;k-format.bind:'n0'; k-min.bind:1;k-max.bind:10000;k-step.bind: 1"
+                           k-on-change.delegate="onKolicinaChange(stavka, $event.detail)" k-on-spin.delegate="onKolicinaChange($this, $event.detail)" />
+                  </td>
+                  <td if.bind="!stavka.obrisan">
+                    ${stavka.kolicina * stavka.cena | dinara}
+                  </td>
+                  <td if.bind="!stavka.obrisan && $parent.ponuda.status < 2">
+                    <a click.delegate="delete(stavka, $index)"><i class="material-icons">delete</i></a>
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>
+                    <span class="uk-text-muted uk-text-small">Total ${ponuda.valuta}</span>
+                    <p class="heading_b uk-text-success">${vrednost | dinara}</p>
+                  </td>
+                  <td if.bind="ponuda.status <2"></td>
+                </tr>
+              </tfoot>
+            </table>
+
+
+            <div class="uk-form-row">
+              <label class="uk-form-label" t="Napomena">Napomena</label>
+              <div class="uk-form-controls">
+                <textarea rows="4" cols="50" class="uk-width-1-1" value.bind="ponuda.napomena" disabled.bind="ponuda.status>=2"></textarea>
+              </div>
+            </div>
+            <div class="uk-form-row">
+              <label class="uk-form-label" t="Uslovi plaćanja">Uslovi plaćanja</label>
+              <div class="uk-form-controls">
+                <textarea rows="4" cols="50" class="uk-width-1-1" value.bind="ponuda.usloviPlacanja" disabled.bind="ponuda.status>=2"></textarea>
+              </div>
+            </div>
+            <div class="uk-form-row">
+              <label class="uk-form-label" t="Period važenja">Period važenja</label>
+              <div class="uk-form-controls">
+                <div class="dynamic_radio uk-margin-small-top">
+                  <span class="icheck-inline">
+                    <input type="radio" name="optVazenje" id="Dan" value.bind="'Dan'" checked.bind="ponuda.vazenje" data-md-icheck required disabled.bind="ponuda.status>=2"/>
+                    <label class="uk-text-small inline-label" for="Dan" t="Dan">Dan</label>
+                  </span>
+                  <span class="icheck-inline">
+                    <input type="radio" name="optVazenje" id="Mesec" model.bind="'Mesec'" checked.bind="ponuda.vazenje" data-md-icheck required disabled.bind="ponuda.status>=2"/>
+                    <label class="uk-text-small inline-label" for="Mesec" t="Mesec">Mesec</label>
+                  </span>
+                  <input type="number" k-on-change.delegate='onChangeVazi()' k-on-spin.delegate='onChangeVazi()' ak-numerictextbox="k-widget.two-way: txtPonudaVazi; k-value.two-way: ponuda.vazi;k-format.bind:'n0'; k-min.bind:1;k-max.bind:360;k-step.bind: ponuda.vazenje==='Dan' ? 10 : 1" />
+                </div>
+              </div>
+            </div>
+            <div class="uk-form-row">
+              <label class="uk-form-label">${'Ponuda važi do' & t} </label>
+              <div class="uk-form-controls">
+                <input ak-datepicker="k-widget.two-way: cboDatumVazenja; k-value.two-way: ponuda.datumVazenja; k-format.bind:'dd.MM.yyyy'" />
+              </div>
+            </div>
+            <div class="uk-form-row">
+              <label class="uk-form-label" t="Ostalo">Ostalo</label>
+              <div class="uk-form-controls">
+                <textarea rows="4" cols="50" class="uk-width-1-1" value.bind="ponuda.ostalo" disabled.bind="ponuda.status>=2"></textarea>
+              </div>
+            </div>
+
+
+
 
             <div class="uk-form-row">
               <label class="uk-form-label" t="Zadužen(a) za ponudu">Zadužen(a) za ponudu</label>
@@ -86,81 +259,163 @@
                 ${ponuda.korisnik.ime} ${ponuda.korisnik.prezime}
               </div>
             </div>
-            <div class="uk-form-row">
-              <label class="uk-form-label" t="Valuta">Valuta</label>
-              <div class="uk-form-controls">
-                <div class="dynamic_radio uk-margin-small-top">
-                  <span class="icheck-inline">
-                    <input type="radio" name="optValuta" id="RSD" value.bind="'RSD'" checked.bind="ponuda.valuta" data-md-icheck required />
-                    <label class="uk-text-small inline-label" for="RSD">RSD</label>
-                  </span>
-                  <span class="icheck-inline">
-                    <input type="radio" name="optValuta" id="EUR" model.bind="'EUR'" checked.bind="ponuda.valuta" data-md-icheck required />
-                    <label class="uk-text-small inline-label" for="EUR">EUR</label>
-                  </span>
-                </div>
-              </div>
-            </div>
 
-
-            <div class="uk-form-row">
-              <label class="uk-form-label" t="Vrednost">Vrednost</label>
-              <div class="uk-form-controls">
-                <input type="number" ak-numerictextbox="k-widget.two-way: txtIznos;k-value.two-way: ponuda.vrednost;k-format.bind:'n2'; k-min.bind:1;k-max.bind:1000000;k-step.bind:10" />
-              </div>
-            </div>
-
-            <div class="uk-form-row">
-              <label class="uk-form-label" t="Ponuda prihvaćena">Ponuda prihvaćena</label>
-              <div class="uk-form-controls dynamic_radio uk-margin-small-top">
-                <span class="icheck-inline">
-                  <input type="radio" name="optPonudaPrihvacena" id="da" model.bind="true" checked.bind="ponuda.prihvacena" data-md-icheck required />
-                  <label class="uk-text-small inline-label" for="ne" t="Da">Da</label>
-                </span>
-                <span class="icheck-inline">
-                  <input type="radio" name="optPonudaPrihvacena" id="ne" model.bind="false" checked.bind="ponuda.prihvacena" data-md-icheck required />
-                  <label class="uk-text-small inline-label" for="ne" t="Ne">Ne</label>
-                </span>
-              </div>
-
-            </div>
           </form>
 
-          <!--<ul if.bind="ponuda.id !==0" class="md-list">
-            <li>
-              <div class="md-list-content">
-                <h4 t="Ponuda - dokument"></h4>
-                <input if.bind="ponudaDokument.length ===0" id="ponudaDokument" type="file" change.delegate="fileSelectedPonudaDokument($event)">
-                <div show.bind="ponudaDokument.length>0">
-                  <span class="md-list-heading"><a href.bind="'api/Dokument/' + ponudaDokument[0].id">${ponudaDokument[0].fileName}</a></span>
-                  <div class="uk-margin-small-top">
-                    <span data-uk-tooltip title="${'Datum postavke fajla' & t}" class="uk-margin-right">
-                      <i class="material-icons">&#xE192;</i> <span class="uk-text-muted uk-text-small">${ponudaDokument[0].dateUploaded | datumVreme}</span>
-                    </span>
-                    <span data-uk-tooltip title="${'Datum fajla' & t}" class="uk-margin-right">
-                      <i class="material-icons">&#xE192;</i> <span class="uk-text-muted uk-text-small">${ponudaDokument[0].dateLastModified | datumVreme}</span>
-                    </span>
-                    <span data-uk-tooltip title="${'Veličina' & t}" class="uk-margin-right">
-                      <i class="material-icons">photo_size_select_large</i> <span class="uk-text-muted uk-text-small">${ponudaDokument[0].size} bytes</span>
-                    </span>
-                    <span data-uk-tooltip title="${'Obriši' & t}" class="uk-margin-right">
-                      <a click.delegate="deletePonudaDokument(ponudaDokument[0].id)"><i class="material-icons">delete_forever</i></a>
-                    </span>
+        </div>
+
+        <div class="uk-width-large-2-6 uk-width-medium-1-2 uk-width-small-1-1">
+
+          <div if.bind="ponuda.status === 1" class="uk-form-row">
+            <label class="uk-form-label" t="Odobrenje ponude">Odobrenje ponude</label>
+            <div class="uk-form-controls">
+              <button class="md-btn md-btn-success md-btn-icon" href="javascript:void(0)" click.delegate="odobri(true)">
+                <i class="uk-icon-check"></i>
+                ${"Odobrena" & t}
+              </button>
+              <button class="md-btn md-btn-danger md-btn-icon" href="javascript:void(0)" click.delegate="odobri(false)">
+                <i class="uk-icon-close"></i>
+                ${"Odbijena" & t}
+              </button>
+            </div>
+          </div>
+
+          <div if.bind="ponuda.status===2" class="uk-form-row">
+            <label class="uk-form-label" t="Prihvatanje ponude">Prihvatanje ponude</label>
+            <div if.bind="!ponuda.datumPrihvatanja" class="uk-form-controls">
+              <button class="md-btn md-btn-success md-btn-icon" href="javascript:void(0)" click.delegate="prihvati(true)">
+                <i class="uk-icon-check"></i>
+                ${"Prihvaćena" & t}
+              </button>
+              <button class="md-btn md-btn-danger md-btn-icon" href="javascript:void(0)" click.delegate="prihvati(false)">
+                <i class="uk-icon-close"></i>
+                ${"Odbijena" & t}
+              </button>
+            </div>
+
+            <div if.bind="ponuda.prihvacena && ponuda.datumPrihvatanja" class="uk-form-controls">
+              <span class="uk-badge">${"Ponuda je prihvaćena" & t} ${ponuda.datumPrihvatanja | datumVreme}</span>
+            </div>
+            <div if.bind="!ponuda.prihvacena && ponuda.datumPrihvatanja" class="uk-form-controls">
+              ${"Ponuda je odbijena" & t} ${ponuda.datumPrihvatanja | datumVreme}
+            </div>
+          </div>
+
+          <h4 class="heading_c uk-margin-small-bottom uk-margin-top" t="Tok događaja">Tok događaja</h4>
+          <div class="timeline">
+            <div class="timeline_item" repeat.for="wf of ponuda.wfs">
+              <div if.bind="wf.tip==='Kreiranje' && !wf.obrisan">
+                <div class="timeline_icon timeline_icon_success"><i class="material-icons">&#xE85D;</i></div>
+                <div class="timeline_date" data-uk-tooltip title=" ${wf.datum | datumVreme}">
+                  ${$parent.ponuda.datumPonude | dan} <span>${$parent.ponuda.datumPonude | mesec} ${$parent.ponuda.datumPonude | godina}</span>
+                </div>
+                <div class="timeline_content">${"Kreirana ponuda" & t} <strong>${$parent.ponuda.broj}</strong> (${wf.korisnik.naziv})</div>
+              </div>
+
+              <div if.bind="wf.tip==='Odobravanje' && !wf.ishod" && !wf.obrisan">
+                <div class="timeline_icon timeline_icon_danger"><i class="material-icons">&#xE5CD;</i></div>
+                <div class="timeline_date" data-uk-tooltip title=" ${wf.datum | datumVreme}">${wf.datum | dan} <span>${wf.datum | mesec} ${wf.datum | godina}</span></div>
+                <div class="timeline_content">
+                  ${wf.opis & t} (${wf.korisnik.naziv})
+                  <div class="timeline_content_addon">
+                    <blockquote>
+                      ${wf.ishodOpis}
+                    </blockquote>
                   </div>
                 </div>
               </div>
-            </li>
-          </ul>-->
-        </div>
+              <div if.bind="wf.tip==='Odobravanje' && wf.ishod && !wf.obrisan">
+                <div class="timeline_icon timeline_icon_success"><i class="material-icons">done</i></div>
+                <div class="timeline_date" data-uk-tooltip title=" ${wf.datum | datumVreme}">${wf.datum | dan} <span>${wf.datum | mesec} ${wf.datum | godina}</span></div>
+                <div class="timeline_content">${wf.opis & t} (${wf.korisnik.naziv})</div>
+              </div>
+              <div if.bind="wf.tip==='Prihvatanje' && wf.ishod && !wf.obrisan">
+                <div class="timeline_icon timeline_icon_success"><i class="material-icons">done</i></div>
+                <div class="timeline_date" data-uk-tooltip title=" ${wf.datum | datumVreme}">${wf.datum | dan} <span>${wf.datum | mesec} ${wf.datum | godina}</span></div>
+                <div class="timeline_content">${wf.opis & t} (${wf.korisnik.naziv})</div>
+              </div>
+              <div if.bind="wf.tip==='Prihvatanje' && !wf.ishod && !wf.obrisan">
+                <div class="timeline_icon timeline_icon_danger"><i class="material-icons">&#xE5CD;</i></div>
+                <div class="timeline_date" data-uk-tooltip title=" ${wf.datum | datumVreme}">${wf.datum | dan} <span>${wf.datum | mesec} ${wf.datum | godina}</span></div>
+                <div class="timeline_content">${wf.opis & t} (${wf.korisnik.naziv})</div>
+              </div>
+            </div>
 
-        <div class="uk-width-large-1-2 uk-width-medium-1-2 uk-width-small-1-1">
-          <fajlovi if.bind="ponuda.id !== 0" naslov="Dokumenta" entitet="Ponuda" entitetopis="PonudaDokument" entitetid.bind="ponuda.id" maksimum="2"></fajlovi>
+            <!--<div class="timeline_item">
+      <div class="timeline_icon timeline_icon_success"><i class="material-icons">&#xE85D;</i></div>
+      <div class="timeline_date">
+        09 <span>Jul</span>
+      </div>
+      <div class="timeline_content">Created ticket <a href="#"><strong>#3289</strong></a></div>
+    </div>
+    <div class="timeline_item">
+      <div class="timeline_icon timeline_icon_danger"><i class="material-icons">&#xE5CD;</i></div>
+      <div class="timeline_date">
+        15 <span>Jul</span>
+      </div>
+      <div class="timeline_content">Deleted post <a href="#"><strong>Consequuntur aut dolorum voluptatibus sit eveniet.</strong></a></div>
+    </div>
+    <div class="timeline_item">
+      <div class="timeline_icon"><i class="material-icons">&#xE410;</i></div>
+      <div class="timeline_date">
+        19 <span>Jul</span>
+      </div>
+      <div class="timeline_content">
+        Added photo
+        <div class="timeline_content_addon">
+          <img src="assets/img/gallery/Image16.jpg" alt="" />
+        </div>
+      </div>
+    </div>
+    <div class="timeline_item">
+      <div class="timeline_icon timeline_icon_primary"><i class="material-icons">&#xE0B9;</i></div>
+      <div class="timeline_date">
+        21 <span>Jul</span>
+      </div>
+      <div class="timeline_content">
+        New comment on post <a href="#"><strong>Quod et ut ut.</strong></a>
+        <div class="timeline_content_addon">
+          <blockquote>
+            Minus quos sint excepturi autem sit deleniti expedita nobis eligendi facere illum commodi aspernatur occaecati eius.&hellip;
+          </blockquote>
+        </div>
+      </div>
+    </div>
+    <div class="timeline_item">
+      <div class="timeline_icon timeline_icon_warning"><i class="material-icons">&#xE7FE;</i></div>
+      <div class="timeline_date">
+        29 <span>Jul</span>
+      </div>
+      <div class="timeline_content">
+        Added to Friends
+        <div class="timeline_content_addon">
+          <ul class="md-list md-list-addon">
+            <li>
+              <div class="md-list-addon-element">
+                <img class="md-user-image md-list-addon-avatar" src="assets/img/avatars/avatar_02_tn.png" alt="" />
+              </div>
+              <div class="md-list-content">
+                <span class="md-list-heading">Albertha Rosenbaum</span>
+                <span class="uk-text-small uk-text-muted">Aut ipsam explicabo temporibus.</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>-->
+
+          </div>
+
+          <fajlovi if.bind="ponuda.id !== 0" naslov="${'Dokumentacija' & t}" entitet="Ponuda" entitetopis="PonudaDokumentacija" entitetid.bind="ponuda.id" maksimum="10"></fajlovi>
+          <!--<fajlovi if.bind="ponuda.id !== 0" naslov="${'Podugovor' & t}" entitet="Ponuda" entitetopis="PonudaPodugovor" entitetid.bind="ponuda.id" maksimum="1"></fajlovi>-->
         </div>
 
       </div>
+
+
       <br />
       <br />
-      <button class="md-btn md-btn-primary md-btn-icon" href="javascript:void(0)" click.delegate="snimi()">
+      <button class="md-btn md-btn-primary md-btn-icon ${ponuda.status > 2 ? 'disabled' : ''}" href="javascript:void(0)" click.delegate="snimi()">
         <i class="uk-icon-save"></i>
         ${"Snimi" & t}
       </button>

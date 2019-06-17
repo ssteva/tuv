@@ -52,10 +52,10 @@ export class Obim {
 
     return Promise.all(promises)
       .then(res => {
-        this.primarne = res[0].obj;
-        this.sekundarne = res[1].obj;
-        this.tercijarne = res[2].obj;
-        this.obimi = res[3].obj;
+        this.primarne = res[0];
+        this.sekundarne = res[1];
+        this.tercijarne = res[2];
+        this.obimi = res[3];
         this.refresh();
       })
       .catch(err => {
@@ -163,11 +163,11 @@ export class Obim {
 
         let obimifilter = this.obimi.filter(e => {
           if(this.sekundarna && this.tercijarna)
-            return e.primarna.id === this.primarna && (e.sekundarna ? e.sekundarna.id : -1 === this.sekundarna) && (e.tercijarna ? e.tercijarna.id : -1 === this.tercijarna);
+            return e.primarna.id === this.primarna && e.sekundarna.id === this.sekundarna && e.tercijarna.id === this.tercijarna;
           if (!this.sekundarna && this.tercijarna)
-            return e.primarna.id === this.primarna && !e.sekundarna  && (e.tercijarna ? e.tercijarna.id : -1 === this.tercijarna);
+            return e.primarna.id === this.primarna && !e.sekundarna && e.tercijarna.id === this.tercijarna;
           if (this.sekundarna && !this.tercijarna)
-            return e.primarna.id === this.primarna && (e.sekundarna ? e.sekundarna.id : -1 === this.sekundarna) && !e.tercijarna;
+            return e.primarna.id === this.primarna && e.sekundarna.id  === this.sekundarna && !e.tercijarna;
           if (!this.sekundarna && !this.tercijarna)
             return e.primarna.id === this.primarna && !e.sekundarna  && !e.tercijarna;
         });
@@ -423,7 +423,7 @@ export class Obim {
       });
   }
   izmenaObim() {
-    let obj2 = this.dajObjekat(this.obim7, "Obim");
+    let obj2 = this.dajObjekat(this.obim, "Obim");
     let obj = {
       naslov: `${obj2.sifra} - ${obj2.naziv}`,
       tip: "Obim",

@@ -1,5 +1,5 @@
 {
-"Promena lozinke": "Promena lozinke",
+ "Promena lozinke": "Promena lozinke",
     "Odjava": "Odjava",
     "Administracija": "Administracija",
     "Klijenti": "Klijenti",
@@ -66,10 +66,13 @@
     "Redni broj": "Redni broj",
     "Datum ponude": "Datum ponude",
     "Ponudu kreirao": "Ponudu kreirao",
+    "Klijent": "Klijent",
     "Obriši": "Obriši",
     "Zadužen(a) za ponudu": "Zadužen(a) za ponudu",
     "Opis posla": "Opis posla",
     "Vrednost": "Vrednost",
     "Ponuda prihvaćena": "Ponuda prihvaćena",
-    "Klijent": "Klijent"
+    "Odobrenje ponude": "Odobrenje ponude",
+    "Odobri": "Odobri",
+    "Otkaži": "Otkaži"
 }

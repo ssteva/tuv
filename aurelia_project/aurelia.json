@@ -92,12 +92,15 @@
               "js/kendo.autocomplete.js",
               "js/kendo.datepicker.js",
               "js/kendo.grid.js",
+              "js/kendo.multiselect.js",
               "js/kendo.tabstrip.js",
               "js/kendo.dropdownlist.js",
               "css/web/kendo.common.min.css",
-              "css/web/kendo.bootstrap-v4.min.css",
-              "css/web/kendo.default.min.css",
-              "css/web/kendo.default-v2.min.css"
+              "css/web/kendo.common-material.min.css",
+              "css/web/kendo.material.min.css",
+              "css/web/kendo.default.min.css"
+
+
             ]
           },
           {
@@ -115,6 +118,7 @@
               "contextmenu/*.{js,html}",
               "numerictextbox/*.{js,html}",
               "dropdownlist/*.{js,html}",
+              "mutliselect/*.{js,html}",
               "tabstrip/*.{js,html}",
               "grid/*.{js,html}"
             ]

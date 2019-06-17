@@ -21,6 +21,7 @@ using NHibernate.Criterion;
 using Tuv.Models;
 using Tuv.Helper;
 using Tuv.Models.Kendo;
+using NHibernate.Transform;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -59,6 +60,27 @@ namespace Tuv.Controllers.api
       return Ok(upit.List<Klijent>());
     }
 
+
+    [HttpGet]
+    [Route("[Action]")]
+    public int BrojDokumenata(string tip, int idklijent)
+    {
+      try
+      {
+        var query = _session.CreateSQLQuery("exec BrojDokumenata :tip, :idklijent");
+        query.SetParameter("tip", tip, NHibernateUtil.String);
+        query.SetParameter("idklijent", idklijent, NHibernateUtil.Int32);
+        var result = query.UniqueResult<int>();
+        return result;
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError(ex.Message);
+        return 0;
+      }
+
+    }
+
     [HttpGet]
     [Route("[Action]")]
     public KlijentKontakt Kontakt(int id)
@@ -72,18 +94,87 @@ namespace Tuv.Controllers.api
 
     [HttpPost]
     [Route("[Action]")]
-    public KendoResult<Klijent> PregledGrid([FromBody] KendoRequest kr) //Get([FromUri] FilterContainer filter, int take, int skip, int page, int pageSize)
+    public KendoResult<KlijentPregled> PregledGrid([FromBody] KendoRequest kr) //Get([FromUri] FilterContainer filter, int take, int skip, int page, int pageSize)
     {
 
       //if (kr.Filter != null && kr.Filter.Filters.FirstOrDefault(x => x.Field == "all") != null)
       //{
       //    var sp = _session.CreateSQLQuery("exec KupacLookup")
       //}
+      Ponuda ponuda = null;
+      Klijent klijent = null;
+      PonudaStavka ponudaStavka = null;
+      KlijentPregled klijentPregled = null;
 
-      var upit = _session.QueryOver<Klijent>()
-          .Where(x => x.Obrisan == false);
+      var subEur = QueryOver.Of<Ponuda>()
+                    .Where(p => !p.Obrisan)
+                    .And(p => p.Klijent.Id == klijent.Id)
+                    .And(p => p.Valuta == "EUR")
+                    .JoinQueryOver(p => p.Stavke, () => ponudaStavka)
+                    .SelectList(ls => ls
+                      .SelectSum(() => ponudaStavka.Vrednost)
+                    );
+
+      var subRsd = QueryOver.Of<Ponuda>()
+              .Where(p => !p.Obrisan)
+              .And(p => p.Klijent.Id == klijent.Id)
+              .And(p => p.Valuta == "RSD")
+              .JoinQueryOver(p => p.Stavke, () => ponudaStavka)
+              .SelectList(ls => ls
+                .SelectSum(() => ponudaStavka.Vrednost)
+              );
+
+      var upit = _session.QueryOver<Klijent>(() => klijent)
+          .Where(x => !x.Obrisan)
+          .Select(Projections.ProjectionList()
+            .Add(Projections.Property(() => klijent.Id), "Id")
+            .Add(Projections.Property(() => klijent.Naziv), "Naziv")
+            .Add(Projections.Property(() => klijent.Drzava), "Drzava")
+            .Add(Projections.Property(() => klijent.Adresa), "Adresa")
+            .Add(Projections.Property(() => klijent.Mesto), "Mesto")
+            .Add(Projections.Property(() => klijent.Pib), "Pib")
+            .Add(Projections.Property(() => klijent.Komentar), "Komentar")
+            .Add(Projections.SubQuery(subRsd), "vrednostRsd")
+            .Add(Projections.SubQuery(subEur), "vrednostEur")
+        );
+      //.SelectList(list => list
+      //  .Select(k => k.Id).WithAlias(() => klijentPregled.Id)
+      //  .Select(k => k.Naziv).WithAlias(() => klijentPregled.Naziv)
+      //  .Select(k => k.Drzava).WithAlias(() => klijentPregled.Drzava)
+      //  .Select(k => k.Mesto).WithAlias(() => klijentPregled.Mesto)
+      //  .Select(k => k.Adresa).WithAlias(() => klijentPregled.Adresa)
+      //  .Select(k => k.Pib).WithAlias(() => klijentPregled.Pib)
+      //  .Select(k => k.Komentar).WithAlias(() => klijentPregled.Komentar)
+      //  .SelectSubQuery(
+      //    QueryOver.Of<Ponuda>()
+      //      .Where(p => !p.Obrisan)
+      //      .And(p => p.Klijent.Id == klijent.Id)
+      //      .And(p => p.Valuta == "RSD")
+      //      .JoinQueryOver(p => p.Stavke, () => ponudaStavka)
+      //      .SelectList(ls => ls
+      //        .SelectSum(() => ponudaStavka.Vrednost)
+      //      )
+      //  ).WithAlias(() => klijentPregled.VrednostRsd)
+      //  .SelectSubQuery(
+      //    QueryOver.Of<Ponuda>()
+      //      .Where(p => !p.Obrisan)
+      //      .And(p => p.Klijent.Id == klijent.Id)
+      //      .And(p => p.Valuta == "EUR")
+      //      .JoinQueryOver(p => p.Stavke, () => ponudaStavka)
+      //      .SelectList(ls => ls
+      //        .SelectSum(() => ponudaStavka.Vrednost)
+      //      )
+      //  ).WithAlias(() => klijentPregled.VrednostEur)
+      //);
+
+
+
+
+
+
       var rowcount = _session.QueryOver<Klijent>()
-          .Where(x => x.Zakljucan == false);
+          .Where(x => !x.Obrisan);
+
 
 
 
@@ -92,7 +183,7 @@ namespace Tuv.Controllers.api
       {
         foreach (FilterDescription filter in kr.Filter.Filters)
         {
-          string prop = textInfo.ToTitleCase(filter.Field);
+          string prop = filter.Field.FirstCharToUpper(); //textInfo.ToTitleCase(filter.Field);
           upit.Where(Restrictions.InsensitiveLike(prop, filter.Value, MatchMode.Anywhere));
           rowcount.Where(Restrictions.InsensitiveLike(prop, filter.Value, MatchMode.Anywhere));
         }
@@ -101,26 +192,36 @@ namespace Tuv.Controllers.api
       upit.Skip(kr.Skip);
       upit.Take(kr.Take);
 
+
+
       if (kr.Sort.Any())
       {
         foreach (Sort sort in kr.Sort)
         {
-          string prop = textInfo.ToTitleCase(sort.Field);
-          upit.UnderlyingCriteria.AddOrder(new Order(prop, sort.Dir.ToLower() == "asc"));
+          string prop = sort.Field.FirstCharToUpper(); //textInfo.ToTitleCase(sort.Field);
+          {
+            //upit.UnderlyingCriteria.AddOrder(new Order(prop, sort.Dir.ToLower() == "asc"));
+            if(sort.Field.Contains("vrednostEur"))
+              upit.UnderlyingCriteria.AddOrder(new Order(Projections.SubQuery(subEur), sort.Dir.ToLower() == "asc"));
+            else if (sort.Field.Contains("vrednostRsd"))
+              upit.UnderlyingCriteria.AddOrder(new Order(Projections.SubQuery(subEur), sort.Dir.ToLower() == "asc"));
+            else
+              upit.UnderlyingCriteria.AddOrder(new Order(prop, sort.Dir.ToLower() == "asc"));
+          }
         }
       }
 
 
-
-      upit.Future<Klijent>();
+      upit.TransformUsing(Transformers.AliasToBean<KlijentPregled>());
+      upit.Future<KlijentPregled>();
 
 
       rowcount.Select(Projections.Count(Projections.Id()));
 
       var redova = rowcount.FutureValue<int>().Value;
 
-      var lista = upit.List<Klijent>();
-      var res = new KendoResult<Klijent>
+      var lista = upit.List<KlijentPregled>();
+      var res = new KendoResult<KlijentPregled>
       {
         Data = lista,
         Total = redova
@@ -162,4 +263,5 @@ namespace Tuv.Controllers.api
 
   }
 }
+
 

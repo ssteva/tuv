@@ -107,6 +107,7 @@ export function configure(aurelia) {
         .kendoAutoComplete()
         .kendoDropDownList()
         .kendoTabStrip()
+        .kendoMultiSelect()
     })
     .plugin('aurelia-validation')
     .plugin('aurelia-after-attached-plugin')

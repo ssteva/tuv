@@ -18,7 +18,7 @@ namespace Tuv.Mapping
     protected override void MapSubClass()
     {
       Table("tTercijarna");
-      Id(x => x.Id).GeneratedBy.Identity();
+      Id(x => x.Id).GeneratedBy.Identity().UnsavedValue(0);
       Map(x => x.Sifra);
       Map(x => x.Naziv);
       References(x => x.Primarna).Not.Update();

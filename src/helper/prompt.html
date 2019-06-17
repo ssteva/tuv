@@ -1,28 +1,36 @@
 <template>
-    <!--<require from="/lib/bootstrap/dist/css/bootstrap.css"></require>-->
-    <ai-dialog>
-        <ai-dailog-header>
-            <h2>${message}</h2>
-        </ai-dailog-header>
-        <ai-daialog-body>
-            <div class="md-card">
-                <div class="md-card-content">
-                    <h4 class="heading_list">Podaci o kupcu</h4>
-                    <div class="uk-grid uk-grid-divider" data-uk-grid-margin>
-                        <div class="uk-width-1-1">
-                            <label>Prezime</label>
-                            <input type="text" class="md-input label-fixed"  />
-                            <label>Broj</label>
-                            <input type="text" class="md-input label-fixed" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-            Telo
-        </ai-daialog-body>
-        <ai-dialog-footer>
-            <button click.trigger="controller.cancel()">Ne</button>
-            <button click.trigger="controller.ok(message)">Da</button>
-        </ai-dialog-footer>
-    </ai-dialog>
-</template> 
+  <!--<require from="/lib/bootstrap/dist/css/bootstrap.css"></require>-->
+  <require from="resources/elements/closebutton.html"></require>
+  <ux-dialog>
+    <ux-dialog-header>
+      <closebutton naslov="${naslov}" click.trigger="cancel()"></closebutton>
+    </ux-dialog-header>
+    <ux-dialog-body>
+      <!--<div class="uk-form-row">
+      <label class="uk-form-label">${labela}</label>
+      <div class="uk-form-controls dynamic_radio uk-margin-small-top">
+        <span class="icheck-inline">
+          <input type="radio" name="opt" id="da" model.bind="true" checked.bind="ishod" data-md-icheck required />
+          <label class="uk-text-small inline-label" for="ne" t="Da">Da</label>
+        </span>
+        <span class="icheck-inline">
+          <input type="radio" name="opt" id="ne" model.bind="false" checked.bind="ishod" data-md-icheck required />
+          <label class="uk-text-small inline-label" for="ne" t="Ne">Ne</label>
+        </span>
+      </div>
+        </div>-->
+      <div class="uk-form-row">
+        <label class="uk-form-label" t="Komentar">Komentar</label>
+        <div class="uk-form-controls">
+          <textarea rows="4" cols="50" class="uk-width-1-1" value.bind="komentar"></textarea>
+        </div>
+      </div>
+    </ux-dialog-body>
+    <ux-dialog-footer>
+      <button if.bind="komentar" class="md-btn md-btn-primary md-btn-icon" href="javascript:void(0)" click.delegate="potvrdi()">
+        <i class="uk-icon-save"></i>
+        ${"Snimi" & t}
+      </button>
+    </ux-dialog-footer>
+  </ux-dialog>
+</template>

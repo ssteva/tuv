@@ -11,7 +11,7 @@
       <label> ${obj.edit ? "Šifra" : "Predlog šifre" & t}</label>
       <input type="text" class="md-input" value.bind="obj.obj.sifra" />
       <label t="Naziv">Naziv</label>
-      <input type="text" class="md-input" value.bind="obj.obj.naziv" />
+      <input attach-focus type="text" class="md-input" value.bind="obj.obj.naziv" />
       
     </ux-dialog-body>
     <ux-dialog-footer>
