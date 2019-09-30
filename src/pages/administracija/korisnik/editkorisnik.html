@@ -18,6 +18,10 @@
               <input type="text" class="md-input uk-text-small" value.bind="korisnik.prezime" />
               <label class="md-input uk-text-small" t="Email">Email</label>
               <input type="text" class="md-input uk-text-small" value.bind="korisnik.email" />
+              <label class="md-input uk-text-small" t="Telefon">Telefon</label>
+              <input type="text" class="md-input uk-text-small" value.bind="korisnik.telefon" />
+              <label class="md-input uk-text-small" t="Mobilni">Mobilni</label>
+              <input type="text" class="md-input uk-text-small" value.bind="korisnik.mobilni" />
             </div>
             <div class="uk-width-1-2">
               
@@ -36,7 +40,7 @@
               <br />
               <br />
               <label for="chkAktivan" t="Aktivan">Aktivan &nbsp;&nbsp;</label>
-              <input type="checkbox" name="chkAktivan" id="chkAktivan" checked.one-way="!korisnik.obrisan" change.delegate="obrisan($this)" />
+              <input type="checkbox" name="chkAktivan" id="chkAktivan" checked.bind="korisnik.aktivan" />
               <br />
               <br />
               <br />

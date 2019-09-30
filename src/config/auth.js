@@ -3,7 +3,7 @@ export default {
     endpoint: 'auth',
 
     // Which endpoints to patch with the JWT (Authorization header).
-    configureEndpoints: ['auth', 'lokal', 'fajl'],
+  configureEndpoints: ['auth', 'lokal', 'fajl', 'fajl2'],
 
     // The base url used for all authentication related requests, including provider.url below.
     // This appends to the httpClient/endpoint base url (in `./app.js`), it does not override it.

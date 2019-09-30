@@ -150,8 +150,8 @@ namespace Tuv
                     //exporter.Execute(true, true, false);
                 }
                 //update
-                 //var update = new SchemaUpdate(config);
-                //update.Execute(true, true);
+                var update = new SchemaUpdate(config);
+                update.Execute(true, true);
 
                 config.SetInterceptor(new AuditInterceptor(factory.GetService<ILoggerFactory>(), NHibernateHelper.OpenSession(), factory.GetService<IHttpContextAccessor>()));
                 config.BuildSessionFactory();//.SetInterceptor(new AuditInterceptor());

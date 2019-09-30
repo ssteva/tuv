@@ -15,7 +15,10 @@ import { activationStrategy } from 'aurelia-router';
 import { I18N } from 'aurelia-i18n';
 import toastr from 'toastr';
 import 'kendo/js/kendo.dropdownlist';
+import 'kendo/js/kendo.all';
+import 'kendo/js/cultures/kendo.culture.de-DE';
 import moment from 'moment';
+
 
 @inject(AuthService)
 class AuthenticateStepRole {
@@ -53,6 +56,11 @@ class AuthenticateStepRole {
 
 @inject(AltairCommon, AuthService, DialogService, Aurelia, Endpoint.of(), EventAggregator, I18N)
 export class App {
+  determineActivationStrategy() {
+    return activationStrategy.replace; //replace the viewmodel with a new instance
+    // or activationStrategy.invokeLifecycle to invoke router lifecycle methods on the existing VM
+    // or activationStrategy.noChange to explicitly use the default behavior
+  }
   odabranijezik = "sr";
   prikazi;
   constructor(altairCommon, authService, dialogService, aur, lokalRepo, eventAggregator, i18N) {
@@ -68,7 +76,7 @@ export class App {
     this.jezici = [{ id: "sr", naziv: "Srpski" }, { id: "en", naziv: "English" }];
     this.ea.subscribe('authentication-change', authenticated => {
       if (!authenticated) {
-        //console.log(1);
+        console.log("auth change");
         //this.router.navigateToRoute('login');
         this.aur.setRoot('pages/login/login');
       }
@@ -199,7 +207,8 @@ export class App {
           .then(() => {
             toastr.success(this.i18n.tr("Uspešna odjava"));
             //location.reload();
-            this.aur.setRoot('pages/login/login');
+            //this.aur.setRoot('pages/login/login');
+            
           });
       } else {
         console.log('cancelled');
@@ -210,12 +219,23 @@ export class App {
 
   logout() {
     UIkit.modal.confirm(this.i18n.tr('Da li želite da se odjavite?'), () => {
+      //this.aur.setRoot('app')
+      //  .then((aurelia) => {
+      //    aurelia.root.viewModel.router.navigateToRoute('pages/login/login');
+      //  }); 
       //UIkit.modal.alert('Confirmed!'); 
       this.authService.logout()
         .then(() => {
+          location.reload();
           toastr.success(this.i18n.tr("Uspešna odjava"));
           //location.reload();
-          this.aur.setRoot('pages/login/login');
+          //this.router.deactivate();
+          //this.router.reset();
+          //this.aur.setRoot('app')
+          //  .then((aurelia) => {
+          //    aurelia.root.viewModel.router.navigateToRoute('login');
+          //  }); 
+          //this.aur.setRoot('pages/login/login');
         });
     });
     //this.dialogService.open({viewModel: Prompt, model: 'Da li želite da se odjavite?' }).then(response => {
@@ -302,6 +322,16 @@ export class App {
 
   }
 }
+Number.prototype.formatMoney = function (c, d, t) {
+    var n = this,
+        c = isNaN(c = Math.abs(c)) ? 2 : c,
+        d = d == undefined ? "." : d,
+        t = t == undefined ? "," : t,
+        s = n < 0 ? "-" : "",
+        i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
+        j = (j = i.length) > 3 ? j % 3 : 0;
+    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+};
 
 
 

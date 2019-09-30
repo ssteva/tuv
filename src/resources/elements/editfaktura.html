@@ -1,0 +1,59 @@
+﻿<template>
+  <require from="./edituplata.css"></require>
+  <require from="resources/elements/closebutton.html"></require>
+  <require from="aurelia-kendoui-bridge/dropdownlist/dropdownlist"></require>
+  <require from="aurelia-kendoui-bridge/datepicker/datepicker"></require>
+  <require from="aurelia-kendoui-bridge/numerictextbox/numerictextbox"></require>
+  <ux-dialog>
+    <ux-dialog-header>
+      <closebutton naslov="${naslov}" click.trigger="cancel()"></closebutton>
+    </ux-dialog-header>
+    <ux-dialog-body>
+      <form class="uk-form-horizontal">
+        <div class="uk-form-row">
+          <label class="uk-form-label" t="Broj računa">Broj računa</label>
+          <div class="uk-form-controls">
+            <input type="text" class="k-textbox" value.bind="obj.broj" style="width: 100%;" disabled.bind="lock" />
+          </div>
+        </div>
+        <div class="uk-form-row">
+          <label class="uk-form-label" t="Datum">Datum</label>
+          <div class="uk-form-controls">
+            <input ak-datepicker="k-widget.two-way: cboDatum; k-value.two-way: obj.datum; k-format.bind:'dd.MM.yyyy'" />
+          </div>
+        </div>
+        <div class="uk-form-row">
+          <div class="uk-form-controls">
+            <div class="dynamic_radio uk-margin-small-top">
+              <span class="icheck-inline">
+                <input type="radio" name="optValuta" id="RSD" value.bind="'RSD'" checked.bind="obj.valuta" data-md-icheck required disabled.bind="lock" />
+                <label class="uk-text-small inline-label" for="RSD">RSD</label>
+              </span>
+              <span class="icheck-inline">
+                <input type="radio" name="optValuta" id="EUR" model.bind="'EUR'" checked.bind="obj.valuta" data-md-icheck required disabled.bind="lock" />
+                <label class="uk-text-small inline-label" for="EUR">EUR</label>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="uk-form-row">
+          <label class="uk-form-label" t="Iznos">Iznos</label>
+          <div class="uk-form-controls">
+            <input type="number" ak-numerictextbox="k-widget.two-way: txtIznos; k-value.two-way: obj.iznos;k-format.bind:'n2'; k-min.bind:1;k-max.bind:99999999;k-step.bind: 1"
+                   k-on-change.delegate="onChange(stavka, $event.detail)" k-on-spin.delegate="onChange($this, $event.detail)" />
+          </div>
+        </div>
+
+
+      </form>
+    </ux-dialog-body>
+    <ux-dialog-footer>
+
+      <button class="md-btn  md-btn-primary md-btn-icon-mini" click.delegate="snimi()">
+        <i class="material-icons">save</i>
+        ${"Snimi" & t}
+      </button>
+    </ux-dialog-footer>
+  </ux-dialog>
+</template>

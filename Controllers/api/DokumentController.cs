@@ -132,6 +132,7 @@ namespace Tuv.Controllers.api
         {
           await file.CopyToAsync(ms);
           dok.Data = ms.ToArray();
+          dok.DateLastModified = lastmodified;
         }
 
         _session.SaveOrUpdate(dok);

@@ -19,8 +19,9 @@ namespace Tuv.Mapping
     {
       Table("tObimPoslovanja");
       Id(x => x.Id).GeneratedBy.Identity().UnsavedValue(0);
-      Map(x => x.Sifra);
+      Map(x => x.Sifra).CustomSqlType("nvarchar(10)");
       Map(x => x.Naziv);
+      Map(x => x.Oznaka).CustomSqlType("nvarchar(10)");
       References(x => x.Primarna).Not.Update();
       References(x => x.Sekundarna).Not.Update();
       References(x => x.Tercijarna).Not.Update();

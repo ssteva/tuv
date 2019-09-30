@@ -20,6 +20,7 @@ namespace Tuv.Models
     public virtual string FileName { get; set; }
     public virtual DateTime DateLastModified { get; set; }
     public virtual long Size { get; set; }
+    [JsonIgnore]
     public virtual byte[] Data { get; set; }
     public virtual Guid RowId { get; set; }
 

@@ -60,7 +60,10 @@ export class Login {
                     if (this.authService.getTokenPayload().role === 'Ino kupac') {
                         this.app.setRoot('appIno').then(() => this.isLoading = false);
                     } else {
-                        this.app.setRoot('app').then(() => this.isLoading = false);
+                      this.app.setRoot('app').then(() => {
+                        this.isLoading = false;
+//                        location.reload();
+                      });
                     }
                     //this.isLoading = false;
                 } else {

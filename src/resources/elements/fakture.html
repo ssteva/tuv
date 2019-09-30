@@ -1,0 +1,64 @@
+﻿<template>
+  <require from="./uplate.css"></require>
+
+  <div id="iduplate">
+    <h4>${naslov}</h4>
+    <table class="uk-table uk-text-small uk-table-condensed">
+      <colgroup>
+        <col span="1" style="width: 25%;">
+        <col span="1" style="width: 15%;">
+        <col span="1" style="width: 20%;">
+        <col span="1" style="width: 30%;">
+        <col span="1" style="width: 10%;">
+      </colgroup>
+      <thead>
+        <tr>
+          <th t="Broj">Broj</th>
+          <th t="Datum">Datum</th>
+          <th t="Valuta">Valuta</th>
+          <th t="Iznos">Iznos</th>
+          <th t="Opcije">Opcije</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr repeat.for="faktura of fakture">
+          <td>
+            ${faktura.broj}
+          </td>
+          <td>
+            ${faktura.datum | datumf}
+          </td>
+          <td>
+            ${faktura.valuta}
+          </td>
+          <td>
+            ${faktura.iznos | dinaraf}
+          </td>
+          <td if.bind="(role==='Izvršilac' || role==='Administrator') && !lock">
+            <a href="javascript:void()" data-uk-tooltip title="${'Pregled uplate' & t}" click.delegate="izmena(faktura)"><i class="md-icon material-icons">mode_edit</i></a>
+            <a href="javascript:void()" data-uk-tooltip title="${'Brisanje uplate' & t}" click.delegate="delete(faktura, $index)"><i class="md-icon material-icons">delete</i></a>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>
+            <span class="uk-text-muted uk-text-small">Total ${faktura.valuta}</span>
+            <p class="heading_b uk-text-success">${vrednost | dinaraf}</p>
+          </td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+    <a class="md-btn md-btn-primary md-btn-icon-mini md-btn-wave-light" href="javascript:void()" click.delegate="novi()">
+      <i class="material-icons md-24">add</i>
+      ${"Nova faktura" & t}
+    </a>
+  </div>
+
+
+
+</template>

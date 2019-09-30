@@ -1,6 +1,6 @@
 ﻿<template>
   <require from="../../helper/grid-i18n"></require>
-  
+
   <a class="md-btn md-btn-primary md-btn-icon-mini md-btn-wave-light" href="javascript:void()" click.delegate="novi()">
     <i class="material-icons md-24">add</i>
     ${"Nova ponuda" & t}
@@ -15,7 +15,7 @@
            k-sortable.bind="true">
     <!-- Column definitions in HTML -->
     <ak-col k-title="${'Rbr' & t}" k-field="rbr"></ak-col>
-    <ak-col k-title="${'Klijent' & t}" k-field="klijent.naziv"></ak-col>
+    <ak-col k-title="${'Klijent' & t}" k-field="klijent.naziv" k-filterable.bind="klijentiFilter"></ak-col>
     <ak-col k-title="${'Broj' & t}" k-field="broj"></ak-col>
     <ak-col k-title="${'Datum ponude' & t}" k-field="datumPonude" k-format="{0:dd.MM.yyyy}" k-width="130px" k-filterable.bind="common.datumDokumentaFilter"></ak-col>
     <ak-col k-title="${'Predmet' & t}" k-field="predmetPonude">
@@ -26,38 +26,49 @@
           </li>
         </ul>
         <!--<table class="uk-table uk-text-small uk-table-condensed">
-          <colgroup>
-            <col span="1" style="width: 20%;">
-            <col span="1" style="width: 60%;">
-          </colgroup>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th t="Šifra">Šifra</th>
-              <th t="Naziv">Naziv</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr repeat.for="pp of predmetPonude">
-              <td>
-                ${pp.obimPoslovanja.sifra}
-              </td>
-              <td if.bind="!obim.obrisan">
-                ${pp.obimPoslovanja.naziv}
-              </td>
-            </tr>
-            </tbody>
-          </table>-->
+      <colgroup>
+        <col span="1" style="width: 20%;">
+        <col span="1" style="width: 60%;">
+      </colgroup>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th t="Šifra">Šifra</th>
+          <th t="Naziv">Naziv</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr repeat.for="pp of predmetPonude">
+          <td>
+            ${pp.obimPoslovanja.sifra}
+          </td>
+          <td if.bind="!obim.obrisan">
+            ${pp.obimPoslovanja.naziv}
+          </td>
+        </tr>
+        </tbody>
+      </table>-->
       </ak-template>
     </ak-col>
     <ak-col k-title="${'Valuta' & t}" k-field="valuta"></ak-col>
     <ak-col k-title="${'Vrednost' & t}" k-field="vrednost"></ak-col>
+    <ak-col k-title="${'Status' & t}" k-field="ponudaStatus.id" k-filterable.bind="statusiFilter">
+      <ak-template>
+        <span class="uk-badge ${ponudaStatus.klasa}">${ponudaStatus.status & t}</span>
+      </ak-template>
+    </ak-col>
     <ak-col k-title="${'Opcije' & t}">
       <ak-template>
         <!--<button class="uk-button-mini uk-button-primary uk-icon-edit" click.delegate="edit($this)">Izmena</button>-->
         <!--<a href="javascript:void()"  click.delegate="izmena($this)" class="uk-icon-justify uk-icon-edit"></a>-->
-        <a href="javascript:void()" click.delegate="izmena($this)">
+        <a href="javascript:void()" data-uk-tooltip title="${'Pregled ponude' & t}" click.delegate="izmena($this)">
           <i class="md-icon material-icons">mode_edit</i>
+        </a>
+        <a if.bind="status>=3" data-uk-tooltip title="${'Novi radni nalog' & t}" href="javascript:void()" click.delegate="nalog($this)">
+          <i class="md-icon material-icons">build</i>
+        </a>
+        <a if.bind="status>=2" data-uk-tooltip title="${'Štampa' & t}" href="javascript:void()" click.delegate="stampa($this)">
+          <i class="md-icon material-icons">print</i>
         </a>
       </ak-template>
     </ak-col>

@@ -68,15 +68,31 @@ namespace Tuv.Controllers.api
         return Json(new { Success = false, Message = ex.Message });
       }
     }
+
+
+    [HttpGet()]
+    [Route("[Action]")]
+    public ActionResult PromeniKurs(int godina, int nedelja, string valuta, decimal kurs)
+    {
+      var query = _session.CreateSQLQuery("exec PromeniKurs :godina, :nedelja, :valuta, :kurs");
+      query.SetParameter("godina", godina, NHibernateUtil.Int32);
+      query.SetParameter("nedelja", nedelja, NHibernateUtil.Int32);
+      query.SetParameter("valuta", valuta, NHibernateUtil.String);
+      query.SetParameter("kurs", kurs, NHibernateUtil.Decimal);
+      query.ExecuteUpdate();
+      return Ok();
+    }
+
+
     [HttpPost]
     public ActionResult Post([FromBody] List<KursnaLista> lista)
     {
       try
       {
 
-        foreach (var kn  in lista)
+        foreach (var kn in lista)
         {
-          
+
           _session.SaveOrUpdate(kn);
         }
 
@@ -94,6 +110,6 @@ namespace Tuv.Controllers.api
 
   }
 
-  
+
 }
 

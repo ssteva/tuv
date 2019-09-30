@@ -4,6 +4,7 @@ import {AuthService} from 'aurelia-authentication';
 import {EntityManager} from 'aurelia-orm';
 import 'kendo/js/kendo.grid';
 import 'kendo/js/kendo.dropdownlist';
+import 'kendo/js/kendo.tabstrip';
 import * as toastr from 'toastr';
 import { Common } from 'helper/common';
 import { AltairCommon } from 'helper/altair_admin_common';
@@ -103,5 +104,55 @@ export class Klijenti {
     //  console.log(response.output);
     //});
     this.router.navigateToRoute("klijent", { id: 0 });
+  }
+  detailInit(e) {
+    let detailRow = e.detailRow;
+    detailRow.find('.tabstrip').kendoTabStrip({
+      animation: {
+        open: { effects: 'fadeIn' }
+      }
+    });
+    this.repo.find('Nalog/NaloziPoKlijentu?klijentid=' + e.data.id)
+      .then(result => {
+        this.nalozi = result;
+      })
+      .catch(err => {
+        toastr.error(err);
+      });
+    detailRow.find('.ponude').kendoGrid({
+      dataSource: {
+        pageSize: 10,
+        batch: false,
+        transport: {
+          read: (o) => {
+            this.repo.post('Ponuda/PregledGrid', o.data)
+              //this.lokalep.post('Zamena/PregledGrid', o.data)                    
+              .then(result => {
+                o.success(result);
+              })
+              .catch(err => {
+                console.log(err.statusText);
+              });
+          }
+        },
+        serverPaging: true,
+        serverSorting: true,
+        serverFiltering: true,
+        schema: {
+          data: "data",
+          total: "total"
+        },
+        filter: { field: 'klijent.id', operator: 'eq', value: e.data.id }
+      },
+      scrollable: false,
+      sortable: true,
+      pageable: true,
+      columns: [
+        { field: 'broj', title: 'Broj', width: '70px' },
+        { field: 'datum', title: 'DatumPonude', width: '70px' },
+        { field: 'valuta', title: 'Valuta', width: '30px' },
+        { field: 'vrednost', title: 'Vrednost', width: '70px' }
+      ]
+    });
   }
 }

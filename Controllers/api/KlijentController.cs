@@ -56,7 +56,8 @@ namespace Tuv.Controllers.api
     [Route("[Action]")]
     public ActionResult dajSveKlijente()
     {
-      var upit = _session.QueryOver<Klijent>().Where(x => !x.Obrisan);
+      var upit = _session.QueryOver<Klijent>().Where(x => !x.Obrisan)
+        .OrderBy(x => x.Naziv).Asc;
       return Ok(upit.List<Klijent>());
     }
 
@@ -125,18 +126,8 @@ namespace Tuv.Controllers.api
               );
 
       var upit = _session.QueryOver<Klijent>(() => klijent)
-          .Where(x => !x.Obrisan)
-          .Select(Projections.ProjectionList()
-            .Add(Projections.Property(() => klijent.Id), "Id")
-            .Add(Projections.Property(() => klijent.Naziv), "Naziv")
-            .Add(Projections.Property(() => klijent.Drzava), "Drzava")
-            .Add(Projections.Property(() => klijent.Adresa), "Adresa")
-            .Add(Projections.Property(() => klijent.Mesto), "Mesto")
-            .Add(Projections.Property(() => klijent.Pib), "Pib")
-            .Add(Projections.Property(() => klijent.Komentar), "Komentar")
-            .Add(Projections.SubQuery(subRsd), "vrednostRsd")
-            .Add(Projections.SubQuery(subEur), "vrednostEur")
-        );
+          .Where(x => !x.Obrisan);
+
       //.SelectList(list => list
       //  .Select(k => k.Id).WithAlias(() => klijentPregled.Id)
       //  .Select(k => k.Naziv).WithAlias(() => klijentPregled.Naziv)
@@ -169,11 +160,18 @@ namespace Tuv.Controllers.api
 
 
 
+      upit.Select(Projections.ProjectionList()
+        .Add(Projections.Property(() => klijent.Id), "Id")
+        .Add(Projections.Property(() => klijent.Naziv), "Naziv")
+        .Add(Projections.Property(() => klijent.Drzava), "Drzava")
+        .Add(Projections.Property(() => klijent.Adresa), "Adresa")
+        .Add(Projections.Property(() => klijent.Mesto), "Mesto")
+        .Add(Projections.Property(() => klijent.Pib), "Pib")
+        .Add(Projections.Property(() => klijent.Komentar), "Komentar")
+        .Add(Projections.SubQuery(subRsd), "vrednostRsd")
+        .Add(Projections.SubQuery(subEur), "vrednostEur"));
 
-
-
-      var rowcount = _session.QueryOver<Klijent>()
-          .Where(x => !x.Obrisan);
+      var rowcount = upit.ToRowCountQuery();
 
 
 
@@ -201,7 +199,7 @@ namespace Tuv.Controllers.api
           string prop = sort.Field.FirstCharToUpper(); //textInfo.ToTitleCase(sort.Field);
           {
             //upit.UnderlyingCriteria.AddOrder(new Order(prop, sort.Dir.ToLower() == "asc"));
-            if(sort.Field.Contains("vrednostEur"))
+            if (sort.Field.Contains("vrednostEur"))
               upit.UnderlyingCriteria.AddOrder(new Order(Projections.SubQuery(subEur), sort.Dir.ToLower() == "asc"));
             else if (sort.Field.Contains("vrednostRsd"))
               upit.UnderlyingCriteria.AddOrder(new Order(Projections.SubQuery(subEur), sort.Dir.ToLower() == "asc"));
@@ -216,7 +214,7 @@ namespace Tuv.Controllers.api
       upit.Future<KlijentPregled>();
 
 
-      rowcount.Select(Projections.Count(Projections.Id()));
+      //rowcount.Select(Projections.Count(Projections.Id()));
 
       var redova = rowcount.FutureValue<int>().Value;
 
@@ -238,7 +236,7 @@ namespace Tuv.Controllers.api
       try
       {
         if (obj.Id == 0)
-          obj.Rbr = Helper.RedniBroj(_session, "klijent");
+          obj.Rbr = Helper.RedniBroj(_session, "klijent", DateTime.Now);
 
         foreach (var kontakt in obj.Kontakti)
         {

@@ -20,8 +20,11 @@ namespace Tuv.Models
     public virtual string Jm { get; set; }
     public virtual int Kolicina { get; set; }
     public virtual decimal Kurs { get; set; }
+    //public virtual int Kn { get; set; }
+    public virtual int PoreskaStopa { get; set; }
     public virtual decimal Cena { get; set; }
     public virtual decimal Vrednost { get; set; }
+
     //public virtual decimal Vrednost
     //{
     //  get

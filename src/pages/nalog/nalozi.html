@@ -1,0 +1,42 @@
+﻿<template>
+  <require from="../../helper/grid-i18n"></require>
+
+  <!--<a class="md-btn md-btn-primary md-btn-icon-mini md-btn-wave-light" href="javascript:void()" click.delegate="novi()">
+    <i class="material-icons md-24">add</i>
+    ${"Nova ponuda" & t}
+  </a>
+  <br />
+  <br />-->
+  <ak-grid grid-i18n k-widget.bind="grid"
+           k-data-source.bind="datasource"
+           k-pageable.bind="common.pageable"
+           k-filterable.bind="common.filterobj"
+           k-on-filter-menu-init.delegate="common.filterMenu($event.detail)"
+           k-sortable.bind="true">
+    <!-- Column definitions in HTML -->
+    <ak-col k-title="${'Rbr' & t}" k-field="rbr"></ak-col>
+    <ak-col k-title="${'Klijent' & t}" k-field="ponuda.klijent.naziv" k-filterable.bind="klijentiFilter"></ak-col>
+    <ak-col k-title="${'Broj' & t}" k-field="broj"></ak-col>
+    <ak-col k-title="${'Datum naloga' & t}" k-field="datumKreiranja" k-format="{0:dd.MM.yyyy}" k-width="130px" k-filterable.bind="common.datumDokumentaFilter"></ak-col>
+    <ak-col k-title="${'Predmet' & t}" k-field="predmetNaloga">
+      <ak-template>
+        ${predmetNaloga.sifra} ${predmetNaloga.naziv}
+      </ak-template>
+    </ak-col>
+    <ak-col k-title="${'Status' & t}" k-field="radniNalogStatus.id" k-filterable.bind="statusiFilter">
+      <ak-template>
+        <span class="uk-badge ${radniNalogStatus.klasa}">${radniNalogStatus.status & t}</span>
+      </ak-template>
+    </ak-col>
+    <ak-col k-title="${'Opcije' & t}">
+      <ak-template>
+        <!--<button class="uk-button-mini uk-button-primary uk-icon-edit" click.delegate="edit($this)">Izmena</button>-->
+        <!--<a href="javascript:void()"  click.delegate="izmena($this)" class="uk-icon-justify uk-icon-edit"></a>-->
+        <a href="javascript:void()" click.delegate="izmena($this)">
+          <i class="md-icon material-icons">mode_edit</i>
+        </a>
+      </ak-template>
+    </ak-col>
+    <!--<ak-col k-command.bind="['edit', 'destroy']" k-title="&nbsp;" k-width.bind="200"></ak-col>-->
+  </ak-grid>
+</template>

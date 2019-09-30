@@ -33,14 +33,22 @@ namespace Tuv.Mapping
       Map(x => x.Vazi);
       Map(x => x.Valuta).CustomSqlType("nvarchar(3)");
       Map(x => x.Status);
-      Map(x => x.Napomena).CustomSqlType("nvarchar(3000)");
+      Map(x => x.BitneNapomene).CustomSqlType("nvarchar(3000)");
       Map(x => x.Ostalo).CustomSqlType("nvarchar(3000)");
       Map(x => x.PrimenjiviZahtevi).CustomSqlType("nvarchar(2000)");
-      Map(x => x.UsloviPlacanja).CustomSqlType("nvarchar(2000)");
+      Map(x => x.CenaUsloviPlacanja).CustomSqlType("nvarchar(2000)");
+      Map(x => x.TipProizvoda).CustomSqlType("nvarchar(2000)");
+      Map(x => x.Proizvodjac).CustomSqlType("nvarchar(2000)");
+      Map(x => x.PredvidjenoVremeZaRealizaciju).CustomSqlType("nvarchar(2000)");
       Map(x => x.Vrednost).Column("VrednostPonude").Not.Update().Not.Insert();
+      Map(x => x.LimitOdobrenjaDirektora);
+      Map(x => x.Revizija).Default("0");
+      Map(x => x.PotrebnoOdobrenjeDirektora).Column("PotrebnoOdobrenjeDirektora").Not.Update().Not.Insert();
+      References(x => x.PonudaStatus).Column("StatusPonude").Not.Update().Not.Insert().ForeignKey("FK_StatusPonude");
       References(x => x.Klijent).Cascade.None();
+      References(x => x.KlijentKontakt).Cascade.None();
       References(x => x.ZaduzenZaPonudu).Column("ZaduzenZaPonuduId").Cascade.None();
-      References(x => x.ZaduzenZaProjekat).Column("ZaduzenZaProjekatId").Cascade.None();
+      References(x => x.PonuduOdobrio).Column("PonuduOdobrioId").Cascade.None();
       HasMany(x => x.Stavke)
            .Inverse()
            .AsSet()

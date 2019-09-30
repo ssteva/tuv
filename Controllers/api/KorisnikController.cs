@@ -59,8 +59,7 @@ namespace Tuv.Controllers.api
     public IList<Korisnik> ListaKorisnika()
     {
       var query = _session.QueryOver<Korisnik>()
-                  .Where(x => !x.Obrisan)
-                  .And(x => x.Aktivan);
+                  .Where(x => !x.Obrisan);
       var lista = query.List<Korisnik>();
       return lista;
     }
@@ -71,7 +70,7 @@ namespace Tuv.Controllers.api
     {
       var query = _session.QueryOver<Korisnik>()
                   .Where(x => !x.Obrisan)
-                  .And(x => x.Uloga == "Rukovodilac");
+                  .And(x => x.Uloga == "Izvršilac");
       var lista = query.List<Korisnik>();
       return lista;
     }
@@ -81,7 +80,7 @@ namespace Tuv.Controllers.api
     {
       var query = _session.QueryOver<Korisnik>()
                   .Where(x => !x.Obrisan)
-                  .And(x => x.Uloga == "Izvršilac");
+                  .And(x => x.Uloga == "Rukovodilac");
       var lista = query.List<Korisnik>();
       return lista;
     }

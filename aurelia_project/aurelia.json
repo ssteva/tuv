@@ -51,6 +51,7 @@
           "assets/js/common.js",
           "node_modules/moment/min/moment-with-locales.min.js",
           "assets/js/uikit_custom.js",
+          "node_modules/jszip/dist/jszip.min.js",
           "node_modules/@babel/polyfill/browser.js",
           "node_modules/requirejs/require.js"
         ],
@@ -92,15 +93,20 @@
               "js/kendo.autocomplete.js",
               "js/kendo.datepicker.js",
               "js/kendo.grid.js",
+              "js/kendo.sortable.js",
               "js/kendo.multiselect.js",
               "js/kendo.tabstrip.js",
               "js/kendo.dropdownlist.js",
+              "js/kendo.pivot.configurator.js",
+              "js/kendo.pivot.fieldmenu.js",
+              "js/kendo.pivotgrid.js",
+              "js/kendo.progressbar.js",
+              "js/kendo.all.js",
+              "js/cultures/kendo.culture.de-DE.js",
               "css/web/kendo.common.min.css",
               "css/web/kendo.common-material.min.css",
               "css/web/kendo.material.min.css",
               "css/web/kendo.default.min.css"
-
-
             ]
           },
           {

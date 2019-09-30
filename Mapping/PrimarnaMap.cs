@@ -19,7 +19,7 @@ namespace Tuv.Mapping
     {
       Table("tPrimarna");
       Id(x => x.Id).GeneratedBy.Identity().UnsavedValue(0);
-      Map(x => x.Sifra);
+      Map(x => x.Sifra).CustomSqlType("nvarchar(10)");
       Map(x => x.Naziv);
 
     }

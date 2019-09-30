@@ -1,7 +1,7 @@
 ﻿<template>
   <require from="./klijent.css"></require>
   <require from="../../../helper/grid-i18n"></require>
-
+  <require from="../../../resources/elements/rekapitulacija"></require>
   <!--<a href="javascript:void()" click.delegate="router.navigateBack()">
     <i class="material-icons md-36">arrow_back</i>
   </a>
@@ -16,7 +16,7 @@
         <li><span if.bind="klijent.id === 0" class="heading_a">${'Novi klijent' & t}</span></li>
         <li><span if.bind="klijent.id !== 0" class="heading_a">${klijent.naziv}</span></li>
       </ul>
-      <ul if.bind="!printLabela" id="nalogtabs" class="uk-tab" data-uk-tab="{connect:'#tab1', animation:'scale'}">
+      <ul id="klijenttabs" class="uk-tab" data-uk-tab="{connect:'#tab1', animation:'scale'}">
 
         <li class="uk-active">
           <a href="#">
@@ -30,12 +30,23 @@
             <h3 class="${klijent.id === 0 ? 'tekst-disabled' : ''}" style="display: inline; margin-left: 5px">${'Ponude' & t} (${brojPonuda})</h3>
           </a>
         </li>
+        <li class="${klijent.id === 0 || brojNaloga===0 ? 'uk-disabled' : ''}">
+          <a href="#">
+            <i class="material-icons md-24 ${klijent.id === 0 ? 'md-color-disabled' : 'md-color-light-green-600'}">build</i>
+            <h3 class="${klijent.id === 0 ? 'tekst-disabled' : ''}" style="display: inline; margin-left: 5px">${'Radni nalozi' & t} (${brojNaloga})</h3>
+          </a>
+        </li>
+        <li class="${klijent.id === 0 || brojPonuda===0 ? 'uk-disabled' : ''}">
+          <a href="#">
+            <i class="material-icons md-24 ${klijent.id === 0 ? 'md-color-disabled' : 'md-color-light-green-600'}">euro_symbol</i>
+            <h3 class="${klijent.id === 0 ? 'tekst-disabled' : ''}" style="display: inline; margin-left: 5px">${'Rekapitulacija' & t}</h3>
+          </a>
+        </li>
       </ul>
       <ul id="tab1" class="uk-switcher uk-margin">
         <li>
           <div class="uk-grid uk-grid-divider" data-uk-grid-margin>
             <div class="uk-width-large-3-10 uk-width-medium-3-10 uk-width-small-1-1">
-
 
 
               <h3 class="heading_a">${klijent.id === 0 ? 'Novi klijent' : klijent.naziv & t}</h3>
@@ -127,7 +138,7 @@
                   </tr>
                 </tbody>
               </table>
-              <a click.delegate="novi(kontakt, $index)"><i class="material-icons">create</i> ${"Novi kontakt" & t}</a>
+              <a click.delegate="novi(kontakt, $index)"><i class="material-icons">add</i> ${"Novi kontakt" & t}</a>
 
 
             </div>
@@ -153,23 +164,96 @@
                    k-data-source.bind="dsPonude"
                    k-pageable.bind="common.pageable"
                    k-filterable.bind="common.filterobj"
+                   k-on-filter-menu-init.delegate="common.filterMenu($event.detail)"
                    k-sortable.bind="true">
             <!-- Column definitions in HTML -->
             <ak-col k-title="${'Rbr' & t}" k-field="rbr"></ak-col>
-            <ak-col k-title="${'Klijent' & t}" k-field="klijent.naziv"></ak-col>
+            <ak-col k-title="${'Klijent' & t}" k-field="klijent.naziv" k-filterable.bind="klijentiFilter"></ak-col>
             <ak-col k-title="${'Broj' & t}" k-field="broj"></ak-col>
-            <ak-col k-title="${'Datum ponude' & t}" k-field="datumPonude" k-format="{0:dd.MM.yyyy}" k-width="130px"></ak-col>
+            <ak-col k-title="${'Datum ponude' & t}" k-field="datumPonude" k-format="{0:dd.MM.yyyy}" k-width="130px" k-filterable.bind="common.datumDokumentaFilter"></ak-col>
+            <ak-col k-title="${'Predmet' & t}" k-field="predmetPonude">
+              <ak-template>
+                <ul>
+                  <li repeat.for="pp of predmetPonude">
+                    ${pp.obimPoslovanja.sifra} ${pp.obimPoslovanja.naziv}
+                  </li>
+                </ul>
+                <!--<table class="uk-table uk-text-small uk-table-condensed">
+                <colgroup>
+                  <col span="1" style="width: 20%;">
+                  <col span="1" style="width: 60%;">
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th t="Šifra">Šifra</th>
+                    <th t="Naziv">Naziv</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr repeat.for="pp of predmetPonude">
+                    <td>
+                      ${pp.obimPoslovanja.sifra}
+                    </td>
+                    <td if.bind="!obim.obrisan">
+                      ${pp.obimPoslovanja.naziv}
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>-->
+              </ak-template>
+            </ak-col>
+            <ak-col k-title="${'Valuta' & t}" k-field="valuta"></ak-col>
+            <ak-col k-title="${'Vrednost' & t}" k-field="vrednost"></ak-col>
+            <ak-col k-title="${'Status' & t}" k-field="ponudaStatus.id" k-filterable.bind="statusiFilter">
+              <ak-template>
+                <span class="uk-badge ${ponudaStatus.klasa}">${ponudaStatus.status & t}</span>
+              </ak-template>
+            </ak-col>
             <ak-col k-title="${'Opcije' & t}">
               <ak-template>
                 <!--<button class="uk-button-mini uk-button-primary uk-icon-edit" click.delegate="edit($this)">Izmena</button>-->
                 <!--<a href="javascript:void()"  click.delegate="izmena($this)" class="uk-icon-justify uk-icon-edit"></a>-->
-                <a href="javascript:void()" click.delegate="izmenaPonude($this)">
+                <a href="javascript:void()" data-uk-tooltip title="${'Pregled ponude' & t}" click.delegate="izmenaPonude($this)">
+                  <i class="md-icon material-icons">mode_edit</i>
+                </a>
+                <a if.bind="status>=3" data-uk-tooltip title="${'Novi radni nalog' & t}" href="javascript:void()" click.delegate="nalog($this)">
+                  <i class="md-icon material-icons">build</i>
+                </a>
+              </ak-template>
+            </ak-col>
+            <!--<ak-col k-command.bind="['edit', 'destroy']" k-title="&nbsp;" k-width.bind="200"></ak-col>-->
+          </ak-grid>
+        </li>
+        <li>
+          <ak-grid grid-i18n k-widget.bind="grid"
+                   k-data-source.bind="dsNalozi"
+                   k-pageable.bind="common.pageable"
+                   k-filterable.bind="common.filterobj"
+                   k-on-filter-menu-init.delegate="common.filterMenu($event.detail)"
+                   k-sortable.bind="true">
+            <!-- Column definitions in HTML -->
+            <ak-col k-title="${'Rbr' & t}" k-field="rbr"></ak-col>
+            <ak-col k-title="${'Ponuda' & t}" k-field="ponuda.broj">
+
+            </ak-col>
+            <ak-col k-title="${'Broj' & t}" k-field="broj"></ak-col>
+            <ak-col k-title="${'Datum naloga' & t}" k-field="datumKreiranja" k-format="{0:dd.MM.yyyy}" k-width="130px" k-filterable.bind="common.datumDokumentaFilter"></ak-col>
+
+            <ak-col k-title="${'Opcije' & t}">
+              <ak-template>
+                <!--<button class="uk-button-mini uk-button-primary uk-icon-edit" click.delegate="edit($this)">Izmena</button>-->
+                <!--<a href="javascript:void()"  click.delegate="izmena($this)" class="uk-icon-justify uk-icon-edit"></a>-->
+                <a href="javascript:void()" click.delegate="izmenaNaloga($this)">
                   <i class="md-icon material-icons">mode_edit</i>
                 </a>
               </ak-template>
             </ak-col>
             <!--<ak-col k-command.bind="['edit', 'destroy']" k-title="&nbsp;" k-width.bind="200"></ak-col>-->
           </ak-grid>
+        </li>
+        <li>
+          <rekapitulacija if.bind="nalog.id !== 0" naslov="" nalogid.bind="nalog.id" ponudaid="0" klijentid="0" lock.bind="nalog.status === 0  || !nalog.zatvoren"></rekapitulacija>
         </li>
       </ul>
     </div>

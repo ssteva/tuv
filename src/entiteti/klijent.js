@@ -1,5 +1,5 @@
-﻿import { Entity, resource, association, type } from 'aurelia-orm';
-import {ensure} from 'aurelia-validation';
+﻿import { Entity, resource } from 'aurelia-orm';
+//import {ensure} from 'aurelia-validation';
 
 @resource('klijent')
 export class KlijentEntity extends Entity {

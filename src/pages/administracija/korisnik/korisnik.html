@@ -16,6 +16,11 @@
     <ak-col k-title="${'Prezime' & t}" k-field="prezime"></ak-col>
     <ak-col k-title="${'Korisničko ime' & t}" k-field="korisnickoIme"></ak-col>
     <ak-col k-title="${'Email' & t}" k-field="email"></ak-col>
+    <ak-col k-title="${'Aktivan' & t}" k-field="aktivan">
+      <ak-template>
+        <input type="checkbox" checked.bind="aktivan" disabled />
+      </ak-template>
+    </ak-col>
     <ak-col k-title="Uloga" k-field="uloga"></ak-col>
     <ak-col k-title="${'Opcije' & t}">
       <ak-template>

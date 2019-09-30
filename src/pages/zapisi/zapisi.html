@@ -1,0 +1,61 @@
+﻿<template>
+  <require from="../../helper/grid-i18n"></require>
+
+  <ak-grid grid-i18n k-widget.bind="grid"
+           k-data-source.bind="datasource"
+           k-pageable.bind="common.pageable"
+           k-filterable.bind="common.filterobj"
+           k-on-filter-menu-init.delegate="common.filterMenu($event.detail)"
+           k-sortable.bind="true">
+    <!-- Column definitions in HTML -->
+    <ak-col k-title="${'Rbr' & t}" k-width="70px" k-field="rbr"></ak-col>
+    <ak-col k-title="${'Klijent' & t}" k-field="klijent.naziv">
+      <ak-template>
+        ${radniNalog.ponuda.klijent.naziv}
+      </ak-template>
+    </ak-col>
+    <ak-col k-title="${'Ponuda' & t}" k-width="90px" k-field="ponuda.broj">
+      <ak-template>
+        ${radniNalog.ponuda.broj}
+      </ak-template>
+    </ak-col>
+    <ak-col k-title="${'Nalog' & t}" k-width="90px" k-field="radniNalog.broj"></ak-col>
+    <ak-col k-title="${'Datum zapisa' & t}" k-field="datum" k-format="{0:dd.MM.yyyy}" k-width="130px" k-filterable.bind="common.datumDokumentaFilter"></ak-col>
+    <ak-col k-title="${'Vrsta usluge' & t}" k-field="radniNalog.predmetNaloga.sifra">
+      <ak-template>
+        ${radniNalog.predmetNaloga.sifra} ${radniNalog.predmetNaloga.naziv}
+      </ak-template>
+    </ak-col>
+    <ak-col k-title="${'Vrsta' & t}" k-width="90px" k-field="oznaka">
+      <ak-template>
+        <span if.bind="oznaka==='Z'" t="Zapisnik"></span>
+        <span if.bind="oznaka==='S'" t="Sertifikat"></span>
+        <span if.bind="oznaka==='I'" t="Izveštaj"></span>
+        <span if.bind="oznaka==='O'" t="Ostalo"></span>
+      </ak-template>
+    </ak-col>
+    <ak-col k-title="${'Broj' & t}" k-width="110px"  k-field="broj"></ak-col>
+    <ak-col k-title="${'Odobreno' & t}" k-width="90px" k-field="odobreno">
+      <ak-template>
+        <span if.bind="odobreno" class="uk-badge uk-badge-success" t="Da"></span>
+        <span if.bind="!odobreno" class="uk-badge uk-badge-danger" t="Ne"></span>
+      </ak-template>
+    </ak-col>
+    <ak-col k-title="${'Opis' & t}" k-field="opis"></ak-col>
+    <ak-col k-title="${'Fajl' & t}" k-field="fileName">
+      <ak-template>
+        <span data-uk-tooltip class="md-list-heading"><a download href.bind="'api/Zapis/' + zapis.id">${fileName}</a></span>
+      </ak-template>
+    </ak-col>
+    <ak-col k-title="${'Opcije' & t}" k-width="90px">
+      <ak-template>
+        <!--<button class="uk-button-mini uk-button-primary uk-icon-edit" click.delegate="edit($this)">Izmena</button>-->
+        <!--<a href="javascript:void()"  click.delegate="izmena($this)" class="uk-icon-justify uk-icon-edit"></a>-->
+        <a href="javascript:void()" click.delegate="izmena($this)">
+          <i class="md-icon material-icons">mode_edit</i>
+        </a>
+      </ak-template>
+    </ak-col>
+    <!--<ak-col k-command.bind="['edit', 'destroy']" k-title="&nbsp;" k-width.bind="200"></ak-col>-->
+  </ak-grid>
+</template>

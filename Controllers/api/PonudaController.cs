@@ -47,8 +47,9 @@ namespace Tuv.Controllers.api
       Ponuda ponuda;
       PonudaPredmet ponudaPredmet = null;
       PonudaStavka ponudaStavka = null;
+      PonudaStatus ponudaStatus = null;
       if (id == 0)
-        ponuda = new Ponuda() { Id = 0, Status = 0, Valuta = "RSD", Vazenje = "Mesec", Vazi = 3 };
+        ponuda = new Ponuda() { Id = 0, Status = 0, Valuta = "EUR", Vazenje = "Mesec", Vazi = 3 };
 
 
       else
@@ -78,6 +79,13 @@ namespace Tuv.Controllers.api
     }
     [HttpGet]
     [Route("[Action]")]
+    public IList<PonudaStatus> PonudaStatusi(int id)
+    {
+      var query = _session.QueryOver<PonudaStatus>().Where(x => !x.Obrisan).List<PonudaStatus>();
+      return query;
+    }
+    [HttpGet]
+    [Route("[Action]")]
     public PonudaPredmet PonudaPredmet(int id)
     {
       PonudaPredmet ponudaPredmet;
@@ -97,18 +105,20 @@ namespace Tuv.Controllers.api
       //    var sp = _session.CreateSQLQuery("exec KupacLookup")
       //}
 
-      Klijent klijent = null;
+      Klijent Klijent = null;
       Ponuda ponuda = null;
-      PonudaPredmet ponudaPredmet = null;
-      ObimPoslovanja obim = null;
+      PonudaPredmet PonudaPredmet = null;
+      ObimPoslovanja Obim = null;
+      PonudaStatus PonudaStatus = null;
       var upit = _session.QueryOver<Ponuda>(() => ponuda)
           .Where(x => x.Obrisan == false);
 
 
-      upit.JoinAlias(x => x.Klijent, () => klijent)
-        .JoinAlias(x => x.PredmetPonude, () => ponudaPredmet)
-        .JoinAlias(() => ponudaPredmet.ObimPoslovanja, () => obim);
-        
+      upit.JoinAlias(x => x.Klijent, () => Klijent)
+        .JoinAlias(x => x.PonudaStatus, () => PonudaStatus)
+        .JoinAlias(x => x.PredmetPonude, () => PonudaPredmet)
+        .JoinAlias(() => PonudaPredmet.ObimPoslovanja, () => Obim);
+
 
 
       TextInfo textInfo = CultureInfo.InvariantCulture.TextInfo;
@@ -121,48 +131,51 @@ namespace Tuv.Controllers.api
 
           if (prop.ToLower().Contains("klijent.id"))
           {
-            upit.And(() => klijent.Id == int.Parse(filter.Value));
-            
+            upit.And(() => Klijent.Id == int.Parse(filter.Value));
+
           }
           else if (prop.ToLower().Contains("predmetponude"))
           {
             upit.And(Restrictions.Disjunction()
-                 .Add(Restrictions.On(() => obim.Sifra)
+                 .Add(Restrictions.On(() => Obim.Sifra)
                      .IsInsensitiveLike(filter.Value, MatchMode.Anywhere))
-                 .Add(Restrictions.On(() => obim.Naziv)
+                 .Add(Restrictions.On(() => Obim.Naziv)
                      .IsInsensitiveLike(filter.Value, MatchMode.Anywhere)));
 
           }
           else if (prop.ToLower().Contains("vrednost") && filter.Operator == "eq")
           {
-            upit.And(p=>p.Vrednost== decimal.Parse(filter.Value));
-            
+            upit.And(p => p.Vrednost == decimal.Parse(filter.Value));
+          }
+          else if (prop.ToLower().Contains("ponudastatus"))
+          {
+            upit.And(() => PonudaStatus.Id == int.Parse(filter.Value));
           }
           else if (prop.ToLower().Contains("vrednost") && filter.Operator == "gt")
           {
             upit.And(p => p.Vrednost >= decimal.Parse(filter.Value));
-            
+
           }
-          else if (prop.ToLower().Contains("vrednost") && filter.Operator == "gt")
+          else if (prop.ToLower().Contains("vrednost") && filter.Operator == "lt")
           {
             upit.And(p => p.Vrednost <= decimal.Parse(filter.Value));
-            
+
           }
           else if (prop.ToLower().Contains("rbr"))
           {
-            upit.And(() => ponuda.Id == int.Parse(filter.Value));
-            
+            upit.And(() => ponuda.Rbr == int.Parse(filter.Value));
+
           }
           else if (prop.ToLower().Contains("klijent.naziv"))
           {
-            upit.AndRestrictionOn(() => klijent.Naziv).IsInsensitiveLike(filter.Value, MatchMode.Anywhere);
-            
+            upit.AndRestrictionOn(() => Klijent.Naziv).IsInsensitiveLike(filter.Value, MatchMode.Anywhere);
+
           }
           else if (filter.Value == "Da" || filter.Value == "Ne")
           {
             var f = filter.Value != "Ne";
             upit.And(Restrictions.Eq(prop, f));
-            
+
           }
           else if (prop.Contains("DatumPonude"))
           {
@@ -171,12 +184,12 @@ namespace Tuv.Controllers.api
             if (filter.Operator == "gte")
             {
               upit.And(x => x.DatumPonude >= d);
-            
+
             }
             if (filter.Operator == "lte")
             {
               upit.And(x => x.DatumPonude <= d);
-            
+
             }
           }
           else if (prop.Contains("DatumVazenja"))
@@ -186,12 +199,12 @@ namespace Tuv.Controllers.api
             if (filter.Operator == "gte")
             {
               upit.And(x => x.DatumVazenja >= d);
-            
+
             }
             if (filter.Operator == "lte")
             {
               upit.And(x => x.DatumVazenja <= d);
-            
+
             }
           }
           else if (prop.Contains("DatumPrihvatanja"))
@@ -201,12 +214,12 @@ namespace Tuv.Controllers.api
             if (filter.Operator == "gte")
             {
               upit.And(x => x.DatumPrihvatanja.Value >= d);
-          
+
             }
             if (filter.Operator == "lte")
             {
               upit.And(x => x.DatumPrihvatanja.Value <= d);
-          
+
             }
           }
           else if (prop.Contains("DatumOdobrenjaR"))
@@ -216,12 +229,12 @@ namespace Tuv.Controllers.api
             if (filter.Operator == "gte")
             {
               upit.And(x => x.DatumOdobrenjaR.Value >= d);
-          
+
             }
             if (filter.Operator == "lte")
             {
               upit.And(x => x.DatumOdobrenjaR.Value <= d);
-          
+
             }
           }
           else if (prop.Contains("DatumOdobrenjaD"))
@@ -231,18 +244,18 @@ namespace Tuv.Controllers.api
             if (filter.Operator == "gte")
             {
               upit.And(x => x.DatumOdobrenjaD.Value >= d);
-          
+
             }
             if (filter.Operator == "lte")
             {
               upit.And(x => x.DatumOdobrenjaD.Value <= d);
-          
+
             }
           }
           else
           {
             upit.Where(Restrictions.InsensitiveLike(prop, filter.Value, MatchMode.Anywhere));
-          
+
           }
         }
       }
@@ -301,7 +314,8 @@ namespace Tuv.Controllers.api
         //    .SingleOrDefault<KursnaLista>()
         //    .Kurs;
 
-
+        if (komentar.ToLower() == "undefined")
+          komentar = null;
 
 
 
@@ -310,13 +324,21 @@ namespace Tuv.Controllers.api
         {
           obj.OdobrenaR = ishod;
           if (ishod)
+          {
             obj.DatumOdobrenjaR = DateTime.Now;
+            obj.PonuduOdobrio = korisnik;
+          }
         }
         if (korisnik.Uloge.Contains("Direktor"))
         {
           obj.OdobrenaD = ishod;
           if (ishod)
             obj.DatumOdobrenjaD = DateTime.Now;
+          else
+          {
+            obj.OdobrenaR = false;
+            obj.DatumOdobrenjaR = null;
+          }
         }
 
 
@@ -329,7 +351,19 @@ namespace Tuv.Controllers.api
         var poruka = ishod ? "Ponuda je odobrena" : "Ponuda nije odobrena";
 
         var tip = "Odobravanje";
-        var wf = new PonudaWf() { Ponuda = obj, Datum = DateTime.Now, Korisnik = korisnik, Opis = poruka, Tip = tip, Ishod = ishod, IshodOpis = komentar };
+        var wf = new PonudaWf()
+        {
+          Ponuda = obj,
+          Datum = DateTime.Now,
+          Korisnik = korisnik,
+          Opis = poruka,
+          Tip = tip,
+          Ishod = ishod ? 1 : 0,
+          Komentar = komentar,
+          TimelineIkona = ishod ? "timeline_icon_success" : "timeline_icon_danger"
+            ,
+          Ikona = ishod ? "done" : "cancel"
+        };
         obj.Wfs.Add(wf);
 
         _session.SaveOrUpdate(obj);
@@ -347,7 +381,7 @@ namespace Tuv.Controllers.api
     }
     [HttpPost]
     [Route("[Action]")]
-    public ActionResult Prihvatanje([FromQuery] bool ishod, [FromBody] Ponuda obj)
+    public ActionResult Prihvatanje([FromQuery] string ishod, [FromBody] Ponuda obj)
     {
 
       try
@@ -358,19 +392,56 @@ namespace Tuv.Controllers.api
         var korisnik = _session.QueryOver<Korisnik>()
                 .Where(x => x.KorisnickoIme == User.Identity.Name)
                 .SingleOrDefault<Korisnik>();
+        var poruka = "";
+        var ikonaTimeline = "";
+        var ikona = "";
+        var ish = 0;
+        if (ishod == "Da")
+        {
+          obj.Prihvacena = true;
+          obj.DatumPrihvatanja = DateTime.Now;
+          obj.Status = 3;
+          ikonaTimeline = "timeline_icon_primary";
+          ikona = "done_outline";
+          poruka = "Ponuda je prihvaćena";
+          ish = 1;
+        }
+        else if (ishod == "Da")
+        {
+          obj.Prihvacena = false;
+          obj.DatumPrihvatanja = DateTime.Now;
+          obj.Status = 3;
+          ikonaTimeline = "timeline_icon_danger";
+          ikona = "error";
+          poruka = "Ponuda nije prihvaćena";
+          ish = 0;
+        }
+        else //revizija
+        {
+          obj.Prihvacena = null;
+          obj.DatumPrihvatanja = null;
+          obj.OdobrenaD = null;
+          obj.OdobrenaR = null;
+          obj.DatumOdobrenjaD = null;
+          obj.DatumOdobrenjaR = null;
+          obj.Status = 1;
+          obj.Revizija = obj.Revizija + 1;
+          obj.Broj = obj.Broj + " rev " + obj.Revizija.ToString();
+          ikonaTimeline = "timeline_icon_warning";
+          ikona = "edit";
+          poruka = "Potrebna je revizija ponude";
+          ish = 3;
+        }
 
-        obj.Prihvacena = ishod;
-
-        obj.DatumPrihvatanja = DateTime.Now;
-        obj.Status = 3;
-        var poruka = ishod ? "Ponuda je prihvaćena" : "Ponuda nije prihvaćena";
 
         var tip = "Prihvatanje";
-        var wf = new PonudaWf() { Ponuda = obj, Datum = DateTime.Now, Korisnik = korisnik, Opis = poruka, Tip = tip, Ishod = ishod, IshodOpis = poruka };
+        var wf = new PonudaWf() { Ponuda = obj, Datum = DateTime.Now, Korisnik = korisnik, Opis = poruka, Tip = tip, Ishod = ish, Komentar = null, TimelineIkona = ikonaTimeline, Ikona = ikona };
         obj.Wfs.Add(wf);
 
+
+
         _session.SaveOrUpdate(obj);
-        
+
         _session.Flush();
         return Json(new { Success = true, Message = "", Obj = obj });
       }
@@ -390,14 +461,36 @@ namespace Tuv.Controllers.api
       {
         if (obj.Id == 0)
         {
-          obj.Rbr = Helper.RedniBroj(_session, "ponuda");
+
+          var kn = Tuv.Helper.Helper.GetIso8601WeekOfYear(obj.DatumPonude);
+          var ks = _session.QueryOver<KursnaLista>()
+              .Where(x => x.Godina == obj.DatumPonude.Year)
+              .And(x => x.Nedelja == kn)
+              .SingleOrDefault<KursnaLista>();
+
+          if (ks == null)
+          {
+            return Json(new { Success = false, Message = "Nije definisana kursna lista za nedelju " + kn.ToString(), Obj = obj });
+          }
+
+          var limit = _session.QueryOver<Parametar>()
+                    .Where(x => x.Vrsta == "LimitOdobrenjaDirektora")
+                    .SingleOrDefault<Parametar>()
+                    .Vredpar1;
+          obj.LimitOdobrenjaDirektora = limit;
+
+
+
+          obj.Rbr = Helper.RedniBroj(_session, "ponuda", obj.DatumPonude);
+          var broj = obj.Rbr.ToString().PadLeft(4, '0') + "/" + obj.DatumPonude.Year.ToString().Substring(2, 2);
+          obj.Broj = broj;
           obj.Status = 1;
           var korisnik = _session.QueryOver<Korisnik>()
           .Where(x => x.KorisnickoIme == User.Identity.Name)
           .SingleOrDefault<Korisnik>();
           var poruka = "Kreirana ponuda";
           var tip = "Kreiranje";
-          var wf = new PonudaWf() { Ponuda = obj, Datum = DateTime.Now, Korisnik = korisnik, Opis = poruka, Tip = tip };
+          var wf = new PonudaWf() { Ponuda = obj, Datum = DateTime.Now, Korisnik = korisnik, Opis = poruka, Tip = tip, TimelineIkona = "timeline_icon_primary", Ikona = "assignment" };
           obj.Wfs.Add(wf);
         }
 
@@ -433,22 +526,31 @@ namespace Tuv.Controllers.api
         }
       }
 
+      var stopa = _session.QueryOver<Parametar>()
+          .Where(x => x.Vrsta == "PoreskaStopa")
+          .SingleOrDefault<Parametar>()
+          .Vredpar3;
+
       foreach (var stavka in obj.Stavke)
       {
         if (stavka.Ponuda == null)
         {
           stavka.Ponuda = obj;
         }
-        if (stavka.Id == 0)
-        {
-          var kn = Tuv.Helper.Helper.GetIso8601WeekOfYear(obj.DatumPonude);
-          var kurs = _session.QueryOver<KursnaLista>()
-              .Where(x => x.Godina == obj.DatumPonude.Year)
-              .And(x => x.Nedelja == kn)
-              .SingleOrDefault<KursnaLista>()
-              .Kurs;
-          stavka.Kurs = kurs;
-        }
+        stavka.Vrednost = stavka.Kolicina * stavka.Cena;
+        stavka.PoreskaStopa = (int)stopa;
+
+        var kn = Tuv.Helper.Helper.GetIso8601WeekOfYear(obj.DatumPonude);
+
+        //stavka.Kn = kn;
+        var kurs = _session.QueryOver<KursnaLista>()
+            .Where(x => x.Godina == obj.DatumPonude.Year)
+            .And(x => x.Nedelja == kn)
+            .SingleOrDefault<KursnaLista>()
+            .Kurs;
+        stavka.Kurs = kurs;
+
+
       }
       return obj;
     }

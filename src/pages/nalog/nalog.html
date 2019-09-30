@@ -1,0 +1,207 @@
+﻿<template>
+  <require from="./nalog.css"></require>
+  <require from="aurelia-kendoui-bridge/datepicker/datepicker"></require>
+  <require from="aurelia-kendoui-bridge/dropdownlist/dropdownlist"></require>
+  <require from="aurelia-kendoui-bridge/multiselect/multiselect"></require>
+  <require from="aurelia-kendoui-bridge/numerictextbox/numerictextbox"></require>
+  <require from="resources/elements/zapisi2"></require>
+  <require from="resources/elements/finansije"></require>
+  <require from="resources/elements/rekapitulacija"></require>
+
+  <div class="md-card">
+    <div class="md-card-content">
+      <ul id="breadcrumbs">
+        <li><a href="/">Home</a></li>
+        <li><a href="/#/nalozi">Nalozi</a></li>
+        <li><span if.bind="nalog.id === 0" class="heading_a">${'Novi radni nalog' & t}</span></li>
+        <li><span if.bind="nalog.id !== 0" class="heading_a">${'Radni nalog broj'& t} &nbsp;${nalog.broj}</span></li>
+      </ul>
+
+      <div class="uk-grid uk-grid-divider uk-margin-top" data-uk-grid-margin>
+        <div class="uk-width-large-2-6 uk-width-medium-2-6 uk-width-small-1-1">
+          <form class="uk-form-horizontal">
+            <div class="uk-form-row">
+              <label class="uk-form-label" t="Broj ponude">Broj ponude</label>
+              <div class="uk-form-controls">
+                <a click.delegate="navigatePonuda(nalog.ponuda.id, nalog.ponuda.klijent.id)">${nalog.ponuda.broj}</a>
+              </div>
+            </div>
+            <div class="uk-form-row">
+              <label class="uk-form-label" t="Predmet ponude">Predmet ponude</label>
+              <div class="uk-form-controls">
+                <ak-drop-down-list k-placeholder="Odabrati..."
+                                   k-widget.two-way="cboObim"
+                                   k-data-text-field="naziv"
+                                   k-data-value-field="id"
+                                   k-auto-bind.bind="false"
+                                   k-data-source.bind="dataSource"
+                                   style="width: 100%"
+                                   k-value.two-way="nalog.predmetNaloga.id">
+                  <ak-template>
+                    ${naziv}
+                  </ak-template>
+                  <ak-template for="headerTemplate">
+                    <span class="ts-align-left">${grupa}</span>
+                  </ak-template>
+                  <ak-template for="groupTemplate">
+                    ${grupa}
+                  </ak-template>
+                </ak-drop-down-list>
+              </div>
+            </div>
+            <div if.bind="nalog.id !== 0" class="uk-form-row">
+              <label class="uk-form-label" t="Broj radnog naloga">Broj radnog naloga</label>
+              <div class="uk-form-controls">
+                <input type="text" class="k-textbox" value.bind="nalog.broj" style="width: 100%;" disabled.bind="true" />
+              </div>
+            </div>
+            <div class="uk-form-row">
+              <label class="uk-form-label" t="Naručilac usluge">Naručilac usluge</label>
+              <div class="uk-form-controls">
+                <a click.delegate="navigateKlijent(nalog.ponuda.klijent.id)">${nalog.ponuda.klijent.naziv}</a>
+              </div>
+            </div>
+            <div if.bind="nalog.id!==0" class="uk-form-row">
+              <label class="uk-form-label">${'Datum naloga' & t} </label>
+              <div class="uk-form-controls">
+                <!--<input ak-datepicker="k-widget.two-way: cboDatumNaloga; k-value.two-way: nalog.datumKreiranja; k-format.bind:'dd.MM.yyyy'" />-->
+                ${nalog.datumKreiranja | datum}
+              </div>
+            </div>
+            <div class="uk-form-row">
+              <label class="uk-form-label" t="Predmet kontrolisanja">Predmet kontrolisanja</label>
+              <div class="uk-form-controls">
+                <textarea rows="4" class="uk-text-small uk-width-1-1" value.bind="nalog.predmetKontrolisanja" disabled.bind="lock"></textarea>
+              </div>
+            </div>
+            <div class="uk-form-row">
+              <label class="uk-form-label" t="Program kontrolisanja">Program kontrolisanja</label>
+              <div class="uk-form-controls">
+                <textarea rows="4" class="uk-text-small uk-width-1-1" value.bind="nalog.programKontrolisanja" disabled.bind="lock"></textarea>
+              </div>
+            </div>
+            <div class="uk-form-row">
+              <label class="uk-form-label" t="Referentni standard">Referentni standard</label>
+              <div class="uk-form-controls">
+                <textarea rows="4" class="uk-text-small uk-width-1-1" value.bind="nalog.referentniStandard" disabled.bind="lock"></textarea>
+              </div>
+            </div>
+            <div class="uk-form-row">
+              <label class="uk-form-label" t="MKO oprema">MKO oprema</label>
+              <div class="uk-form-controls">
+                <textarea rows="4" class="uk-text-small uk-width-1-1" value.bind="nalog.mkoOprema" disabled.bind="lock"></textarea>
+              </div>
+            </div>
+
+            <div class="uk-form-row">
+              <label class="uk-form-label" t="Očekivani rok završetka kontrolisanja">Očekivani rok završetka kontrolisanja</label>
+              <div class="uk-form-controls">
+                <input ak-datepicker="k-widget.two-way: cboDatumVazenja; k-value.two-way: nalog.ocekivaniRokZavrsetka; k-format.bind:'dd.MM.yyyy'" />
+              </div>
+            </div>
+            <div class="uk-form-row">
+              <label class="uk-form-label" t="Napomena">Napomena</label>
+              <div class="uk-form-controls">
+                <textarea rows="4" class="uk-text-small uk-width-1-1" value.bind="nalog.napopmena" disabled.bind="lock"></textarea>
+              </div>
+            </div>
+
+            <div class="uk-form-row">
+              <label class="uk-form-label" t="Zadužen(a) za realizaciju">Zadužen(a) za realizaciju</label>
+              <div if.bind="!lock" class="uk-form-controls">
+                <ak-drop-down-list k-option-label="Odabrati..."
+                                   k-widget.two-way="cboZaduzenZaRealizaciju"
+                                   k-data-source.bind="izvrsioci"
+                                   k-data-text-field="naziv"
+                                   k-on-select.delegate="onSelectZaduzenZaRealizaciju($event.detail)"
+                                   k-data-value-field="id"
+                                   style="width: 100%"
+                                   k-value.two-way="nalog.zaduzenZaRealizaciju.id">
+
+                </ak-drop-down-list>
+              </div>
+              <div if.bind="lock" class="uk-form-controls">
+                ${nalog.zaduzenZaRealizaciju.naziv}
+              </div>
+            </div>
+          </form>
+
+        </div>
+
+        <div class="uk-width-large-4-6 uk-width-medium-4-6 uk-width-small-1-1">
+
+          <ul id="klijenttabs" class="uk-tab" data-uk-tab="{connect:'#tab1', animation:'scale'}">
+            <li class="${nalog.status >= 1 ? 'uk-active' : ''}">
+              <a href="#">
+                <i class="material-icons md-24 md-color-light-green-600">assignment</i>
+                <h3 style="display: inline; margin-left: 5px">${'Zapisi' & t}</h3>
+              </a>
+            </li>
+            <li class="${nalog.status < 2 ? 'uk-disabled1' : ''}">
+              <a href="#">
+                <i class="material-icons md-24 md-color-light-green-600">assignment_return</i>
+                <h3 style="display: inline; margin-left: 5px">${'Fakture' & t}</h3>
+              </a>
+            </li>
+            <li class="${nalog.status < 2 ? 'uk-disabled' : ''}">
+              <a href="#">
+                <i class="material-icons md-24 md-color-light-green-600">assignment_returned</i>
+                <h3 style="display: inline; margin-left: 5px">${'Uplate' & t}</h3>
+              </a>
+            </li>
+            <li class="${nalog.status < 2 ? 'uk-disabled' : ''}">
+              <a href="#">
+                <i class="material-icons md-24 md-color-light-green-600">date_range</i>
+                <h3 style="display: inline; margin-left: 5px">${'Troškovi' & t}</h3>
+              </a>
+            </li>
+            <li class="${nalog.status < 2 ? 'uk-disabled' : ''}">
+              <a href="#">
+                <i class="material-icons md-24 md-color-light-green-600">euro_symbol</i>
+                <h3 style="display: inline; margin-left: 5px">${'Rekapitulacija' & t}</h3>
+              </a>
+            </li>
+          </ul>
+          <ul id="tab1" class="uk-switcher uk-margin">
+            <li>
+              <zapisi2 if.bind="nalog.id !== 0" naslov="" nalog.bind="nalog" nalogid.bind="nalog.id" lock.bind="nalog.status === 0  || !nalog.zatvoren"></zapisi2>
+            </li>
+            <li>
+              <finansije if.bind="nalog.id !== 0" naslov="" nalogid.bind="nalog.id" vrsta='F' valuta.bind="nalog.valuta" lock.bind="nalog.status === 0 || !nalog.zatvoren"></finansije>
+            </li>
+            <li>
+              <finansije if.bind="nalog.id !== 0" naslov="" nalogid.bind="nalog.id" vrsta='U' valuta.bind="nalog.valuta" lock.bind="nalog.status === 0  || !nalog.zatvoren"></finansije>
+            </li>
+            <li>
+              <finansije if.bind="nalog.id !== 0" naslov="" nalogid.bind="nalog.id" vrsta='T' valuta="" lock.bind="nalog.status === 0  || !nalog.zatvoren"></finansije>
+            </li>
+            <li>
+              <rekapitulacija if.bind="nalog.id !== 0" naslov="" nalogid.bind="nalog.id" ponudaid="0" klijentid="0" lock.bind="nalog.status === 0  || !nalog.zatvoren"></rekapitulacija>
+            </li>
+          </ul>
+
+
+        </div>
+
+
+      </div>
+
+      <br />
+      <br />
+      <button if.bind="role==='Administrator' || role==='Rukovodilac'" class="md-btn md-btn-primary md-btn-icon ${lock ? 'disabled' : ''}" href="javascript:void(0)" click.delegate="snimi()">
+        <i class="uk-icon-save"></i>
+        ${"Snimi" & t}
+      </button>
+      <button if.bind="(role==='Administrator' || role==='Rukovodilac') && !nalog.zatvoren" class="md-btn md-btn-warning md-btn-icon ${lock ? 'disabled' : ''}" href="javascript:void(0)" click.delegate="zatvori()">
+        <i class="uk-icon-lock"></i>
+        ${"Zatvori nalog" & t}
+      </button>
+      <button if.bind="(role==='Administrator' || role==='Rukovodilac') && nalog.zatvoren" class="md-btn md-btn-warning md-btn-icon" href="javascript:void(0)" click.delegate="otvori()">
+        <i class="uk-icon-unlock"></i>
+        ${"Otvori nalog" & t}
+      </button>
+    </div>
+  </div>
+
+</template>
+

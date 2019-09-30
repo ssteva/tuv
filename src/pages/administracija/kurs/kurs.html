@@ -24,8 +24,11 @@
   <br />
   <div repeat.for="li of lista">
     <div class="uk-input-group">
-      <label style="width: 20px;" class="uk-text-small" t="Kursna nedelja">Kursna nedelja ${li.nedelja}</label>
-      <input style="margin-left: 15px;" class="uk-text-small" type="number" ak-numerictextbox="k-widget.two-way: txtKurs;k-value.two-way: li.kurs;k-format.bind:'n2'; k-min.bind:1;k-max.bind:1000;k-step.bind:1" />
+      <label style="width: 30px;" class="uk-text-small" t="Kursna nedelja">Kursna nedelja </label>
+      <span class="uk-text-small"> ${li.nedelja}</span>  <input class="uk-text-small ${li.nedelja<10 ? 'margina' : 'marginav'}" type="number" ak-numerictextbox="k-widget.two-way: txtKurs;k-value.two-way: li.kurs;k-format.bind:'n2'; k-min.bind:1;k-max.bind:1000;k-step.bind:1" />
+      <a  click.delegate="promeni(li)">
+        ${"Promeni u dokumentima" & t}
+      </a>
     </div>
   </div>
   <br />

@@ -26,6 +26,8 @@ namespace Tuv.Mapping
       Map(x=>x.Lozinka).CustomSqlType("binary(64)");
       Map(x => x.So);
       Map(x=>x.Uloga);
+      Map(x => x.Telefon);
+      Map(x => x.Mobilni);
       Map(x=>x.Aktivan);
       Map(x => x.Lang).CustomSqlType("nvarchar(10)").Default("'sr'");
 

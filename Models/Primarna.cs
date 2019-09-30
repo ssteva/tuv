@@ -8,7 +8,7 @@ namespace Tuv.Models
   public class Primarna : Entitet
   {
     public virtual int Id { get; set; }
-    public virtual int Sifra { get; set; }
+    public virtual string Sifra { get; set; }
     public virtual string Naziv { get; set; }
 
   }

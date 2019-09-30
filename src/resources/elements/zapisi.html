@@ -1,0 +1,83 @@
+﻿<template>
+  <require from="./zapisi.css"></require>
+  <require from="aurelia-kendoui-bridge/dropdownlist/dropdownlist"></require>
+  <div id="idzapisi">
+    <h4>${naslov}</h4>
+    <input if.bind="!lock" id="dodaj" type="file" change.delegate="fileSelected($event)">
+
+
+
+
+
+    <table class="uk-table uk-text-small uk-table-condensed">
+      <colgroup>
+        <col span="1" style="width: 5%;">
+        <col span="1" style="width: 15%;">
+        <col span="1" style="width: 50%;">
+        <col span="1" style="width: 20%;">
+        <col span="1" style="width: 5%;">
+      </colgroup>
+      <thead>
+        <tr>
+          <th t="Odobreno">Odobreno</th>
+          <th t="Vrsta">Vrsta</th>
+          <th t="Opis">Opis</th>
+          <th t="Fajl">Fajl</th>
+          <th t="Opcije">Opcije</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr repeat.for="zapis of zapisi">
+          <td if.bind="!zapis.obrisan">
+            <input type="checkbox" data-md-icheck checked.bind="zapis.odobreno" disabled.bind="lock"/>
+          </td>
+          <td if.bind="!zapis.obrisan && (!zapis.odobreno && !lock)">
+            <ak-drop-down-list k-widget.two-way="cboZapis"
+                               k-data-source.bind="common.zapisi"
+                               k-option-label="Odabrati..."
+                               k-data-text-field="naziv"
+                               k-data-value-field="oznaka"
+                               k-on-select.delegate="onSelectZapis(zapis, $event.detail)"
+                               style="width: 100%"
+                               k-value.two-way="zapis.oznaka">
+
+            </ak-drop-down-list>
+            <h4 if.bind="zapis.broj && zapis.oznaka && zapis.oznaka !=='O'">
+              ${'Broj' & t}: ${zapis.broj}
+            </h4>
+
+          </td>
+          <td if.bind="!zapis.obrisan && (zapis.odobreno || lock)">
+            ${zapis.vrsta}
+          </td>
+          <td if.bind="!zapis.obrisan">
+            <textarea rows="4" class="uk-text-small uk-width-1-1" value.bind="zapis.opis" disabled.bind="zapis.odobreno || lock"></textarea>
+          </td>
+          <td if.bind="!zapis.obrisan">
+            <!--${zapis.fileName} <br />-->
+            <span data-uk-tooltip class="md-list-heading"><a download href.bind="'api/Zapis/' + zapis.id">${zapis.fileName}</a></span>
+            <!--<span data-uk-tooltip title="${'Datum postavke fajla' & t}" class="uk-margin-right">
+              <i class="material-icons">update</i> <span class="uk-text-muted uk-text-small">${zapis.dateUploaded | datumVremeFajl}</span>
+            </span>
+            <span data-uk-tooltip title="${'Datum fajla' & t}" class="uk-margin-right">
+              <i class="material-icons">&#xE192;</i> <span class="uk-text-muted uk-text-small">${zapis.dateLastModified | datumVremeFajl}</span>
+            </span>
+            <span data-uk-tooltip title="${'Veličina' & t}" class="uk-margin-right">
+              <i class="material-icons">photo_size_select_large</i> <span class="uk-text-muted uk-text-small">${zapis.size | size}</span>
+            </span>-->
+          </td>
+          <td if.bind="!zapis.obrisan && (role==='Izvršilac' || role==='Administrator') && !lock">
+            <a click.delegate="delete(zapis, $index)"><i class="material-icons">delete</i></a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <button class="md-btn md-btn-primary md-btn-icon ${lock ? 'disabled' : ''}" href="javascript:void(0)" click.delegate="snimiZ()">
+      <i class="uk-icon-save"></i>
+      ${"Snimi" & t}
+    </button>
+  </div>
+
+
+
+</template>

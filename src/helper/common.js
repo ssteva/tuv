@@ -10,6 +10,7 @@ export class Common {
   labels = this.jezik === "en" ? { 'Ok': 'Yes', 'Cancel': 'No' } : { 'Ok': 'Da', 'Cancel': 'Ne' };
   vazenje = this.jezik === "en" ? ["Dan", "Mesec"] : ["Day", "Month"];
   poreskaStopa = 20;
+  zapisi = [{ id: 1, naziv: "Sertifikat", oznaka: "S" }, { id: 2, naziv: "Izveštaj", oznaka: "I" }, { id: 3, naziv: "Zapisnik", oznaka: "Z" }, { id: 4, naziv: "Ostalo", oznaka: "O" } ];
   constructor(authService, repo) {
     this.repo = repo;
     this.authService = authService;

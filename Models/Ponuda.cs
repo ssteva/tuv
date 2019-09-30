@@ -30,15 +30,23 @@ namespace Tuv.Models
     public virtual string Vazenje { get; set; }
     public virtual int Vazi { get; set; }
     public virtual string Valuta { get; set; }
-    public virtual string Napomena { get; set; }
+    public virtual string BitneNapomene { get; set; }
     public virtual string Ostalo { get; set; }
-    public virtual string UsloviPlacanja { get; set; }
+    public virtual string CenaUsloviPlacanja { get; set; }
     public virtual string PrimenjiviZahtevi { get; set; }
+    public virtual string TipProizvoda { get; set; }
+    public virtual string Proizvodjac { get; set; }
+    public virtual string PredvidjenoVremeZaRealizaciju { get; set; }
+
     public virtual int Status { get; set; } //0 izrada, 1 prva potvrda, 2 odobrena  3 prihvacena ponuda
     public virtual decimal Vrednost { get; set; }
+    public virtual int LimitOdobrenjaDirektora { get; set; }
+    public virtual int Revizija { get; set; }
     public virtual Klijent Klijent { get; set; }
     public virtual Korisnik ZaduzenZaPonudu { get; set; }
-    public virtual Korisnik ZaduzenZaProjekat { get; set; }
+    public virtual Korisnik PonuduOdobrio { get; set; }
+    public virtual KlijentKontakt KlijentKontakt { get; set; }
+    public virtual PonudaStatus PonudaStatus { get; set; }
     public virtual ICollection<PonudaPredmet> PredmetPonude { get; set; }
     public virtual ICollection<PonudaStavka> Stavke { get; set; }
     public virtual ICollection<PonudaWf> Wfs { get; set; }
@@ -61,25 +69,26 @@ namespace Tuv.Models
     //    }
     //  }
     //}
-    public virtual bool PotrebnoOdobrenjeDirektora
-    {
-      get
-      {
-        try
-        {
-          decimal vred = 0;
-          foreach (var stavka in Stavke)
-          {
-            vred += stavka.VrednostEur;
-          }
-          return vred >= 10000;
-        }
-        catch
-        {
-          return false;
-        }
-      }
-    }
+    public virtual bool PotrebnoOdobrenjeDirektora { get; set; }
+    //public virtual bool PotrebnoOdobrenjeDirektora
+    //{
+    //  get
+    //  {
+    //    try
+    //    {
+    //      decimal vred = 0;
+    //      foreach (var stavka in Stavke)
+    //      {
+    //        vred += stavka.VrednostEur;
+    //      }
+    //      return vred >= 10000;
+    //    }
+    //    catch
+    //    {
+    //      return false;
+    //    }
+    //  }
+    //}
     //public virtual string PredmetiPonude
     //{
     //  get

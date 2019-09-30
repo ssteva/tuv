@@ -1,0 +1,77 @@
+﻿<template>
+  <require from="aurelia-kendoui-bridge/pivotgrid/pivotgrid"></require>
+  <require from="aurelia-kendoui-bridge/pivotgrid/pivotconfigurator"></require>
+  <require from="aurelia-kendoui-bridge/dropdownlist/dropdownlist"></require>
+  <require from="aurelia-kendoui-bridge/datepicker/datepicker"></require>
+  <div class="md-card">
+    <div class="md-card-content">
+
+      <div class="uk-grid">
+        <ak-grid-toolbar>
+          <div style="padding: 7px;">
+
+
+
+            <!--<label>Od</label>
+            <input class="uk-text-small" ak-datepicker="k-widget.two-way: cboDat1; k-value.two-way: dat1; k-format.bind:'dd.MM.yyyy'" style="width: 100%"/>
+            <label>Od</label>
+            <input class="uk-text-small" ak-datepicker="k-widget.two-way: cboDat2; k-value.two-way: dat2; k-format.bind:'dd.MM.yyyy'" style="width: 100%"/>
+            <button class="md-btn md-btn-primary md-btn-mini md-btn-wave-light md-btn-icon" href="javascript:void(0)" click.delegate="podaci()">
+                <i class="uk-icon-refresh"></i>
+            </button>
+            <button ak-button click.delegate="export()" class="k-button ak-button-icontext hidden-on-narrow">
+                <span class="k-icon k-i-excel"></span>Export to Excel
+            </button>-->
+            <div style="display: inline-block">
+              <label class="uk-text-small">Od</label>&nbsp;
+              <input class="uk-text-small" ak-datepicker="k-widget.two-way: cboDat1; k-value.two-way: dat1; k-format.bind:'dd.MM.yyyy'" style="width: 110px" />
+            </div>
+            <div style="display: inline-block; margin-left: 10px;">
+              <label class="uk-text-small">Do</label>&nbsp;
+              <input class="uk-text-small" ak-datepicker="k-widget.two-way: cboDat2; k-value.two-way: dat2; k-format.bind:'dd.MM.yyyy'" style="width: 110px" />
+            </div>&nbsp;&nbsp;
+
+            <div style="display: inline-block; margin-left: 10px;">
+              <button class="md-btn md-btn-primary md-btn-mini md-btn-wave-light md-btn-icon" href="javascript:void(0)" click.delegate="izvestaj()">
+                Preuzmi podatke
+                <i class="uk-icon-refresh"></i>
+              </button>
+
+            </div>
+            <span style="margin-left: 10px;">Redova: ${podaci.length}</span>
+            &nbsp;&nbsp;
+            <button ak-button click.delegate="export()" class="k-button ak-button-icontext hidden-on-narrow">
+              <span class="k-icon k-i-excel"></span>Export to Excel
+            </button>
+          </div>
+        </ak-grid-toolbar>
+        <div class="uk-width-large-1-1 uk-width-small-1-1">
+
+          <ak-pivot-configurator id="pivotconfigurator"
+                                 class="hidden-on-narrow"
+                                 k-widget.bind="pivotconfigurator"
+                                 k-data-source.bind="dataSource"
+                                 k-filterable.bind="true"
+                                 k-height.bind="570"
+                                 style="display: inline-block">
+          </ak-pivot-configurator>
+          <ak-pivot-grid id="pivotgrid"
+                         class="hidden-on-narrow"
+                         k-filterable.bind="true"
+                         k-column-width.bind="120"
+                         k-height.bind="570"
+                         k-widget.bind="pivotgrid"
+                         k-excel.bind="excel"
+                         k-on-data-bound.delegate="dataBound($this, $event)"
+                         style="display: inline-block">
+            <div class="responsive-message"></div>
+          </ak-pivot-grid>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</template>
+

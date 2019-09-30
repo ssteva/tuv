@@ -20,7 +20,10 @@ namespace Tuv.Models
     public virtual Guid So { get; set; }
     public virtual string Email { get; set; }
     public virtual string Uloga { get; set; }
+    public virtual string Telefon { get; set; }
+    public virtual string Mobilni { get; set; }
     public virtual bool Aktivan { get; set; }
+
     public virtual string Naziv
     {
       get

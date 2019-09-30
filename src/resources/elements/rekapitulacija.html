@@ -1,0 +1,135 @@
+﻿<template>
+  <require from="./rekapitulacija.css"></require>
+  <require from="aurelia-kendoui-bridge/progressbar/progressbar"></require>
+
+  <table class="uk-table uk-text-small uk-table-condensed">
+    <thead>
+      <tr>
+        <th if.bind="rekap.ponudaR" t="Ponuda RSD">Ponuda RSD</th>
+        <th if.bind="rekap.ponudaE" t="Ponuda EUR">Ponuda EUR</th>
+        <th if.bind="rekap.ponudaU" style="font-weight: bolder" t="Ponuda ukupno">Ponuda ukupno</th>
+        <th if.bind="rekap.fakturaR" t="Fakturisano RSD">Fakturisano RSD</th>
+        <th if.bind="rekap.fakturaE" t="Fakturisano EUR">Fakturisano EUR</th>
+        <th if.bind="rekap.fakturaU" style="font-weight: bold" t="Fakturisano ukupno">Fakturisano ukupno</th>
+        <th if.bind="rekap.uplataR" t="Uplaćeno RSD">Uplaćeno RSD</th>
+        <th if.bind="rekap.uplataE" t="Uplaćeno EUR">Uplaćeno EUR</th>
+        <th if.bind="rekap.uplataU" style="font-weight: bolder" t="Uplaćeno ukupno">Uplaćeno ukupno</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td if.bind="rekap.ponudaR">
+          <p class="heading_c uk-text-success">${rekap.ponudaR | dinarar}</p>
+        </td>
+        <td if.bind="rekap.ponudaE">
+          <p class="heading_c uk-text-success">${rekap.ponudaE | dinarar}</p>
+        </td>
+        <td if.bind="rekap.ponudaU">
+          <p style="font-weight: bolder" class="heading_c uk-text-success">${rekap.ponudaU | dinarar}</p>
+        </td>
+        <td if.bind="rekap.fakturaR">
+          <p class="heading_c uk-text-success">${rekap.fakturaR | dinarar}</p>
+        </td>
+        <td if.bind="rekap.fakturaE">
+          <p class="heading_c uk-text-success">${rekap.fakturaE | dinarar}</p>
+        </td>
+        <td if.bind="rekap.fakturaU">
+          <p style="font-weight: bolder" class="heading_c uk-text-success">${rekap.fakturaU | dinarar}</p>
+        </td>
+        <td if.bind="rekap.uplataR">
+          <p class="heading_c uk-text-success">${rekap.uplataR | dinarar}</p>
+        </td>
+        <td if.bind="rekap.uplataE">
+          <p class="heading_c uk-text-success">${rekap.uplataE | dinarar}</p>
+        </td>
+        <td if.bind="rekap.uplataU">
+          <p style="font-weight: bolder" class="heading_c uk-text-success">${rekap.uplataU | dinarar}</p>
+        </td>
+
+      </tr>
+    </tbody>
+  </table>
+  <br />
+  <table class="uk-table uk-text-small uk-table-condensed">
+    <thead>
+      <tr>
+        <th t="Fakturisano RSD %">Fakturisano RSD %</th>
+        <th t="Fakturisano EUR %">Fakturisano EUR %</th>
+        <th t="Fakturisano ukupno %">Fakturisano ukupno %</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <div ak-progress-bar="k-min: 0;
+                             k-max: 100;
+                             k-type: value;
+                             k-animation.bind: {duration: 400};
+                             k-widget.bind: pbfr"
+               style="width: 100%;">
+          </div>
+        </td>
+        <td>
+          <div ak-progress-bar="k-min: 0;
+                             k-max: 100;
+                             k-type: value;
+                             k-animation.bind: {duration: 400};
+                             k-widget.bind: pbfe"
+               style="width: 100%;">
+          </div>
+        </td>
+        <td>
+          <div ak-progress-bar="k-min: 0;
+                             k-max: 100;
+                             k-type: value;
+                             k-animation.bind: {duration: 400};
+                             k-widget.bind: pbfu"
+               style="width: 100%;">
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <br />
+  <table class="uk-table uk-text-small uk-table-condensed">
+    <thead>
+      <tr>
+        <th t="Uplaćeno RSD %">Uplaćeno RSD %</th>
+        <th t="Uplaćeno EUR %">Uplaćeno EUR %</th>
+        <th t="Uplaćeno ukupno %">Uplaćeno ukupno %</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <div ak-progress-bar="k-min: 0;
+                             k-max: 100;
+                             k-type: value;
+                             k-animation.bind: {duration: 400};
+                             k-widget.bind: pbur"
+               style="width: 100%;">
+          </div>
+        </td>
+        <td>
+          <div ak-progress-bar="k-min: 0;
+                             k-max: 100;
+                             k-type: value;
+                             k-animation.bind: {duration: 400};
+                             k-widget.bind: pbue"
+               style="width: 100%;">
+          </div>
+        </td>
+        <td>
+          <div ak-progress-bar="k-min: 0;
+                             k-max: 100;
+                             k-type: value;
+                             k-animation.bind: {duration: 400};
+                             k-widget.bind: pbuu"
+               style="width: 100%;">
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+</template>

@@ -80,18 +80,65 @@ export class Klijenti {
         }
       }
     });
+    this.dsNalozi = new kendo.data.DataSource({
+      pageSize: 10,
+      batch: false,
+      transport: {
+        read: (o) => {
+          if (o.data.filter) {
+            o.data.filter.filters.forEach(f => {
+              if (f.field === 'ponuda.klijent.id') vrsta = true;
+            });
+            if (vrsta === false) {
+              o.data.filter.filters.push({ field: "ponuda.klijent.id", operator: "equals", value: this.klijent.id });
+            }
+          } else {
+            if (this.klijent) {
+              o.data.filter = { logic: "and", filters: [] };
+              o.data.filter.filters.push({ field: "ponuda.klijent.id", operator: "equals", value: this.klijent.id });
+            }
+          }
+          this.repo.post('Nalog/PregledGrid', o.data)
+            .then(result => {
+              o.success(result);
+            })
+            .catch(err => {
+              console.log(err.statusText);
+            });
+        }
+      },
+      serverPaging: true,
+      serverSorting: true,
+      serverFiltering: true,
+      schema: {
+        data: "data",
+        total: "total",
+        model: {
+          id: "id",
+          fields: {
+            datumKreiranja: { type: 'date' }
+            //vrednost: { type: 'number' }
+            //  ime: { type: 'string' },
+            //  prezime: { type: 'string' },
+            //  email: { type: 'string' },
+            //  uloga: { type: 'string' }
+          }
+        }
+      }
+    });
   }
   activate(params, routeData) {
 
     let promises = [];
 
-    promises.push(this.repo.find('Klijent', params.id), this.dc.brojDokumenata("ponuda", params.id));
+    promises.push(this.repo.find('Klijent', params.id), this.dc.brojDokumenata("ponuda", params.id), this.dc.brojDokumenata("nalog", params.id));
     
     return Promise.all(promises)
       .then(res => {
         //if (params.id.toString() !== "0")
         this.klijent = res[0];
         this.brojPonuda = res[1];
+        this.brojNaloga = res[2];
       })
       .catch(console.error);
 
@@ -167,13 +214,18 @@ export class Klijenti {
   }
 
 
-
+  nalog(obj) {
+    this.router.navigateToRoute("nalog", { id: 0, idp: obj.id });
+  }
   izmenaPonude(obj, e) {
     this.router.navigateToRoute("ponuda", { id: obj.id, idk: this.klijent.id });
   }
 
   novaPonuda() {
     this.router.navigateToRoute("ponuda", { id: 0, idk: this.klijent.id });
+  }
+  izmenaNaloga(obj, e) {
+    this.router.navigateToRoute("nalog", { id: obj.id, idp: obj.ponuda.id });
   }
 
 }

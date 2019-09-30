@@ -1,6 +1,6 @@
 ﻿<template>
   <require from="./fajlovi.css"></require>
-  <di id="idfajlovi">
+  <div id="idfajlovi">
     <h4>${naslov} (${maksimum - fajlovi.length})</h4>
     <input if.bind="fajlovi.length < maksimum" id="dodaj" type="file" change.delegate="fileSelected($event)">
     <ul class="md-list">

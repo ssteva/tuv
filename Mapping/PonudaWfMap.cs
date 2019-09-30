@@ -21,9 +21,11 @@ namespace Tuv.Mapping
       Id(x => x.Id).GeneratedBy.Identity().UnsavedValue(0);
       Map(x => x.Datum).CustomSqlType("datetime").Default("getdate()");
       Map(x => x.Tip).CustomSqlType("nvarchar(50)");
-      Map(x => x.Ishod);
-      Map(x => x.IshodOpis).CustomSqlType("nvarchar(50)");
       Map(x => x.Opis).CustomSqlType("nvarchar(1000)");
+      Map(x => x.Ishod);
+      Map(x => x.Komentar).CustomSqlType("nvarchar(3000)");
+      Map(x => x.TimelineIkona).CustomSqlType("nvarchar(50)");
+      Map(x => x.Ikona).CustomSqlType("nvarchar(50)");
       References(x => x.Ponuda).Cascade.None();
       References(x => x.Korisnik).Cascade.None();
       

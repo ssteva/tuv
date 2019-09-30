@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using NHibernate.Impl;
 using System.Security;
+using System.Text.RegularExpressions;
 
 namespace Tuv.Helper
 {
@@ -12,12 +13,19 @@ namespace Tuv.Helper
   {
     public static string FirstCharToUpper(this string input)
     {
-      switch (input)
+
+
+      input = input.First().ToString().ToUpper() + input.Substring(1);
+
+      string expression = @"[\.]+([a-z])";
+      char[] charArray = input.ToCharArray();
+      foreach (Match match in Regex.Matches(input, expression, RegexOptions.Singleline))
       {
-        case null: throw new ArgumentNullException(nameof(input));
-        case "": throw new ArgumentException($"{nameof(input)} cannot be empty", nameof(input));
-        default: return input.First().ToString().ToUpper() + input.Substring(1);
+        charArray[match.Groups[1].Index] = Char.ToUpper(charArray[match.Groups[1].Index]);
       }
+      string output = new string(charArray);
+      return output;
+
     }
   }
   public static class HelperClasses

@@ -1,5 +1,6 @@
-﻿import { Endpoint } from 'aurelia-api';
+﻿import { Config, Endpoint } from 'aurelia-api';
 import { inject, BindingEngine, computedFrom } from 'aurelia-framework';
+import { activationStrategy } from 'aurelia-router';
 import { AuthService } from 'aurelia-authentication';
 import { EntityManager } from 'aurelia-orm';
 import 'kendo/js/kendo.dropdownlist';
@@ -12,13 +13,18 @@ import { AltairCommon } from 'helper/altair_admin_common';
 import { Router } from 'aurelia-router';
 import { DataCache } from 'helper/datacache';
 import { I18N } from 'aurelia-i18n';
-import { Config } from 'aurelia-api';
+
 import { Prompt } from '../../helper/prompt';
+
 
 @inject(AuthService, EntityManager, AltairCommon, Endpoint.of(), Common, DialogService, Router, I18N, DataCache, Config, BindingEngine)
 export class Ponuda {
 
-
+  determineActivationStrategy() {
+    return activationStrategy.replace; //replace the viewmodel with a new instance
+    // or activationStrategy.invokeLifecycle to invoke router lifecycle methods on the existing VM
+    // or activationStrategy.noChange to explicitly use the default behavior
+  }
   constructor(authService, em, ac, repo, common, dialogService, router, i18n, dc, config, bindingEngine) {
     this.authService = authService;
     this.repo = repo;
@@ -26,7 +32,7 @@ export class Ponuda {
     this.dc = dc;
     this.i18n = i18n;
     this.common = common;
-    this.fajlEndpoint = config.getEndpoint('fajl');
+    this.fajlEndpoint = config.getEndpoint('fajl2');
     this.em = em;
     this.repoKontakt = em.getRepository('kontakt');
     this.dialogService = dialogService;
@@ -54,7 +60,7 @@ export class Ponuda {
 
     var p = this.repo.find('Ponuda', params.id);
     promises.push(p, this.dc.dajSveKlijente(), this.dc.dajIzvrsioce(), this.dc.dajRukovodioce());
-    promises.push(this.dc.dajDokumenta("Ponuda", "PonudaDokument", params.id));
+    //promises.push(this.dc.dajDokumenta("Ponuda", "PonudaDokument", params.id));
     promises.push(this.repo.find('Korisnik', this.korisnikid));
     promises.push(this.dc.getObim());
     promises.push(this.repo.find("Ponuda/PonudaStavka?id=0"));
@@ -68,21 +74,18 @@ export class Ponuda {
         this.klijenti = res[1];
         this.izvrsioci = res[2];
         this.rukovodioci = res[3];
-        this.ponudaDokument = res[4];
-        this.korisnik = res[5];
-        this.obimi = res[6];
-        this.stavkamodel = res[7];
-        this.predmetmodel = res[8];
+        //this.ponudaDokument = res[4];
+        this.korisnik = res[4];
+        this.obimi = res[5];
+        this.stavkamodel = res[6];
+        this.predmetmodel = res[7];
         if (this.role.includes("Izvršilac") && params.id.toString() === "0") {
-          this.ponuda.korisnik = this.korisnik;
+          this.ponuda.zaduzenZaPonudu = this.korisnik;
         }
         if (params.idk) {
-          this.klijent = res[9];
+          this.klijent = res[8];
           if (params.id.toString() === "0") {
             this.ponuda.klijent = this.klijent;
-            if (this.role.includes("Izvršilac")) {
-              this.ponuda.korisnik = this.korisnik;
-            }
           }
         }
         this.ponuda.predmetPonude.forEach(e => {
@@ -108,6 +111,17 @@ export class Ponuda {
   onChangeVazi() {
     this.ponuda.datumVazenja = new Date(moment(this.ponuda.datumPonude).add(this.ponuda.vazi, this.ponuda.vazenje === "Dan" ? "Days" : "Months"));
   }
+  @computedFrom('ponuda.status')
+  get lock() {
+    if (this.ponuda.status >= 2 || this.ponuda.odobrenaR) {
+      this.zakljucaj();
+      return true;
+    }
+    else {
+      return false;
+    }
+    //return this.ponuda.status >= 2 ? true : false;
+  }
   @computedFrom('ponuda.vazenje', 'ponuda.vazi')
   get vazenjePonudeOpis() {
     try {
@@ -123,7 +137,7 @@ export class Ponuda {
     this.cboDatumVazenja.enable(false);
     this.onChangeVazi();
     this.sumaUkupno();
-    if (this.ponuda.status >= 2) {
+    if (this.ponuda.status >= 2 || this.ponuda.odobrenaR) {
       this.zakljucaj();
     };
     $('[name="optValuta"]')
@@ -145,10 +159,16 @@ export class Ponuda {
   }
   onSelectKlijent(e) {
     let dataItem = this.cboKlijent.dataItem(e.item);
-    if (dataItem.id)
+    if (dataItem.id) {
       this.ponuda.klijent = dataItem;
-    else
+      this.cboKontakt.dataSource.data(this.ponuda.klijent.kontakti);
+    }
+    else {
       this.ponuda.klijent = null;
+      this.cboKontakt.dataSource.data([]);
+    }
+    this.ponuda.klijentKontakt = null;
+    
   }
   onSelectZaduzenZaPonudu(e) {
     let dataItem = this.cboZaduzenZaPonudu.dataItem(e.item);
@@ -156,6 +176,13 @@ export class Ponuda {
       this.ponuda.zaduzenZaPonudu = dataItem;
     else
       this.ponuda.zaduzenZaPonudu = null;
+  }
+  onSelectKontakt(e) {
+    let dataItem = this.cboKontakt.dataItem(e.item);
+    if (dataItem.id)
+      this.ponuda.klijentKontakt = dataItem;
+    else
+      this.ponuda.klijentKontakt = null;
   }
   onSelectZaduzenZaProjekat(e) {
     let dataItem = this.cboZaduzenZaProjekat.dataItem(e.item);
@@ -211,12 +238,18 @@ export class Ponuda {
     e.preventDefault();
   }
   zakljucaj() {
-    this.cboKlijent.enable(false);
-    this.cboDatumPonude.enable(false);
-    this.cboZaduzenZaPonudu.enable(false);
-    this.cboObim.enable(false);
-    this.txtPonudaVazi.enable(false);
+    if (this.cboKlijent)
+      this.cboKlijent.enable(false);
+    if (this.cboDatumPonude)
+      this.cboDatumPonude.enable(false);
+    if (this.cboZaduzenZaPonudu)
+      this.cboZaduzenZaPonudu.enable(false);
+    if (this.cboObim)
+      this.cboObim.enable(false);
+    if (this.txtPonudaVazi)
+      this.txtPonudaVazi.enable(false);
   }
+
   intersection(o1, o2) {
     return Object.keys(o1).filter({}.hasOwnProperty.bind(o2));
   }
@@ -280,13 +313,22 @@ export class Ponuda {
     this.vrednost = this.ponuda.stavke.reduce((sum, stavka) => sum + (stavka.obrisan ? 0 : (stavka.kolicina * stavka.cena)), 0)
   }
   prihvati(res) {
-    let poruka = res ? this.i18n.tr("Klijent je prihvatio ponudu?") : this.i18n.tr("Klijent nije prihvatio ponudu?");
+    let poruka = "";
+    if (res === "Da")
+      poruka = this.i18n.tr("Klijent je prihvatio ponudu?");
+    else if (res === "Ne")
+      poruka = this.i18n.tr("Klijent nije prihvatio ponudu?");
+    else {
+      poruka = this.i18n.tr("Potrebna je revizija ponude?");
+    }
+
     UIkit.modal.confirm(poruka, () => {
       this.repo.post("Ponuda/Prihvatanje?ishod=" + res, this.ponuda)
         .then(result => {
           if (result.success) {
             toastr.success(this.i18n.tr("Uspešno snimljeno"));
             this.ponuda = result.obj;
+            this.zakljucaj();
             this.router.navigateToRoute('ponuda', { id: this.ponuda.id });
           } else {
             toastr.error(this.i18n.tr("Greška prilikom upisa"));
@@ -297,6 +339,19 @@ export class Ponuda {
         });
     });
   }
+  nalog() {
+    this.router.navigateToRoute("nalog", { id: 0, idp: this.ponuda.id });
+  }
+  stampa() {
+    this.fajlEndpoint.find("Template/", this.ponuda.id)
+      .then(result => {
+        console.log(1);
+      })
+      .catch(err => {
+        toastr.error(err);
+      });
+  }
+
   snimi() {
     //validacija
     if (!this.ponuda.klijent) {
@@ -307,7 +362,14 @@ export class Ponuda {
       toastr.error(this.i18n.tr("Izvšilac zadužen za ponudu je obavezan podatak"));
       return;
     }
-
+    if (this.ponuda.predmetPonude.length === 0) {
+      toastr.error(this.i18n.tr("Predmet ponude je obavezan podatak"));
+      return;
+    }
+    //if (!this.vrednost || this.vrednost === 0) {
+    //  toastr.error(this.i18n.tr("Vrednost ponude je nula"));
+    //  return;
+    //}
     //upis
     var id = this.ponuda.id;
     UIkit.modal.confirm(this.i18n.tr('Da li želite da sačuvate izmene?'), () => {
@@ -320,6 +382,7 @@ export class Ponuda {
               this.router.navigateToRoute('ponuda', { id: this.ponuda.id });
           } else {
             toastr.error(this.i18n.tr("Greška prilikom upisa"));
+            toastr.error(result.message);
           }
         })
         .catch(err => {
@@ -335,7 +398,7 @@ export class LowerCaseValueConverter {
     return value.toString().toLowerCase();
   }
 }
-export class DatumValueConverter {
+export class Datum2ValueConverter {
   toView(value) {
     if (!value) return "";
     moment.locale('sr');
@@ -343,7 +406,7 @@ export class DatumValueConverter {
     return moment(value).format('DD.MM.YYYY');
   }
 }
-export class DatumVremeValueConverter {
+export class DatumVreme2ValueConverter {
   toView(value) {
     if (!value) return "";
     moment.locale('sr');
@@ -389,5 +452,21 @@ export class GodinaValueConverter {
     moment.locale('sr');
     //return moment(value).format('LLLL');
     return moment(value).format('YY');
+  }
+}
+export class DatumVremeValueConverter {
+  toView(value) {
+    if (!value) return "";
+    moment.locale('sr');
+    //return moment(value).format('LLLL');
+    return moment(value).format('DD.MM.YYYY HH:mm:ss');
+  }
+}
+export class DatumValueConverter {
+  toView(value) {
+    if (!value) return "";
+    moment.locale('sr');
+    //return moment(value).format('LLLL');
+    return moment(value).format('DD.MM.YYYY');
   }
 }

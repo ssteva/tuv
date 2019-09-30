@@ -7,16 +7,17 @@ using System.Threading.Tasks;
 
 namespace Tuv.Controllers.api
 {
-    public static class Helper
+  public static class Helper
+  {
+    public static int RedniBroj(ISession _session, string tip, DateTime datum)
     {
-        public static int RedniBroj(ISession _session, string tip)
-        {
-            var query = _session.CreateSQLQuery("exec RedniBroj :tip");
-            query.SetCacheMode(CacheMode.Ignore);
-            query.SetParameter("tip", tip);
-            //query.SetResultTransformer(new AliasToBeanResultTransformer(typeof(int)));
-            var result = query.UniqueResult<int>();
-            return result;
-        }
+      var query = _session.CreateSQLQuery("exec RedniBroj :tip, :datum");
+      query.SetCacheMode(CacheMode.Ignore);
+      query.SetParameter("tip", tip);
+      query.SetParameter("datum", datum);
+      //query.SetResultTransformer(new AliasToBeanResultTransformer(typeof(int)));
+      var result = query.UniqueResult<int>();
+      return result;
     }
+  }
 }
