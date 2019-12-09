@@ -32,13 +32,13 @@
             </div>&nbsp;&nbsp;
 
             <div style="display: inline-block; margin-left: 10px;">
-              <button class="md-btn md-btn-primary md-btn-mini md-btn-wave-light md-btn-icon" href="javascript:void(0)" click.delegate="izvestaj()">
+              <button class="md-btn md-btn-primary md-btn-mini md-btn-wave-light md-btn-icon ${disable ? 'disabled' : ''}" href="javascript:void(0)" click.delegate="izvestaj()">
                 Preuzmi podatke
                 <i class="uk-icon-refresh"></i>
               </button>
 
             </div>
-            <span style="margin-left: 10px;">Redova: ${podaci.length}</span>
+            <span style="margin-left: 10px;">${Redova & t}: ${podaci.length}</span>
             &nbsp;&nbsp;
             <button ak-button click.delegate="export()" class="k-button ak-button-icontext hidden-on-narrow">
               <span class="k-icon k-i-excel"></span>Export to Excel

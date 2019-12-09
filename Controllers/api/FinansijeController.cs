@@ -24,6 +24,9 @@ using Tuv.Models.Kendo;
 using Microsoft.AspNetCore.Http;
 using tuv.Models.DTO;
 using NHibernate.Transform;
+using Microsoft.Extensions.Localization;
+using tuv;
+using System.Reflection;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -36,11 +39,22 @@ namespace Tuv.Controllers.api
     private readonly ILogger _logger;
     private readonly NHibernate.ISession _session;
     private readonly Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor;
-    public FinansijeController(NHibernate.ISession session, ILoggerFactory loggerFactory, Microsoft.AspNetCore.Http.IHttpContextAccessor contextAccessor)
+    private readonly IStringLocalizer _localizer;
+    public FinansijeController(NHibernate.ISession session, ILoggerFactory loggerFactory, Microsoft.AspNetCore.Http.IHttpContextAccessor contextAccessor, IStringLocalizerFactory factory)
     {
-      _logger = loggerFactory.CreateLogger<FinansijeController>();
+      _logger = loggerFactory.CreateLogger<PonudaController>();
       _session = session;
       _httpContextAccessor = contextAccessor;
+
+      var korisnik = _session.QueryOver<Korisnik>()
+         .Where(x => x.KorisnickoIme == contextAccessor.HttpContext.User.Identity.Name)
+         .SingleOrDefault<Korisnik>();
+
+      var type = typeof(Prevod);
+      var assemblyName = new AssemblyName(type.GetTypeInfo().Assembly.FullName);
+
+      _localizer = factory.Create("Prevod" + korisnik.Lang, assemblyName.Name);
+
     }
 
 
@@ -382,7 +396,7 @@ namespace Tuv.Controllers.api
             uplata += rekap.UplataE;
             if (uplata > rekap.FakturaE)
             {
-              return Json(new { Success = false, Message = "Uplata je veća od fakture", obj });
+              return Json(new { Success = false, Message = _localizer["Uplata je veća od fakture"], obj });
             }
           }
           if (nalog.Valuta == "RSD")
@@ -390,7 +404,7 @@ namespace Tuv.Controllers.api
             uplata += rekap.UplataR;
             if (uplata > rekap.FakturaR)
             {
-              return Json(new { Success = false, Message = "Uplata je veća od fakture", obj });
+              return Json(new { Success = false, Message = _localizer["Uplata je veća od fakture"], obj });
             }
           }
         }

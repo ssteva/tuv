@@ -12,7 +12,7 @@
     <div class="md-card-content">
       <ul id="breadcrumbs">
         <li><a href="/">Home</a></li>
-        <li><a href="/#/klijenti">${"Klijenti" & t}</a></li>
+        <li><a href="/#/klijenti"><span>${"Klijenti" & t}</span></a></li>
         <li><span if.bind="klijent.id === 0" class="heading_a">${'Novi klijent' & t}</span></li>
         <li><span if.bind="klijent.id !== 0" class="heading_a">${klijent.naziv}</span></li>
       </ul>

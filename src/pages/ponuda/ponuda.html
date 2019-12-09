@@ -124,13 +124,13 @@
                 <div class="uk-form-row">
                   <label class="uk-form-label" t="Primenjivi zahtevi">Primenjivi zahtevi</label>
                   <div class="uk-form-controls">
-                    <textarea rows="4" class="uk-text-small uk-width-1-1" value.bind="ponuda.primenjiviZahtevi" disabled.bind="lock"></textarea>
+                    <textarea rows="4" class="uk-width-1-1" value.bind="ponuda.primenjiviZahtevi" disabled.bind="lock"></textarea>
                   </div>
                 </div>
                 <div class="uk-form-row">
                   <label class="uk-form-label" t="Predviđeno vreme za realizaciju">Predviđeno vreme za realizaciju</label>
                   <div class="uk-form-controls">
-                    <textarea rows="4" class="uk-text-small uk-width-1-1" value.bind="ponuda.predvidjenoVremeZaRealizaciju" disabled.bind="lock"></textarea>
+                    <textarea rows="4" class="uk-width-1-1" value.bind="ponuda.predvidjenoVremeZaRealizaciju" disabled.bind="lock"></textarea>
                   </div>
                 </div>
                 <div class="uk-form-row">
@@ -173,7 +173,7 @@
                     <tr repeat.for="stavka of ponuda.stavke">
                       <!--<td if.bind="!stavka.obrisan">${$index + 1}</td>-->
                       <td if.bind="!stavka.obrisan">
-                        <textarea rows="4" class="uk-text-small uk-width-1-1" value.bind="stavka.opisPosla" disabled.bind="lock"></textarea>
+                        <textarea rows="4" class="uk-width-1-1" value.bind="stavka.opisPosla" disabled.bind="lock"></textarea>
                       </td>
                       <td if.bind="!stavka.obrisan">
                         <input type="text" class="k-textbox" value.bind="stavka.jm" style="width: 100%;" disabled.bind="lock" />

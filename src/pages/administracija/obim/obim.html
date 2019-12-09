@@ -6,7 +6,7 @@
     <div class="md-card-content">
       <div class="uk-grid uk-grid-divider" data-uk-grid-margin>
         <div class="uk-width-large-1-4 uk-width-medium-1-2 uk-width-small-1-1">
-          <h3 class="uk-margin-bottom">Primarna grupa</h3>
+          <h3 class="uk-margin-bottom">${Primarna grupa & t}</h3>
           <select size="20" value.bind="primarna" change.delegate="chgPrimarna(primarna)" dblclick.delegate="izmenaPrimarna()">
             <option repeat.for="p of primarne" ondblclick.delegate="izmenaPrimarna()"
                     model.bind="p.id">
@@ -26,7 +26,7 @@
         </div>
         
         <div class="uk-width-large-1-4 uk-width-medium-1-2 uk-width-small-1-1">
-          <h3 class="uk-margin-bottom">Sekundarna grupa</h3>
+          <h3 class="uk-margin-bottom">${Sekundarna grupa & t}</h3>
           <select size="20" value.bind="sekundarna" change.delegate="chgSekundarna(sekundarna)" dblclick.delegate="izmenaSekundarna()">
             <option model.bind="null">Nema</option>
             <option repeat.for="p of odabranesekundarne"
@@ -47,7 +47,7 @@
         </div>
 
         <div class="uk-width-large-1-4 uk-width-medium-1-2 uk-width-small-1-1">
-          <h3 class="uk-margin-bottom">Tercijarna grupa</h3>
+          <h3 class="uk-margin-bottom">${Tercijarna grupa & t}</h3>
           <select size="20" value.bind="tercijarna" change.delegate="chgTercijarna(tercijarna)" dblclick.delegate="izmenaTercijarna()">
             <option model.bind="null">Nema</option>
             <option repeat.for="p of odabranetercijarne"
@@ -68,7 +68,7 @@
         </div>
 
         <div class="uk-width-large-1-4 uk-width-medium-1-2 uk-width-small-1-1">
-          <h3 class="uk-margin-bottom">Oblast poslovanja</h3>
+          <h3 class="uk-margin-bottom">${Obim poslovanja & t}</h3>
           <select style="font-size 8px;" size="20" value.bind="obim" change.delegate="chgObim(obim)"  dblclick.delegate="izmenaObim()">
             <option repeat.for="p of odabraniobimi"
                     model.bind="p.id">

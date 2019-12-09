@@ -20,6 +20,9 @@ using Newtonsoft.Json.Linq;
 using NHibernate.Criterion;
 using Tuv.Models;
 using Tuv.Helper;
+using Microsoft.Extensions.Localization;
+using tuv;
+using System.Reflection;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -32,11 +35,23 @@ namespace Tuv.Controllers.api
     private readonly ILogger _logger;
     private readonly ISession _session;
     private readonly KorisnikManager _userManager;
-    public KorisnikController(ISession session, ILoggerFactory loggerFactory, KorisnikManager userManager)
+    private readonly Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor;
+    private readonly IStringLocalizer _localizer;
+    public KorisnikController(NHibernate.ISession session, ILoggerFactory loggerFactory, Microsoft.AspNetCore.Http.IHttpContextAccessor contextAccessor, IStringLocalizerFactory factory)
     {
-      _logger = loggerFactory.CreateLogger<KorisnikController>();
+      _logger = loggerFactory.CreateLogger<PonudaController>();
       _session = session;
-      _userManager = userManager;
+      _httpContextAccessor = contextAccessor;
+
+      var korisnik = _session.QueryOver<Korisnik>()
+         .Where(x => x.KorisnickoIme == contextAccessor.HttpContext.User.Identity.Name)
+         .SingleOrDefault<Korisnik>();
+
+      var type = typeof(Prevod);
+      var assemblyName = new AssemblyName(type.GetTypeInfo().Assembly.FullName);
+
+      _localizer = factory.Create("Prevod" + korisnik.Lang, assemblyName.Name);
+
     }
 
     // [HttpGet("{id}")]
@@ -107,9 +122,9 @@ namespace Tuv.Controllers.api
 
       var result = _userManager.KorisnikResetLozinke(korisnik.KorisnickoIme, "Test123");
 
-      if (!result) return BadRequest("Greška prilikom reseta lozinke!");
+      if (!result) return BadRequest(_localizer["Greška prilikom reseta lozinke!"]);
 
-      return Ok("Uspešno promenjena lozinka");
+      return Ok(_localizer["Uspešno promenjena lozinka"]);
 
     }
 
@@ -131,7 +146,7 @@ namespace Tuv.Controllers.api
       //}
 
 
-      return Ok("Uspešno promenjena lozinka");
+      return Ok(_localizer["Uspešno promenjena lozinka"]);
 
     }
 
@@ -159,11 +174,6 @@ namespace Tuv.Controllers.api
       }
 
       var res =  _userManager.KorisnikPromenaJezika(User.Identity.Name, novaLozinka["jezik"].ToString());
-
-
-      
-
-      
 
       return Ok();
     }

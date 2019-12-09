@@ -223,7 +223,7 @@ Number.prototype.formatMoney = function (c, d, t) {
 export class DinaraValueConverter {
     toView(value) {
         if (!value) return "";
-        return value.formatMoney(2, '.', ',');
+        return value.formatMoney(2, ',', '.');
     }
 }
 export class DanValueConverter {

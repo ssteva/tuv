@@ -19,8 +19,30 @@
     <ak-col k-title="${'Mesto' & t}" k-field="mesto"></ak-col>
     <ak-col k-title="${'Država' & t}" k-field="drzava"></ak-col>
     <ak-col k-title="${'Komentar' & t}" k-field="komentar"></ak-col>
-    <ak-col k-title="${'Vrednost' & t} EUR" k-field="vrednostEur"></ak-col>
-    <ak-col k-title="${'Vrednost' & t} RSD" k-field="vrednostRsd"></ak-col>
+    <ak-col k-title="&Sigma; ${'Ugovoreno' & t} EUR" k-field="ugovoreno">
+      <ak-template>
+        ${ugovoreno | dinara}
+      </ak-template>
+      <ak-template for="footerTemplate">
+        Total: ${sum | dinara}
+      </ak-template>
+    </ak-col>
+    <ak-col k-title="&Sigma; ${'Fakturisano' & t} EUR" k-field="fakturisano">
+      <ak-template>
+        ${fakturisano | dinara}
+      </ak-template>
+      <ak-template for="footerTemplate">
+        Total: ${sum | dinara}
+      </ak-template>
+    </ak-col>
+    <ak-col k-title="&Sigma; ${'Uplaćeno' & t} EUR" k-field="uplaceno">
+      <ak-template>
+        ${uplaceno | dinara}
+      </ak-template>
+      <ak-template for="footerTemplate">
+        Total: ${sum | dinara}
+      </ak-template>
+    </ak-col>
     <ak-col k-title="${'Opcije' & t}">
       <ak-template>
         <!--<button class="uk-button-mini uk-button-primary uk-icon-edit" click.delegate="edit($this)">Izmena</button>-->
@@ -31,26 +53,26 @@
       </ak-template>
     </ak-col>
     <!--<ak-template for="detailTemplate">
-      <div class="tabstrip">
-        <ul>
-          <li class="k-state-active">
-            ${'Ponude' & t}
-          </li>
-          <li>
-            ${'Nalozi' & t}
-          </li>
-        </ul>
-        <div>
-          <div class="ponude"></div>
-        </div>
-        <div>
-          <div class="nalozi">
-            <ak-grid k-data-source.bind="nalozi">
-              <ak-col k-title="Nalog" k-field="broj"></ak-col>
-            </ak-grid>
-          </div>
+    <div class="tabstrip">
+      <ul>
+        <li class="k-state-active">
+          ${'Ponude' & t}
+        </li>
+        <li>
+          ${'Nalozi' & t}
+        </li>
+      </ul>
+      <div>
+        <div class="ponude"></div>
+      </div>
+      <div>
+        <div class="nalozi">
+          <ak-grid k-data-source.bind="nalozi">
+            <ak-col k-title="Nalog" k-field="broj"></ak-col>
+          </ak-grid>
         </div>
       </div>
-    </ak-template>-->
+    </div>
+  </ak-template>-->
   </ak-grid>
 </template>

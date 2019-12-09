@@ -20,7 +20,7 @@ namespace Tuv.Models
     public virtual int Rbr { get; set; }
     public virtual string Broj { get; set; }
     public virtual DateTime DatumPonude { get; set; }
-    public virtual DateTime DatumVazenja{ get; set; }
+    public virtual DateTime DatumVazenja { get; set; }
     public virtual DateTime? DatumOdobrenjaR { get; set; }
     public virtual DateTime? DatumOdobrenjaD { get; set; }
     public virtual DateTime? DatumPrihvatanja { get; set; }
@@ -50,6 +50,10 @@ namespace Tuv.Models
     public virtual ICollection<PonudaPredmet> PredmetPonude { get; set; }
     public virtual ICollection<PonudaStavka> Stavke { get; set; }
     public virtual ICollection<PonudaWf> Wfs { get; set; }
+    public virtual bool PotrebnoOdobrenjeDirektora { get; set; }
+
+
+
     //public virtual decimal Vrednost
     //{
     //  get
@@ -69,7 +73,8 @@ namespace Tuv.Models
     //    }
     //  }
     //}
-    public virtual bool PotrebnoOdobrenjeDirektora { get; set; }
+
+
     //public virtual bool PotrebnoOdobrenjeDirektora
     //{
     //  get

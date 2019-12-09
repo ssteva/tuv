@@ -107,23 +107,23 @@ namespace Tuv.Controllers.api
       PonudaStavka ponudaStavka = null;
       KlijentPregled klijentPregled = null;
 
-      var subEur = QueryOver.Of<Ponuda>()
-                    .Where(p => !p.Obrisan)
-                    .And(p => p.Klijent.Id == klijent.Id)
-                    .And(p => p.Valuta == "EUR")
-                    .JoinQueryOver(p => p.Stavke, () => ponudaStavka)
-                    .SelectList(ls => ls
-                      .SelectSum(() => ponudaStavka.Vrednost)
-                    );
+      //var subEur = QueryOver.Of<Ponuda>()
+      //              .Where(p => !p.Obrisan)
+      //              .And(p => p.Klijent.Id == klijent.Id)
+      //              .And(p => p.Valuta == "EUR")
+      //              .JoinQueryOver(p => p.Stavke, () => ponudaStavka)
+      //              .SelectList(ls => ls
+      //                .SelectSum(() => ponudaStavka.Vrednost)
+      //              );
 
-      var subRsd = QueryOver.Of<Ponuda>()
-              .Where(p => !p.Obrisan)
-              .And(p => p.Klijent.Id == klijent.Id)
-              .And(p => p.Valuta == "RSD")
-              .JoinQueryOver(p => p.Stavke, () => ponudaStavka)
-              .SelectList(ls => ls
-                .SelectSum(() => ponudaStavka.Vrednost)
-              );
+      //var subRsd = QueryOver.Of<Ponuda>()
+      //        .Where(p => !p.Obrisan)
+      //        .And(p => p.Klijent.Id == klijent.Id)
+      //        .And(p => p.Valuta == "RSD")
+      //        .JoinQueryOver(p => p.Stavke, () => ponudaStavka)
+      //        .SelectList(ls => ls
+      //          .SelectSum(() => ponudaStavka.Vrednost)
+      //        );
 
       var upit = _session.QueryOver<Klijent>(() => klijent)
           .Where(x => !x.Obrisan);
@@ -168,8 +168,11 @@ namespace Tuv.Controllers.api
         .Add(Projections.Property(() => klijent.Mesto), "Mesto")
         .Add(Projections.Property(() => klijent.Pib), "Pib")
         .Add(Projections.Property(() => klijent.Komentar), "Komentar")
-        .Add(Projections.SubQuery(subRsd), "vrednostRsd")
-        .Add(Projections.SubQuery(subEur), "vrednostEur"));
+        .Add(Projections.Property(() => klijent.Ugovoreno), "Ugovoreno")
+        .Add(Projections.Property(() => klijent.Fakturisano), "Fakturisano")
+        .Add(Projections.Property(() => klijent.Uplaceno), "Uplaceno"));
+        //.Add(Projections.SubQuery(subRsd), "vrednostRsd")
+        //.Add(Projections.SubQuery(subEur), "vrednostEur"));
 
       var rowcount = upit.ToRowCountQuery();
 
@@ -187,8 +190,11 @@ namespace Tuv.Controllers.api
         }
       }
 
-      upit.Skip(kr.Skip);
-      upit.Take(kr.Take);
+      if (kr.PageSize != 0)
+      {
+        upit.Skip(kr.Skip);
+        upit.Take(kr.Take);
+      }
 
 
 
@@ -198,13 +204,13 @@ namespace Tuv.Controllers.api
         {
           string prop = sort.Field.FirstCharToUpper(); //textInfo.ToTitleCase(sort.Field);
           {
-            //upit.UnderlyingCriteria.AddOrder(new Order(prop, sort.Dir.ToLower() == "asc"));
-            if (sort.Field.Contains("vrednostEur"))
-              upit.UnderlyingCriteria.AddOrder(new Order(Projections.SubQuery(subEur), sort.Dir.ToLower() == "asc"));
-            else if (sort.Field.Contains("vrednostRsd"))
-              upit.UnderlyingCriteria.AddOrder(new Order(Projections.SubQuery(subEur), sort.Dir.ToLower() == "asc"));
-            else
-              upit.UnderlyingCriteria.AddOrder(new Order(prop, sort.Dir.ToLower() == "asc"));
+            upit.UnderlyingCriteria.AddOrder(new Order(prop, sort.Dir.ToLower() == "asc"));
+            //if (sort.Field.Contains("vrednostEur"))
+            //  upit.UnderlyingCriteria.AddOrder(new Order(Projections.SubQuery(subEur), sort.Dir.ToLower() == "asc"));
+            //else if (sort.Field.Contains("vrednostRsd"))
+            //  upit.UnderlyingCriteria.AddOrder(new Order(Projections.SubQuery(subEur), sort.Dir.ToLower() == "asc"));
+            //else
+            //  upit.UnderlyingCriteria.AddOrder(new Order(prop, sort.Dir.ToLower() == "asc"));
           }
         }
       }

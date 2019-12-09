@@ -25,9 +25,10 @@ namespace Tuv.Mapping
       Map(x => x.Mesto);
       Map(x => x.Adresa);
       Map(x => x.Pib);
-      Map(x => x.VrednostRsd).Not.Update().Not.Insert();
-      Map(x => x.VrednostEur).Not.Update().Not.Insert();
       Map(x => x.Komentar).CustomSqlType("nvarchar(1000)");
+      Map(x => x.Ugovoreno).Not.Update().Not.Insert();
+      Map(x => x.Uplaceno).Not.Update().Not.Insert();
+      Map(x => x.Fakturisano).Not.Update().Not.Insert();
       HasMany(x => x.Kontakti)
         .Inverse()
         .AsSet()

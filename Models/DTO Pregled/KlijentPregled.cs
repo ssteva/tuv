@@ -15,8 +15,9 @@ namespace Tuv.Models
     public string Adresa { get; set; }
     public string Pib { get; set; }
     public string Komentar { get; set; }
-    public decimal VrednostRsd { get; set; }
-    public decimal VrednostEur { get; set; }
+    public decimal Ugovoreno { get; set; }
+    public decimal Fakturisano { get; set; }
+    public decimal Uplaceno { get; set; }
   }
 }
 

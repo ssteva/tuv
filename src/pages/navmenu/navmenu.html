@@ -11,17 +11,17 @@
           <li class="nav-item ${row.master ? '' : 'dropdown'}" >
             <a if.bind="!row.master && row.podmeni.length===0 && row.title !== 'Home'"  class="nav-link" href.bind="row.href">
               <i class="fa fa-${row.settings.ikona}" aria-hidden="true"></i>
-              <span class="title">${row.title}</span>
+              <span class="title">${row.title & t}</span>
             </a>
             <a if.bind="row.podmeni.length>0"  class="nav-link dropdown-toggle" href="javascript:void(0)" id.bind="row.title + row.id.toString()" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fa fa-${row.settings.ikona}" aria-hidden="true"></i>
-                <span class="title">${row.title}</span>
+                <span class="title">${row.title & t}</span>
             </a>
             <div if.bind="row.podmeni.length>0" class="dropdown-menu" aria-labelledby.bind="row.title + row.id.toString()">
               <div repeat.for="row2 of row.podmeni">
                 <a class="dropdown-item" href.bind="row2.href">
                     <i class="fa fa-${row2.settings.ikona}" aria-hidden="true"></i>
-                    ${row2.title}
+                    ${row2.title & t}
                   </a>
                 </div>
             </div>

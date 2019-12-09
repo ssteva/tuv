@@ -22,6 +22,9 @@ using Tuv.Models;
 using Tuv.Helper;
 using Tuv.Models.Kendo;
 using NHibernate.Transform;
+using Microsoft.Extensions.Localization;
+using tuv;
+using System.Reflection;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -34,11 +37,22 @@ namespace Tuv.Controllers.api
     private readonly ILogger _logger;
     private readonly ISession _session;
     private readonly Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor;
-    public NalogController(ISession session, ILoggerFactory loggerFactory, Microsoft.AspNetCore.Http.IHttpContextAccessor contextAccessor)
+    private readonly IStringLocalizer _localizer;
+    public NalogController(NHibernate.ISession session, ILoggerFactory loggerFactory, Microsoft.AspNetCore.Http.IHttpContextAccessor contextAccessor, IStringLocalizerFactory factory)
     {
-      _logger = loggerFactory.CreateLogger<NalogController>();
+      _logger = loggerFactory.CreateLogger<PonudaController>();
       _session = session;
       _httpContextAccessor = contextAccessor;
+
+      var korisnik = _session.QueryOver<Korisnik>()
+         .Where(x => x.KorisnickoIme == contextAccessor.HttpContext.User.Identity.Name)
+         .SingleOrDefault<Korisnik>();
+
+      var type = typeof(Prevod);
+      var assemblyName = new AssemblyName(type.GetTypeInfo().Assembly.FullName);
+
+      _localizer = factory.Create("Prevod" + korisnik.Lang, assemblyName.Name);
+
     }
 
     [HttpGet("{id}")]
@@ -233,9 +247,9 @@ namespace Tuv.Controllers.api
           var korisnik = _session.QueryOver<Korisnik>()
           .Where(x => x.KorisnickoIme == User.Identity.Name)
           .SingleOrDefault<Korisnik>();
-          var poruka = "Kreiran radni nalog";
+          var poruka = _localizer["Kreiran radni nalog"];
           var zaduzen = _session.Load<Korisnik>(obj.ZaduzenZaRealizaciju.Id);
-          var poruka2 = "Kreiran radni nalog - izvršitelj " + zaduzen.Naziv ?? "";
+          var poruka2 = _localizer["Kreiran radni nalog - izvršitelj"] + " " + zaduzen.Naziv ?? "";
           var tip = "Kreiranje";
           var wf = new RadniNalogWf() { RadniNalog = obj, Datum = DateTime.Now, Korisnik = korisnik, Opis = poruka, Tip = tip, TimelineIkona = "timeline_icon_primary", Ikona = "assignment" };
           var wfp = new PonudaWf() { Ponuda = obj.Ponuda, Datum = DateTime.Now, Korisnik = korisnik, Opis = poruka2, Tip = tip, TimelineIkona = "timeline_icon_default", Ikona = "build" };
@@ -253,13 +267,13 @@ namespace Tuv.Controllers.api
             string ikona;
             if (obj.Zatvoren)
             {
-              poruka = "Zatvoren radni nalog";
+              poruka = _localizer["Zatvoren radni nalog"];
               tip = "Zatvaranje";
               ikona = "lock";
             }
             else
             {
-              poruka = "Otvoren radni nalog";
+              poruka = _localizer["Otvoren radni nalog"];
               tip = "Otvaranje";
               ikona = "lock_open";
             }

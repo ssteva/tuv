@@ -95,8 +95,9 @@ export class Nalozi {
                 model: {
                     id: "id",
                     fields: {
-                        datumKreiranja: { type: 'date' }
-                        //vrednost: { type: 'number' }
+                        datumKreiranja: { type: 'date' },
+                        fakturiasnoNalog: { type: 'number' },
+                        uplacenoNalog: { type: 'number' }
                         //  ime: { type: 'string' },
                         //  prezime: { type: 'string' },
                         //  email: { type: 'string' },
@@ -124,4 +125,10 @@ export class Nalozi {
         this.router.navigateToRoute("nalog", { id: obj.id, idp: obj.ponuda.id });
     }
 
+}
+export class DinaraValueConverter {
+    toView(value) {
+        if (!value) return "";
+        return value.formatMoney(2, ',', '.');
+    }
 }

@@ -190,7 +190,7 @@ export class Finansije {
 export class DinarauValueConverter {
     toView(value) {
         if (!value) return "";
-        return value.formatMoney(2, '.', ',');
+        return value.formatMoney(2, ',', '.');
     }
 }
 //export class LowerCaseValueConverter {

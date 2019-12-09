@@ -1,6 +1,6 @@
 ﻿<template>
   <require from="../../helper/grid-i18n"></require>
-
+  <require from="resources/elements/rekapitulacija"></require>
   <a class="md-btn md-btn-primary md-btn-icon-mini md-btn-wave-light" href="javascript:void()" click.delegate="novi()">
     <i class="material-icons md-24">add</i>
     ${"Nova ponuda" & t}
@@ -10,6 +10,7 @@
   <ak-grid grid-i18n k-widget.bind="grid"
            k-data-source.bind="datasource"
            k-pageable.bind="common.pageable"
+           k-on-detail-init.delegate="detailInit($event.detail)"
            k-filterable.bind="common.filterobj"
            k-on-filter-menu-init.delegate="common.filterMenu($event.detail)"
            k-sortable.bind="true">
@@ -25,33 +26,17 @@
             ${pp.obimPoslovanja.sifra} ${pp.obimPoslovanja.naziv}
           </li>
         </ul>
-        <!--<table class="uk-table uk-text-small uk-table-condensed">
-      <colgroup>
-        <col span="1" style="width: 20%;">
-        <col span="1" style="width: 60%;">
-      </colgroup>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th t="Šifra">Šifra</th>
-          <th t="Naziv">Naziv</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr repeat.for="pp of predmetPonude">
-          <td>
-            ${pp.obimPoslovanja.sifra}
-          </td>
-          <td if.bind="!obim.obrisan">
-            ${pp.obimPoslovanja.naziv}
-          </td>
-        </tr>
-        </tbody>
-      </table>-->
       </ak-template>
     </ak-col>
     <ak-col k-title="${'Valuta' & t}" k-field="valuta"></ak-col>
-    <ak-col k-title="${'Vrednost' & t}" k-field="vrednost"></ak-col>
+    <ak-col k-title="${'Vrednost' & t}" k-field="vrednost">
+    </ak-col>
+    <!--<ak-col k-title="${'Vrednost svedeno EUR' & t}" k-field="vrednostSvedenoEur">
+    <ak-template for="footerTemplate">
+      Total: ${sum | dinara}
+    </ak-template>
+  </ak-col-->
+    
     <ak-col k-title="${'Status' & t}" k-field="ponudaStatus.id" k-filterable.bind="statusiFilter">
       <ak-template>
         <span class="uk-badge ${ponudaStatus.klasa}">${ponudaStatus.status & t}</span>
@@ -72,6 +57,17 @@
         </a>
       </ak-template>
     </ak-col>
-    <!--<ak-col k-command.bind="['edit', 'destroy']" k-title="&nbsp;" k-width.bind="200"></ak-col>-->
+    <ak-template for="detailTemplate">
+      <div class="tabstrip">
+        <ul>
+          <li class="k-state-active">
+            Rekapitulacija
+          </li>
+        </ul>
+        <div>
+          <rekapitulacija  naslov="" nalogid="0" ponudaid.bind="id" klijentid="0" lock.bind="false"></rekapitulacija>
+        </div>
+      </div>
+    </ak-template>
   </ak-grid>
 </template>

@@ -29,6 +29,8 @@ namespace Tuv.Models
     public virtual DateTime DatumKreiranja { get; set; }
     public virtual DateTime? DatumZatvaranja { get; set; }
     public virtual DateTime? OcekivaniRokZavrsetka { get; set; }
+    public virtual decimal FakturisanoNalog { get; set; }
+    public virtual decimal UplacenoNalog { get; set; }
     public virtual Ponuda Ponuda { get; set; }
     public virtual Korisnik ZaduzenZaRealizaciju { get; set; }
     public virtual RadniNalogStatus RadniNalogStatus { get; set; }

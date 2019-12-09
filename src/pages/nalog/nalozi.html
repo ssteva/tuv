@@ -23,6 +23,16 @@
         ${predmetNaloga.sifra} ${predmetNaloga.naziv}
       </ak-template>
     </ak-col>
+    <ak-col k-title="&Sigma; ${'Fakturisano' & t} EUR" k-field="fakturisanoNalog">
+      <ak-template>
+        ${fakturisanoNalog | dinara}
+      </ak-template>
+    </ak-col>
+    <ak-col k-title="&Sigma; ${'Uplaćeno' & t} EUR" k-field="uplacenoNalog">
+      <ak-template>
+        ${uplacenoNalog | dinara}
+      </ak-template>
+    </ak-col>
     <ak-col k-title="${'Status' & t}" k-field="radniNalogStatus.id" k-filterable.bind="statusiFilter">
       <ak-template>
         <span class="uk-badge ${radniNalogStatus.klasa}">${radniNalogStatus.status & t}</span>

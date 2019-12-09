@@ -144,7 +144,7 @@ export class Rekapitulacija {
 export class DinararValueConverter {
     toView(value) {
         if (!value) return "";
-        return value.formatMoney(2, '.', ',');
+        return value.formatMoney(2, ',', '.');
     }
 }
 //export class LowerCaseValueConverter {

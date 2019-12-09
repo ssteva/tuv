@@ -41,6 +41,8 @@ namespace Tuv.Mapping
       Map(x => x.DatumZatvaranja).CustomSqlType("date");
       Map(x => x.Valuta).CustomSqlType("nvarchar(3)");
       Map(x => x.Zatvoren);
+      Map(x => x.FakturisanoNalog).Not.Update().Not.Insert();
+      Map(x => x.UplacenoNalog).Not.Update().Not.Insert();
       References(x => x.Ponuda).Cascade.None();
       References(x => x.RadniNalogStatus).Column("Status").Not.Update().Not.Insert().ForeignKey("FK_StatusNaloga");
       References(x => x.PredmetNaloga).Column("PredmetNalogaId").Cascade.None();
